@@ -4,7 +4,7 @@ from backend.src.attraction.interfaces.repository import Repository
 
 class SQLRepository(Repository):
     def __init__(self, connection_string):
-        # TODO: Configure DB
+        #TODO: Configure DB
         self._connection_string = connection_string
         self._connection = db.connect(connection_string)
 
