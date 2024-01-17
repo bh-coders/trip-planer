@@ -4,20 +4,20 @@ from abc import ABC, abstractmethod
 class Repository(ABC):
     @abstractmethod
     def get_all(self):
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def get_by_id(self, item_id):
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def create(self, item):
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def update(self, item):
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def delete(self, item_id):
-        raise NotImplementedError
+        pass
