@@ -3,7 +3,7 @@ from typing_extensions import Union
 
 
 class Attraction(BaseModel):
-    id: UUID4
+    id: str
     name: str
     latitude: float
     longitude: float

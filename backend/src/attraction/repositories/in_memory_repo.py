@@ -88,15 +88,15 @@ class InMemoryRepository(Repository):
         self._data_source.append(item)
         return item
 
-    def update(self, item):
-        index = next((i for i, obj in enumerate(self._data_source) if obj["id"] == item.id), None)
+    def update(self, updated_item):
+        index = next((i for i, obj in enumerate(self._data_source) if obj["id"] == str(updated_item.id)), None)
         if index is not None:
-            self._data_source[index] = item
+            self._data_source[index].update(updated_item)
             return True
         return False
 
     def delete(self, item_id):
-        index = next((i for i, obj in enumerate(self._data_source) if obj.id == item_id), None)
+        index = next((i for i, obj in enumerate(self._data_source) if obj["id"] == item_id), None)
         if index is not None:
             self._data_source.pop(index)
             return True
