@@ -1,9 +1,10 @@
+from typing import List
+
 from pydantic import BaseModel
+from pydantic_extra_types.coordinate import Coordinate
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.ext.declarative import declarative_base
-from pydantic_extra_types.coordinate import Coordinate
-from typing import List
 
 Base = declarative_base()
 
