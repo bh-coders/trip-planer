@@ -1,0 +1,10 @@
+version: '3.11'
+
+services:
+  backend:
+    container_name: api
+    build:
+      context: backend
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8081:80" 
