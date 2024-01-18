@@ -8,10 +8,32 @@ const alias = [
   { find: 'components', replacement: '/src/components' },
 ];
 
+const extensions = [
+  '.web.tsx',
+  '.tsx',
+  '.web.ts',
+  '.ts',
+  '.web.jsx',
+  '.jsx',
+  '.web.js',
+  '.js',
+  '.css',
+  '.json',
+  '.mjs',
+];
+
 const configBase = {
+  clearScreen: true,
   plugins: [react()],
   resolve: {
-    alias: [...alias],
+    extensions: extensions,
+    alias: [
+      {
+        find: 'react-native',
+        replacement: 'react-native-web',
+      },
+      ...alias,
+    ],
   },
   server: {
     watch: {
@@ -25,7 +47,7 @@ const configBase = {
 
 let configType = {};
 if (process.env.NODE_ENV === 'development') {
-  dotenv.config({ path: '../.envs/.env.development' });
+  dotenv.config({ path: '../.envs/frontend/.env.development' });
   configType = {
     ...configBase,
     server: {
@@ -35,7 +57,7 @@ if (process.env.NODE_ENV === 'development') {
     },
   };
 } else {
-  dotenv.config({ path: '../.envs/.env.production' });
+  dotenv.config({ path: '../.envs/frontend/.env.production' });
   configType = {
     ...configBase,
     server: {
@@ -46,5 +68,4 @@ if (process.env.NODE_ENV === 'development') {
   };
 }
 
-console.log(process.env.NODE_ENV);
 export default defineConfig(configType);
