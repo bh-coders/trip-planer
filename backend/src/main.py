@@ -1,14 +1,10 @@
-import uvicorn
 from fastapi import FastAPI
-from attraction import router
+from attraction.routes.router import router as attraction_router
+from database import engine, Base
+from attraction.models import Attraction  # Importuj tutaj wszystkie swoje modele
 
-from src.attraction import router
 
+Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
-app.include_router(router.router, prefix="/attractions")
-
-
-@app.get("/")
-def root() -> dict[str, str]:
-    return {"Trip": "Planner"}
+app.include_router(attraction_router, prefix="/attractions")

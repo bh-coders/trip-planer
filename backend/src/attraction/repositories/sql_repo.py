@@ -1,8 +1,10 @@
-from backend.src.attraction.interfaces.repository import Repository
+from attraction.interfaces.repository import Repository
 
 
 class SQLRepository(Repository):
-    def __init__(self, ):
+    def __init__(
+        self,
+    ):
         pass
 
     def get_all(self):

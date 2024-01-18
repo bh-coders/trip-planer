@@ -1,4 +1,4 @@
-from ..interfaces.repository import Repository
+from attraction.interfaces.repository import Repository
 
 
 class InMemoryRepository(Repository):
@@ -10,35 +10,15 @@ class InMemoryRepository(Repository):
                 "latitude": 12.4567,
                 "longitude": 24.8909,
                 "opening_hours": {
-                    "Monday": {
-                        "Open": 10,
-                        "Close": 18
-                    },
-                    "Tuesday": {
-                        "Open": 10,
-                        "Close": 18
-                    },
-                    "Wednesday": {
-                        "Open": 10,
-                        "Close": 18
-                    },
-                    "Thursday": {
-                        "Open": 10,
-                        "Close": 18
-                    }
+                    "Monday": {"Open": 10, "Close": 18},
+                    "Tuesday": {"Open": 10, "Close": 18},
+                    "Wednesday": {"Open": 10, "Close": 18},
+                    "Thursday": {"Open": 10, "Close": 18},
                 },
                 "prices": {
-                    "Entry fee": {
-                        "Normal": 20,
-                        "Child": 10,
-                        "Dog": 5
-                    },
-                    "Photos": {
-                        "Normal": 10,
-                        "Child": 5,
-                        "Dog": 2.5
-                    }
-                }
+                    "Entry fee": {"Normal": 20, "Child": 10, "Dog": 5},
+                    "Photos": {"Normal": 10, "Child": 5, "Dog": 2.5},
+                },
             },
             {
                 "id": "549eaf51-41eb-408b-86d8-fba661e2f755",
@@ -46,36 +26,16 @@ class InMemoryRepository(Repository):
                 "latitude": 12.4567,
                 "longitude": 24.8909,
                 "opening_hours": {
-                    "Monday": {
-                        "Open": 10,
-                        "Close": 18
-                    },
-                    "Tuesday": {
-                        "Open": 10,
-                        "Close": 18
-                    },
-                    "Wednesday": {
-                        "Open": 10,
-                        "Close": 18
-                    },
-                    "Thursday": {
-                        "Open": 10,
-                        "Close": 18
-                    }
+                    "Monday": {"Open": 10, "Close": 18},
+                    "Tuesday": {"Open": 10, "Close": 18},
+                    "Wednesday": {"Open": 10, "Close": 18},
+                    "Thursday": {"Open": 10, "Close": 18},
                 },
                 "prices": {
-                    "Entry fee": {
-                        "Normal": 20,
-                        "Child": 10,
-                        "Dog": 5
-                    },
-                    "Photos": {
-                        "Normal": 10,
-                        "Child": 5,
-                        "Dog": 2.5
-                    }
-                }
-            }
+                    "Entry fee": {"Normal": 20, "Child": 10, "Dog": 5},
+                    "Photos": {"Normal": 10, "Child": 5, "Dog": 2.5},
+                },
+            },
         ]
 
     def get_all(self):
@@ -89,14 +49,23 @@ class InMemoryRepository(Repository):
         return item
 
     def update(self, updated_item):
-        index = next((i for i, obj in enumerate(self._data_source) if obj["id"] == str(updated_item.id)), None)
+        index = next(
+            (
+                i
+                for i, obj in enumerate(self._data_source)
+                if obj["id"] == str(updated_item.id)
+            ),
+            None,
+        )
         if index is not None:
             self._data_source[index].update(updated_item)
             return True
         return False
 
     def delete(self, item_id):
-        index = next((i for i, obj in enumerate(self._data_source) if obj["id"] == item_id), None)
+        index = next(
+            (i for i, obj in enumerate(self._data_source) if obj["id"] == item_id), None
+        )
         if index is not None:
             self._data_source.pop(index)
             return True
