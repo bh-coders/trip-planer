@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+
 from .schemas import Attraction
 from .services.attraction_service import AttractionService
 from .repositories.in_memory_repo import InMemoryRepository
