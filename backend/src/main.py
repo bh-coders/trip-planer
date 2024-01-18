@@ -1,4 +1,6 @@
+import uvicorn
 from fastapi import FastAPI
+from attraction import router
 
 from src.attraction import router
 
