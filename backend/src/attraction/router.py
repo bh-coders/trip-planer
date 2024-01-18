@@ -1,16 +1,18 @@
 from fastapi import APIRouter
 
+from src.attraction.schemas import Attraction
+
 router = APIRouter()
 
 
 @router.get("/all")
-async def get_all_attractions() -> None:
-    pass
+def get_all_attractions() -> list[Attraction]:
+    ...
 
 
 @router.get("/{id}")
-async def get_attraction_by_id() -> None:
-    pass
+def get_attraction_by_id() -> Attraction:
+    ...
 
 
 @router.get("/{latitude},{longitude}/")
