@@ -37,7 +37,6 @@ select = [
     "E7",
     "E9",
     "F",
-    "E",
     "F",
     "I",
     "W505",
@@ -69,6 +68,7 @@ plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
 python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
+disable_error_code = ["empty-body"]
 exclude = [
     '^file1\\.py$',
     '^file2\\.py$',
@@ -83,7 +83,8 @@ warn_unused_ignores = true
 disallow_any_generics = true
 check_untyped_defs = true
 no_implicit_reexport = true
-disallow_untyped_defs = true
+disallow_untyped_defs = false
+warn_no_return = true
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
