@@ -1,0 +1,8 @@
+{
+  "extends": "expo/tsconfig.base",
+  "exclude": ["babel.config.js", "metro.config.js"],
+  "compilerOptions": {
+    "strict": true,
+    "typeRoots": ["env.d.tsx"]
+  },
+}
