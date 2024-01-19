@@ -1,4 +1,4 @@
-from attraction.interfaces.repository import Repository
+from src.attraction.interfaces.repository import Repository
 
 
 class InMemoryRepository(Repository):

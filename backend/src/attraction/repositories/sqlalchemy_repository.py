@@ -1,7 +1,7 @@
-from attraction.interfaces.repository import Repository
-from attraction.models import Attraction
+from src.attraction.interfaces.repository import Repository
+from src.attraction.models import Attraction
 from sqlalchemy.orm import Session
-from attraction.schemas import AttractionSchema
+from src.attraction.schemas import AttractionSchema
 
 
 class SQLAlchemyRepository(Repository):

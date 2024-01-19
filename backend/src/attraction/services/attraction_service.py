@@ -1,7 +1,7 @@
 from uuid import uuid4
 from sqlalchemy.orm import Session
-from attraction.schemas import AttractionSchema
-from attraction.interfaces.repository import Repository
+from src.attraction.schemas import AttractionSchema
+from src.attraction.interfaces.repository import Repository
 
 
 class AttractionService:
