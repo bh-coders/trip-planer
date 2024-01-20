@@ -1,15 +1,33 @@
-import { API_TOKEN } from '@env';
-import { StatusBar } from 'expo-status-bar';
-import { Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { getToken } from './components/utils/tokenUtils';
+import Dashboard from './components/views/Dashboard/Dashboard';
+import Auth from './components/views/Auth/Auth';
+import User from './components/views/User/User';
 
-import styles from './Styles';
+const Drawer = createDrawerNavigator();
 
-export default function App() {
+function App(): React.JSX.Element {
+  const [userToken, setUserToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await getToken();
+      setUserToken(token);
+    };
+    fetchToken();
+  }, []);
   return (
-    <View style={styles.App}>
-      <Text>Open up App.tsx to start working on your app! {API_TOKEN}</Text>
-      <Text>Some Text</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="Dashboard">
+        <Drawer.Screen name="Dashboard" component={Dashboard} />
+        {!userToken && <Drawer.Screen name="Register" component={Auth} />}
+        {!userToken && <Drawer.Screen name="Login" component={Auth} />}
+        {userToken && <Drawer.Screen name="User" component={User} />}
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
+
+export default App;
