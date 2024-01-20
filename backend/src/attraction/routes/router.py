@@ -36,9 +36,9 @@ def create_attraction(attraction: AttractionSchema, db: Session = Depends(get_db
 
 @router.patch("/{attraction_id}/update")
 def update_attraction(
-        attraction_id: int,
-        updated_attraction: AttractionSchema,
-        db: Session = Depends(get_db),
+    attraction_id: int,
+    updated_attraction: AttractionSchema,
+    db: Session = Depends(get_db),
 ):
     logger.info(f"Updating attraction with ID: {attraction_id}")
 
