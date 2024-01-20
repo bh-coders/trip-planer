@@ -1,6 +1,7 @@
+from sqlalchemy.orm import Session
+
 from src.attraction.interfaces.repository import Repository
 from src.attraction.models import Attraction
-from sqlalchemy.orm import Session
 from src.attraction.schemas import AttractionSchema
 
 
@@ -39,6 +40,7 @@ class SQLAlchemyRepository(Repository):
                     setattr(db_item, key, value)
 
                 db.add(db_item)
+                db.commit()
             return db_item
         except Exception as e:
             print(f"Error during update: {e}")
@@ -48,6 +50,7 @@ class SQLAlchemyRepository(Repository):
         try:
             with db.begin_nested():
                 db.delete(item)
+                db.commit()
             return True
         except Exception as e:
             print(f"Error during delete: {e}")
