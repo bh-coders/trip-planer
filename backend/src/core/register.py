@@ -3,9 +3,10 @@ from fastapi import FastAPI
 from src.attraction.routes.router import router as attraction_router
 from src.core.logger import LoggerSetup
 from src.database import Base, engine
+from src.attraction.models import Attraction  # Importuj tutaj wszystkie swoje modele
 
 
-def init_app(version: str) -> FastAPI:
+def _init_app(version: str) -> FastAPI:
     Base.metadata.create_all(bind=engine)
     return FastAPI(version=version)
 
@@ -19,7 +20,7 @@ def _read_version() -> str:
 def register_app():
     VERSION = _read_version()
     # config = config.Settings() if we create Settings object we can put this to init_app
-    app = init_app(version=VERSION)
+    app = _init_app(version=VERSION)
 
     register_router(app)
     # we can initialize all configurations, middlewares, cors etc. here
