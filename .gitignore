@@ -623,4 +623,5 @@ Temporary Items
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/python,pycharm+all,visualstudiocode,react,reactnative,node
+# End of https://www.toptal.com/developers/gitignore/api.idea/python,pycharm+all,visualstudiocode,react,reactnative,node
+.idea
