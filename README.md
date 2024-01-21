@@ -77,7 +77,7 @@ All the requirements mentioned for the web, and additionally:
 - Create an Android emulator
 
 **For iOS:**
-We need have to install xcode with latest version of ios.
+- Xcode: This is the IDE for iOS development. Install the latest version from the Mac App Store. Ensure your Mac is updated to a compatible OS version as required by Xcode.
 
 To start, run the following command:
 ```bash
