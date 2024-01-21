@@ -7,15 +7,15 @@ class Repository(ABC):
         pass
 
     @abstractmethod
-    def get_by_id(self, db, item_id):
+    def get_by_id(self, db, attraction_id):
         pass
 
     @abstractmethod
-    def create(self, db, item):
+    def create(self, db, attraction):
         pass
 
-    def update(self, db, db_item, updated_item):
+    def update(self, db, db_attraction, updated_attraction):
         pass
 
-    def delete(self, db, item):
+    def delete(self, db, attraction):
         pass
