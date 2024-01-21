@@ -5,13 +5,13 @@ from src.attraction.models import Attraction
 from src.attraction.schemas import AttractionSchema
 
 
-class SQLAlchemyRepository(Repository):
+class AttractionRepository(Repository):
     def get_all(self, db: Session) -> list[Attraction]:
         attractions = db.query(Attraction).all()
         return attractions
 
-    def get_by_id(self, db: Session, id: int):
-        attraction = db.query(Attraction).filter(Attraction.id == id).first()
+    def get_by_id(self, db: Session, attraction_id: int):
+        attraction = db.query(Attraction).filter(Attraction.id == attraction_id).first()
         return attraction
 
     def create(self, db: Session, attraction: AttractionSchema):
@@ -30,12 +30,12 @@ class SQLAlchemyRepository(Repository):
         return False
 
     def update(
-        self, db: Session, db_item: Attraction, updatedItem: AttractionSchema
+        self, db: Session, db_item: Attraction, updated_item: AttractionSchema
     ) -> Attraction:
         try:
             # we using begin_nested, because we already used session to get db_item
             with db.begin_nested():
-                update_data = updatedItem.model_dump(exclude_unset=True)
+                update_data = updated_item.model_dump(exclude_unset=True)
                 for key, value in update_data.items():
                     setattr(db_item, key, value)
 
