@@ -1,8 +1,6 @@
 {
-  "extends": "expo/tsconfig.base",
-  "exclude": ["babel.config.js", "metro.config.js"],
+  "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
-    "strict": true,
-    "typeRoots": ["env.d.tsx"],
-  },
+    "jsx": "react",
+  }
 }
