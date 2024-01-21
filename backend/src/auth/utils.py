@@ -1,9 +1,9 @@
-from src.auth.configs import ACCESS_TOKEN_EXPIRE_MINUTES
+from src.core.configs import ACCESS_TOKEN_EXPIRE_MINUTES
 import jwt
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 
-from src.auth.configs import SECRET_KEY, ALGORITHM
+from src.core.configs import SECRET_KEY, ALGORITHM
 
 
 password_hashing = CryptContext(schemes=["bcrypt"], deprecated="auto")
