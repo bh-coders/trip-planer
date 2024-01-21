@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
 import { View } from 'react-native';
 import { getToken } from './components/utils/tokenUtils';
 import styles from './Styles';

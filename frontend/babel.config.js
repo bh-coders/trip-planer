@@ -1,17 +1,21 @@
 module.exports = function (api) {
   api.cache.using(() => process.env.NODE_ENV);
   return {
-    presets: ['babel-preset-expo'],
+    presets: ['module:metro-react-native-babel-preset'],
     plugins: [
+      ['module:react-native-dotenv', {
+        envName: 'APP_ENV',
+        moduleName: '@env',
+        path: '../.envs/frontend/.env.development',
+        safe: false,
+        allowUndefined: true,
+        verbose: false,
+      }],
+      ['react-native-reanimated/plugin'],
       [
-        'module:react-native-dotenv',
+        'inline-import-data-uri',
         {
-          envName: 'APP_ENV',
-          moduleName: '@env',
-          path: '../.envs/frontend/.env.development',
-          safe: false,
-          allowUndefined: true,
-          verbose: false,
+          extensions: ['png'],
         },
       ],
     ],
