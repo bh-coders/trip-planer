@@ -19,3 +19,8 @@ To start, run the following command:
 npm start
 ```
 Then, choose the desired option from the Expo menu.
+
+To run tests:
+
+```bash
+npm test```
