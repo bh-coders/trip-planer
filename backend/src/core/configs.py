@@ -1,9 +1,9 @@
 import os
 
-POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
-POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
+POSTGRES_HOST = os.getenv("POSTGRES_HOST", "51.83.130.148")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5001")
 POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
-POSTGRES_DB_NAME = os.getenv("POSTGRES_DB", "postgres")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "wHhdUAMX79gExGsZv2NYyJ")
+POSTGRES_DB_NAME = os.getenv("POSTGRES_DB", "tripplaner")
 
 LOKI_INSTANCE_URL = os.getenv("LOKI_INSTANCE_URL", "")
