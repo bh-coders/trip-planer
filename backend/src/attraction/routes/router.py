@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from src.attraction.repositories.sqlalchemy_repository import SQLAlchemyRepository
 from src.attraction.schemas import AttractionSchema
 from src.attraction.services.attraction_service import AttractionService
-from src.database import get_db
+from src.core.database import get_db
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
