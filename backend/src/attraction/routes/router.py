@@ -2,12 +2,11 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from src.attraction.schemas import AttractionSchema
 from src.attraction.services.attraction_service import AttractionService
-from src.attraction.repositories.sqlalchemy_repository import SQLAlchemyRepository
+from src.attraction.repositories.attraction_repo import AttractionRepository
 from src.database import get_db
 
 router = APIRouter()
-in_memory_repo = SQLAlchemyRepository()
-_attraction_service = AttractionService(in_memory_repo)
+_attraction_service = AttractionService(AttractionRepository())
 
 
 @router.get("/all")
