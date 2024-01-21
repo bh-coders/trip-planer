@@ -10,7 +10,7 @@ from src.auth.utils import hash_password, check_password, return_token
 
 
 class AuthRepository(Repository):
-    def register(self, db: Session, user: UserSchema):
+    def register(self, db: Session, user: UserSchema) -> dict:
         try:
             with db.begin():
                 new_user = User(
@@ -27,7 +27,7 @@ class AuthRepository(Repository):
             return False
 
 
-    def sign_in(self, db, sign_in_user: SignInSchema):
+    def sign_in(self, db, sign_in_user: SignInSchema) -> dict:
         user = db.query(User).filter_by(username=sign_in_user.username).first()
         if user and check_password(sign_in_user.password, user.password):
             return return_token(user)
