@@ -1,8 +1,3 @@
-from fastapi import FastAPI
+from src.core.register import register_app
 
-app = FastAPI()
-
-
-@app.get("/")
-def root():
-    return {"Trip": "Planner"}
+app = register_app()
