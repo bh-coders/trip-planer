@@ -6,3 +6,8 @@ class UserSchema(BaseModel):
     email: str
     password: str
 
+
+class SignInSchema(BaseModel):
+    username: str
+    password: str
+
