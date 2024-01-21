@@ -5,10 +5,8 @@ import uuid
 
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from src.core.logger import LoggerSetup
 
-logger_setup = LoggerSetup()
-logger = logging.getLogger("uvicorn")
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
@@ -45,12 +43,12 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             "body": parsed_body
         }
 
-        logger.info(json.dumps({
+        logger.info({
             "X-Process-Time": str(process_time),
             "X-API-REQUEST-ID": request_id,
             "request": request_details,
             "response": response_details
-        }))
+        })
 
         return response
 
