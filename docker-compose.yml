@@ -9,8 +9,8 @@ services:
     ports:
       - "8081:80"
     environment:
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=51.83.130.148
+      - POSTGRES_PORT=5001
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=wHhdUAMX79gExGsZv2NYyJ
+      - POSTGRES_DB=tripplaner
