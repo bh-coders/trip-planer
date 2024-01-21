@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from src.auth.repositories.auth_repo import AuthRepository
 from src.auth.schemas import UserSchema
 from src.auth.services.auth_service import AuthService
-from src.database import get_db
+from src.core.database import get_db
 
 router = APIRouter()
 _auth_service = AuthService(AuthRepository())
