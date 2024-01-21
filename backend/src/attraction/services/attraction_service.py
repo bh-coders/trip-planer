@@ -18,9 +18,9 @@ class AttractionService:
         return self._repository.create(db, attraction)
 
     def update_attraction(
-        self, db: Session, id: int, updated_attraction: AttractionSchema
+        self, db: Session, attraction_id: int, updated_attraction: AttractionSchema
     ):
-        attraction = self.get_attraction_by_id(db, id)
+        attraction = self.get_attraction_by_id(db, attraction_id)
         if attraction is None:
             return False
         return self._repository.update(db, attraction, updated_attraction)

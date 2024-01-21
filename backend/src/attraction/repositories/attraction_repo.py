@@ -5,13 +5,13 @@ from src.attraction.models import Attraction
 from src.attraction.schemas import AttractionSchema
 
 
-class SQLAlchemyRepository(Repository):
+class AttractionRepository(Repository):
     def get_all(self, db: Session) -> list[Attraction]:
         attractions = db.query(Attraction).all()
         return attractions
 
-    def get_by_id(self, db: Session, id: int):
-        attraction = db.query(Attraction).filter(Attraction.id == id).first()
+    def get_by_id(self, db: Session, attraction_id: int):
+        attraction = db.query(Attraction).filter(Attraction.id == attraction_id).first()
         return attraction
 
     def create(self, db: Session, attraction: AttractionSchema):
@@ -30,26 +30,26 @@ class SQLAlchemyRepository(Repository):
         return False
 
     def update(
-        self, db: Session, db_item: Attraction, updatedItem: AttractionSchema
+        self, db: Session, db_attraction: Attraction, updated_attraction: AttractionSchema
     ) -> Attraction:
         try:
             # we using begin_nested, because we already used session to get db_item
             with db.begin_nested():
-                update_data = updatedItem.model_dump(exclude_unset=True)
+                update_data = updated_attraction.model_dump(exclude_unset=True)
                 for key, value in update_data.items():
-                    setattr(db_item, key, value)
+                    setattr(db_attraction, key, value)
 
-                db.add(db_item)
+                db.add(db_attraction)
                 db.commit()
-            return db_item
+            return db_attraction
         except Exception as e:
             print(f"Error during update: {e}")
             return False  # For now I will return False
 
-    def delete(self, db: Session, item: Attraction):
+    def delete(self, db: Session, attraction: Attraction):
         try:
             with db.begin_nested():
-                db.delete(item)
+                db.delete(attraction)
                 db.commit()
             return True
         except Exception as e:
