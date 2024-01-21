@@ -1,10 +1,14 @@
+import logging
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+
+from src.attraction.repositories.sqlalchemy_repository import SQLAlchemyRepository
 from src.attraction.schemas import AttractionSchema
 from src.attraction.services.attraction_service import AttractionService
-from src.attraction.repositories.sqlalchemy_repository import SQLAlchemyRepository
-from src.database import get_db
+from src.core.database import get_db
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 in_memory_repo = SQLAlchemyRepository()
 _attraction_service = AttractionService(in_memory_repo)
@@ -35,5 +39,5 @@ def update_attraction(
 
 
 @router.delete("/{attraction_id}/delete")
-def delete_attraction(attraction_id: str, db: Session = Depends(get_db)):
+def delete_attraction(attraction_id: int, db: Session = Depends(get_db)):
     return _attraction_service.delete_attraction(db, attraction_id)
