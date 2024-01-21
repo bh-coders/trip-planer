@@ -22,6 +22,7 @@ class AttractionRepository(Repository):
                     description=attraction.description,
                     longitude=attraction.longitude,
                     latitude=attraction.latitude,
+                    open_hours=attraction.open_hours
                 )
                 db.add(new_attraction)
             return True
@@ -30,7 +31,7 @@ class AttractionRepository(Repository):
         return False
 
     def update(
-        self, db: Session, db_attraction: Attraction, updated_attraction: AttractionSchema
+            self, db: Session, db_attraction: Attraction, updated_attraction: AttractionSchema
     ) -> Attraction:
         try:
             # we using begin_nested, because we already used session to get db_item
