@@ -6,9 +6,9 @@ const { width } = Dimensions.get('window');
 
 const AttractionsSlider = () => {
   const attractions = [
-    { id: '1', title: 'Atrakcja1' },
-    { id: '2', title: 'Atrakcja2' },
-    { id: '3', title: 'Atrakcja3' },
+    { id: '1', title: 'Placeholder 1' },
+    { id: '2', title: 'Placeholder 2' },
+    { id: '3', title: 'Placeholder 3' },
   ];
   console.log('WIDTH', width);
   const renderAttraction = ({ item }: any) => (

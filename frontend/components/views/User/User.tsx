@@ -38,7 +38,7 @@ const User = ({ navigation }: any) => {
       </View>
 
       <View style={styles.attractionsSection}>
-        <Text style={styles.sectionTitle}>Ostatnio dodane atrakcje</Text>
+        <Text style={styles.sectionTitle}>Recently Added Attractions</Text>
         <AttractionsSlider />
       </View>
     </ScrollView>
