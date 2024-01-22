@@ -10,6 +10,8 @@ import SignIn from './components/views/Auth/SignIn/SignIn';
 import User from './components/views/User/User';
 import Footer from './components/views/common/Footer';
 import { AuthProvider } from './contexts/AuthContext';
+import ChangePassword from './components/views/User/ChangePassword';
+import ChangeEmail from './components/views/User/ChangeEmail';
 const Drawer = createDrawerNavigator();
 
 function App(): React.JSX.Element {
@@ -28,9 +30,19 @@ function App(): React.JSX.Element {
         <NavigationContainer>
           <Drawer.Navigator initialRouteName="Dashboard">
             <Drawer.Screen name="Dashboard" component={Dashboard} />
-            {!userToken && <Drawer.Screen name="Register" component={Register} />}
-            {!userToken && <Drawer.Screen name="Sign In" component={SignIn} />}
-            {!userToken && <Drawer.Screen name="User" component={User} />}
+            <Drawer.Screen name="Register" component={Register} />
+            <Drawer.Screen name="Sign In" component={SignIn} />
+            <Drawer.Screen name="User" component={User} />
+            <Drawer.Screen
+              name="Change Password"
+              component={ChangePassword}
+              options={{ drawerItemStyle: { display: 'none' } }}
+            />
+            <Drawer.Screen
+              name="Change Email"
+              component={ChangeEmail}
+              options={{ drawerItemStyle: { display: 'none' } }}
+            />
           </Drawer.Navigator>
         </NavigationContainer>
         <Footer />

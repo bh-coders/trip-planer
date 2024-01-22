@@ -4,9 +4,9 @@ import { makeGetMessage } from './api/apiService';
 import { UserCredentials } from './types';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { styles } from './styles';
-import AttractionsSlider from './AttractionSlider';
-import SettingsModal from './SettingModal';
-const User = () => {
+import AttractionsSlider from './components/AttractionSlider';
+import SettingsModal from './components/SettingModal';
+const User = ({ navigation }: any) => {
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [userCredentials, setUserCredentials] = useState<UserCredentials | null>(null);
   const { userToken } = useContext(AuthContext);
@@ -22,11 +22,12 @@ const User = () => {
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity style={styles.settingsButton} onPress={() => setSettingsModalVisible(true)}>
-        <Text style={styles.settingsButtonText}>Ustawienia</Text>
+        <Text style={styles.settingsButtonText}>Settings</Text>
       </TouchableOpacity>
       <SettingsModal
         isVisible={settingsModalVisible}
         setSettingsModalVisible={setSettingsModalVisible}
+        navigation={navigation}
       />
       <View style={styles.userSection}>
         {/* Avatar użytkownika */}

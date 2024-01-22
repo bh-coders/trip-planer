@@ -8,11 +8,6 @@ const SignInForm: FC<SignInFormProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = () => {
-    // Implement your login logic here
-    onLogin(username, password);
-  };
-
   return (
     <View style={styles.container}>
       <TextInput

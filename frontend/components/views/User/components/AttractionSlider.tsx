@@ -10,7 +10,7 @@ const AttractionsSlider = () => {
     { id: '2', title: 'Atrakcja2' },
     { id: '3', title: 'Atrakcja3' },
   ];
-
+  console.log('WIDTH', width);
   const renderAttraction = ({ item }: any) => (
     <View style={styles.slide}>
       <Text style={styles.slideText}>{item.title}</Text>
@@ -23,7 +23,7 @@ const AttractionsSlider = () => {
       renderItem={renderAttraction}
       keyExtractor={(item) => item.id}
       horizontal
-      showsHorizontalScrollIndicator={false}
+      showsHorizontalScrollIndicator={true}
       pagingEnabled
       style={styles.slider}
     />
@@ -37,8 +37,13 @@ const styles = StyleSheet.create({
   },
   slide: {
     width: width,
+    height: width * 0.7,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 25,
+    borderRadius: 20,
   },
   slideText: {
     fontSize: 24,

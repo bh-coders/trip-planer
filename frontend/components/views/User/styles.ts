@@ -76,12 +76,7 @@ export const modalStyles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
+
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
@@ -90,5 +85,39 @@ export const modalStyles = StyleSheet.create({
   settingsButtonText: {
     color: 'black',
     fontSize: 14,
+  },
+  settingsButton: {
+    backgroundColor: '#20B2AA',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 10,
+    width: 200,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 10,
+    width: 150,
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export const formStyles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  input: {
+    height: 40,
+    marginBottom: 10,
+    borderWidth: 1,
+    padding: 10,
   },
 });

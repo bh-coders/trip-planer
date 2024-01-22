@@ -5,7 +5,7 @@
 export const makePostMessage = async (body: any, fetchMethod: string, address: string) => {
   console.log('Fetch post ', body, fetchMethod, address);
   try {
-    const response = await fetch(`auth/${address}`, {
+    const response = await fetch(`user/${address}`, {
       method: `${fetchMethod}`,
       headers: {
         'Content-Type': 'application/json',

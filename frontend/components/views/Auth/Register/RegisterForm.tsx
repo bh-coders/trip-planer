@@ -42,7 +42,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ onRegister }) => {
         onChangeText={setRePassword}
         secureTextEntry
       />
-      <Button title="Register" onPress={handleSubmit} />
+      <Button title="Change Email" onPress={handleSubmit} />
     </View>
   );
 };
