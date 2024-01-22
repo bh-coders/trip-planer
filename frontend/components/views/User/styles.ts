@@ -119,6 +119,5 @@ export const formStyles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 1,
     padding: 10,
-    borderRadius: 15,
   },
 });
