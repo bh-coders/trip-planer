@@ -43,8 +43,3 @@ def update_attraction(
 @router.delete("/{attraction_id}/delete")
 def delete_attraction(attraction_id: int, db: Session = Depends(get_db)):
     return _attraction_service.delete_attraction(db, attraction_id)
-
-
-@router.get("/protected-endpoint/")
-async def protected_endpoint(is_token_valid: bool = Depends(verify_jwt)):
-    return {"message": "Protected data"}
