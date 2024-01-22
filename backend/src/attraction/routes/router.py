@@ -1,8 +1,6 @@
 import logging
-
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from starlette import status
 
 from src.attraction.repositories.attraction_repo import AttractionRepository
 from src.attraction.schemas import AttractionSchema
@@ -17,17 +15,25 @@ _attraction_service = AttractionService(AttractionRepository())
 
 
 @router.get("/all")
-def get_all_attractions(db: Session = Depends(get_db)):
+def get_all_attractions(db: Session = Depends(get_db), is_token_valid: bool = Depends(verify_jwt)):
     return _attraction_service.get_all_attractions(db)
 
 
 @router.get("/{attraction_id}")
-def get_attraction_by_id(attraction_id: int, db: Session = Depends(get_db)):
+def get_attraction_by_id(
+        attraction_id: int,
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
+):
     return _attraction_service.get_attraction_by_id(db, attraction_id)
 
 
 @router.post("/create")
-def create_attraction(attraction: AttractionSchema, db: Session = Depends(get_db)):
+def create_attraction(
+        attraction: AttractionSchema,
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
+):
     return _attraction_service.create_attraction(db, attraction)
 
 
@@ -36,10 +42,15 @@ def update_attraction(
     attraction_id: int,
     updated_attraction: AttractionSchema,
     db: Session = Depends(get_db),
+    is_token_valid: bool = Depends(verify_jwt),
 ):
     return _attraction_service.update_attraction(db, attraction_id, updated_attraction)
 
 
 @router.delete("/{attraction_id}/delete")
-def delete_attraction(attraction_id: int, db: Session = Depends(get_db)):
+def delete_attraction(
+        attraction_id: int,
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
+):
     return _attraction_service.delete_attraction(db, attraction_id)
