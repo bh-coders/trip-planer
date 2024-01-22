@@ -35,10 +35,6 @@ const AttractionsSlider = ({ attractions }: AttractionsSliderProps) => {
     />
   );
 };
-
-// Styl dla
-
-// Styl dla komponentu
 const styles = StyleSheet.create({
   slider: {
     flexGrow: 0,

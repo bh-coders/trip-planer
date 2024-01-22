@@ -12,6 +12,7 @@ import Footer from './components/views/common/Footer';
 import { AuthProvider } from './contexts/AuthContext';
 import ChangePassword from './components/views/User/ChangePassword';
 import ChangeEmail from './components/views/User/ChangeEmail';
+import DeleteAccount from './components/views/User/DeleteUser';
 const Drawer = createDrawerNavigator();
 
 function App(): React.JSX.Element {
@@ -41,6 +42,11 @@ function App(): React.JSX.Element {
             <Drawer.Screen
               name="Change Email"
               component={ChangeEmail}
+              options={{ drawerItemStyle: { display: 'none' } }}
+            />
+            <Drawer.Screen
+              name="Delete Account"
+              component={DeleteAccount}
               options={{ drawerItemStyle: { display: 'none' } }}
             />
           </Drawer.Navigator>

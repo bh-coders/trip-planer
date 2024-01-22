@@ -45,3 +45,20 @@ export const makeGetMessage = async (token: string) => {
     throw error;
   }
 };
+
+export const makeDeleteMessage = async (address: string, token: string) => {
+  try {
+    const response = await fetch(`user/${address}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer: ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error', error);
+    throw error;
+  }
+};

@@ -1,4 +1,6 @@
 export type UserCredentials = {
+  firstName: string;
+  lastName: string;
   username: string;
   email: string;
   attractions: Attraction[];

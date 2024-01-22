@@ -42,6 +42,11 @@ const SettingsModal: FC<SettingsModalProps> = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={modalStyles.settingsButton}
+            onPress={() => handleNavigationToModal('Delete Account')}>
+            <Text style={modalStyles.textStyle}>Delete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={modalStyles.settingsButton}
             onPress={() => setSettingsModalVisible(false)}>
             <Text style={modalStyles.textStyle}>My Attractions</Text>
           </TouchableOpacity>
