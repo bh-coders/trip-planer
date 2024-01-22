@@ -10,7 +10,7 @@ from src.auth.utils import hash_password, check_password, return_token
 
 
 class AuthRepository(Repository):
-    def register(self, db: Session, user: UserSchema) -> dict:
+    def register(self, user: UserSchema, db: Session) -> dict:
         try:
             with db.begin():
                 new_user = User(
@@ -20,16 +20,16 @@ class AuthRepository(Repository):
                 )
                 db.add(new_user)
 
-                return return_token(new_user)
+            return return_token(new_user.username, new_user.id)
 
         except Exception as e:
             print(f"Error during user creation: {e}")
             return False
 
 
-    def sign_in(self, db, sign_in_user: SignInSchema) -> dict:
+    def sign_in(self, sign_in_user: SignInSchema, db: Session) -> dict:
         user = db.query(User).filter_by(username=sign_in_user.username).first()
         if user and check_password(sign_in_user.password, user.password):
-            return return_token(user)
+            return return_token(user.username, user.id)
 
         raise HTTPException(status_code=401, detail="Invalid credentials")

@@ -8,8 +8,8 @@ class AuthService:
     def __init__(self, repository: Repository):
         self._repository = repository
 
-    def register_user(self, db: Session, user: UserSchema):
-        return self._repository.register(db, user)
+    def register_user(self, user: UserSchema, db: Session):
+        return self._repository.register(user, db)
 
-    def sign_in_user(self, db: Session, sign_in_user: SignInSchema):
-        return self._repository.sign_in(db, sign_in_user)
+    def sign_in_user(self, sign_in_user: SignInSchema, db: Session):
+        return self._repository.sign_in(sign_in_user, db)

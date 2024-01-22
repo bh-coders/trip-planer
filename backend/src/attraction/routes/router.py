@@ -1,12 +1,14 @@
 import logging
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from starlette import status
 
 from src.attraction.repositories.attraction_repo import AttractionRepository
 from src.attraction.schemas import AttractionSchema
 from src.attraction.services.attraction_service import AttractionService
 from src.core.database import get_db
+from src.core.interceptors.auth_interceptor import verify_jwt
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -41,3 +43,8 @@ def update_attraction(
 @router.delete("/{attraction_id}/delete")
 def delete_attraction(attraction_id: int, db: Session = Depends(get_db)):
     return _attraction_service.delete_attraction(db, attraction_id)
+
+
+@router.get("/protected-endpoint/")
+async def protected_endpoint(is_token_valid: bool = Depends(verify_jwt)):
+    return {"message": "Protected data"}
