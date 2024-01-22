@@ -1,27 +1,33 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native';
+import { Attraction } from '../types';
 
-// Szerokość ekranu
 const { width } = Dimensions.get('window');
 
-const AttractionsSlider = () => {
-  const attractions = [
-    { id: '1', title: 'Placeholder 1' },
-    { id: '2', title: 'Placeholder 2' },
-    { id: '3', title: 'Placeholder 3' },
+type AttractionsSliderProps = {
+  attractions: Attraction[] | undefined;
+};
+
+const AttractionsSlider = ({ attractions }: AttractionsSliderProps) => {
+  const attractionsPlaceholder: Attraction[] = [
+    { id: 1, name: 'Placeholder 1' },
+    { id: 2, name: 'Placeholder 2' },
+    { id: 3, name: 'Placeholder 3' },
   ];
+
   console.log('WIDTH', width);
-  const renderAttraction = ({ item }: any) => (
+
+  const renderAttraction = ({ item }: { item: Attraction }) => (
     <View style={styles.slide}>
-      <Text style={styles.slideText}>{item.title}</Text>
+      <Text style={styles.slideText}>{item.name}</Text>
     </View>
   );
 
   return (
     <FlatList
-      data={attractions}
+      data={attractions || attractionsPlaceholder}
       renderItem={renderAttraction}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.id.toString()}
       horizontal
       showsHorizontalScrollIndicator={true}
       pagingEnabled
@@ -29,6 +35,8 @@ const AttractionsSlider = () => {
     />
   );
 };
+
+// Styl dla
 
 // Styl dla komponentu
 const styles = StyleSheet.create({

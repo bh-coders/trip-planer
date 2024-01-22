@@ -1,10 +1,11 @@
 import React, { useState, FC } from 'react';
 import { View, TextInput, Button } from 'react-native';
 import { formStyles } from '../styles';
+import { NavigationProp } from '@react-navigation/native';
 
 type ChangeEmailFormProps = {
   onEmailChange: (newEmail: string, oldEmail: string, password: string) => void;
-  navigation: any;
+  navigation: NavigationProp<any>;
 };
 
 const ChangeEmailForm: FC<ChangeEmailFormProps> = ({ onEmailChange, navigation }) => {

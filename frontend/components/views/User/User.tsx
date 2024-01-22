@@ -28,9 +28,10 @@ const User = ({ navigation }: any) => {
         isVisible={settingsModalVisible}
         setSettingsModalVisible={setSettingsModalVisible}
         navigation={navigation}
+        userToken={userToken}
       />
       <View style={styles.userSection}>
-        {/* Avatar użytkownika */}
+        {/* Avatar */}
         <Image source={{ uri: userCredentials?.avatar }} style={styles.avatar} />
         {''}
         <Text style={styles.username}>Username</Text>
@@ -39,7 +40,7 @@ const User = ({ navigation }: any) => {
 
       <View style={styles.attractionsSection}>
         <Text style={styles.sectionTitle}>Recently Added Attractions</Text>
-        <AttractionsSlider />
+        <AttractionsSlider attractions={userCredentials?.attractions} />
       </View>
     </ScrollView>
   );
