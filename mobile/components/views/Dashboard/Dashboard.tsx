@@ -1,6 +1,6 @@
 import React from 'react';
-import {View} from 'react-native';
-import {styles} from './styles';
+import { View } from 'react-native';
+import { styles } from './styles';
 import Mapbox from '@rnmapbox/maps';
 import Config from 'react-native-config';
 
