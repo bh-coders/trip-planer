@@ -88,3 +88,20 @@ To start, run the following command:
 npm start
 ```
 Then, choose the desired option from the Expo menu.
+
+If cannot find android SDK
+```bash
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+If you have error with local.properties:
+
+android/local.properties
+```bash
+
+sdk.dir = /Users/<your_name>/Library/Android/sdk
+```
+
+
