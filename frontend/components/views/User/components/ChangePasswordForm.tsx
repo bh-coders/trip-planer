@@ -1,9 +1,10 @@
 import React, { useState, FC } from 'react';
 import { View, TextInput, Button } from 'react-native';
 import { formStyles } from '../styles';
+import { NavigationProp } from '@react-navigation/native';
 type ChangePasswordProps = {
   onPasswordChange: (password: string, newPassword: string) => Promise<void>;
-  navigation: any;
+  navigation: NavigationProp<any>;
 };
 const PasswordChangeForm: FC<ChangePasswordProps> = ({ onPasswordChange, navigation }) => {
   const [newPassword, setNewPassword] = useState('');

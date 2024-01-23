@@ -1,10 +1,24 @@
 import { Modal, Text, View, TouchableOpacity } from 'react-native';
 import { modalStyles } from '../styles';
+import React, { FC } from 'react';
+import { NavigationProp } from '@react-navigation/native';
 
-const SettingsModal = ({ isVisible, setSettingsModalVisible, navigation }: any) => {
+type SettingsModalProps = {
+  isVisible: boolean;
+  setSettingsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  navigation: NavigationProp<any>;
+  userToken: string | null;
+};
+
+const SettingsModal: FC<SettingsModalProps> = ({
+  isVisible,
+  setSettingsModalVisible,
+  navigation,
+  userToken,
+}) => {
   const handleNavigationToModal = (modalName: string) => {
     setSettingsModalVisible(false);
-    navigation.navigate(modalName);
+    navigation.navigate(modalName, { userToken });
   };
 
   return (
@@ -25,6 +39,11 @@ const SettingsModal = ({ isVisible, setSettingsModalVisible, navigation }: any) 
             style={modalStyles.settingsButton}
             onPress={() => handleNavigationToModal('Change Password')}>
             <Text style={modalStyles.textStyle}>Change Password</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={modalStyles.settingsButton}
+            onPress={() => handleNavigationToModal('Delete Account')}>
+            <Text style={modalStyles.textStyle}>Delete</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={modalStyles.settingsButton}

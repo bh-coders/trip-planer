@@ -1,4 +1,6 @@
 export type UserCredentials = {
+  firstName: string;
+  lastName: string;
   username: string;
   email: string;
   attractions: Attraction[];
@@ -6,8 +8,9 @@ export type UserCredentials = {
 };
 
 export type Attraction = {
+  id: number;
   name: string;
-  openingHours: { [key: string]: { [key: string]: string } };
+  openingHours?: { [key: string]: { [key: string]: string } };
 };
 
 export type Token = {

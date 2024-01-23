@@ -1,13 +1,23 @@
 // ChangeEmail.tsx
-import React from 'react';
+import React, { FC } from 'react';
 import { View, Alert } from 'react-native';
 import ChangeEmailForm from './components/ChangeEmailForm';
 import { makePostMessage } from './api/apiService';
+import { NavigationProp } from '@react-navigation/native';
 
-const ChangeEmail = ({ navigation }: any) => {
+type ChangeEmailProps = {
+  navigation: NavigationProp<any>;
+  userToken: string;
+};
+const ChangeEmail: FC<ChangeEmailProps> = ({ navigation, userToken }: any) => {
   const onEmailChange = async (currentEmail: string, newEmail: string, password: string) => {
     try {
-      await makePostMessage({ currentEmail, newEmail, password }, 'change-email', 'PATCH');
+      await makePostMessage(
+        { currentEmail, newEmail, password },
+        'change-email',
+        'PATCH',
+        userToken,
+      );
 
       navigation.navigate('User');
     } catch (error) {
