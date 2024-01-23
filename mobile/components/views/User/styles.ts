@@ -96,6 +96,7 @@ export const modalStyles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    margin: 10,
   },
   buttonClose: {
     backgroundColor: '#2196F3',
@@ -107,6 +108,11 @@ export const modalStyles = StyleSheet.create({
     height: 45,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  questionText: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
 
