@@ -1,31 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {View} from 'react-native';
-import {getToken} from './components/utils/tokenUtils';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { View } from 'react-native';
 import styles from './Styles';
 import Dashboard from './components/views/Dashboard/Dashboard';
 import Register from './components/views/Auth/Register/Register';
 import SignIn from './components/views/Auth/SignIn/SignIn';
 import User from './components/views/User/User';
 import Footer from './components/views/common/Footer';
-import {AuthProvider} from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 import ChangePassword from './components/views/User/ChangePassword';
 import ChangeEmail from './components/views/User/ChangeEmail';
 import DeleteAccount from './components/views/User/DeleteUser';
-
 const Drawer = createDrawerNavigator();
 
 function App(): React.JSX.Element {
-  const [userToken, setUserToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchToken = async () => {
-      const token = await getToken();
-      setUserToken(token);
-    };
-    fetchToken();
-  }, []);
   return (
     <AuthProvider>
       <View style={styles.container}>
@@ -38,17 +27,17 @@ function App(): React.JSX.Element {
             <Drawer.Screen
               name="Change Password"
               component={ChangePassword}
-              options={{drawerItemStyle: {display: 'none'}}}
+              options={{ drawerItemStyle: { display: 'none' } }}
             />
             <Drawer.Screen
               name="Change Email"
               component={ChangeEmail}
-              options={{drawerItemStyle: {display: 'none'}}}
+              options={{ drawerItemStyle: { display: 'none' } }}
             />
             <Drawer.Screen
               name="Delete Account"
               component={DeleteAccount}
-              options={{drawerItemStyle: {display: 'none'}}}
+              options={{ drawerItemStyle: { display: 'none' } }}
             />
           </Drawer.Navigator>
         </NavigationContainer>
