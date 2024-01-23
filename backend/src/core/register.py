@@ -2,9 +2,10 @@ from fastapi import FastAPI
 
 from src.attraction.routes.router import router as attraction_router
 from src.auth.routes.router import router as auth_router
-from src.core.logger import LoggerSetup
 from src.core.database import Base, engine
+from src.core.logger import LoggerSetup
 from src.middleware.log_middleware import LoggingMiddleware
+from src.users.routes import user_router
 
 
 def _init_app(version: str) -> FastAPI:
@@ -37,6 +38,7 @@ def register_middleware(app: FastAPI):
 def register_router(app: FastAPI):
     app.include_router(attraction_router, prefix="/attractions")
     app.include_router(auth_router, prefix="/auth")
+    app.include_router(user_router, prefix="/me", tags=["users"])
 
 
 def register_logger() -> LoggerSetup:
