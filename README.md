@@ -72,7 +72,6 @@ To run the frontend in a developer environment, you should install the following
 **For web:**
 - Node.js (Specify the version according to your OS)
 - React Native: `npm install react-native`
-- Expo: `npm install expo`
 
 **For Android:**
 All the requirements mentioned for the web, and additionally:

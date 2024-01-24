@@ -19,7 +19,8 @@ const DeleteAccount: FC<DeleteAccountProps> = ({ navigation, userToken }) => {
   };
 
   return (
-    <View>
+    <View style={modalStyles.centeredView}>
+      <Text style={modalStyles.questionText}>Do you really want to delete this account?</Text>
       <TouchableOpacity style={modalStyles.settingsButton} onPress={onDeleteAccount}>
         <Text style={modalStyles.textStyle}>Yes</Text>
       </TouchableOpacity>
