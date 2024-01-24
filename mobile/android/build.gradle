@@ -1,6 +1,12 @@
 def envFile = project.rootProject.file('../.env')
 def Properties envVariables
+<<<<<<< HEAD
 if (envFile.exists()) {
+=======
+println "$envFile"
+if (envFile.exists()) {
+    println "Reading env from: $envFile"
+>>>>>>> 871629e (30-frontend-fix_build_gradle_for_mapbox_download_token)
     envVariables = new Properties()
     envFile.withInputStream { stream ->
         envVariables.load(stream)
@@ -40,6 +46,10 @@ allprojects {
                 username = 'mapbox'
                 // Use the secret token you stored in gradle.properties as the password
                 password = project.ext.has('MAPBOX_DOWNLOADS_TOKEN') ? project.ext.get('MAPBOX_DOWNLOADS_TOKEN') : envVariables.getProperty('MAPBOX_SECRET_TOKEN')
+<<<<<<< HEAD
+=======
+                println "Password: $password"
+>>>>>>> 871629e (30-frontend-fix_build_gradle_for_mapbox_download_token)
             }
         }
     }
