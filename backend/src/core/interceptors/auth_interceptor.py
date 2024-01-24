@@ -3,9 +3,10 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from starlette import status
 
-from src.core.configs import SECRET_KEY, ALGORITHM
+from src.core.configs import ALGORITHM, SECRET_KEY
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 def verify_jwt(token: str = Depends(oauth2_scheme)) -> bool:
     try:
@@ -17,4 +18,6 @@ def verify_jwt(token: str = Depends(oauth2_scheme)) -> bool:
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=403, detail="Invalid token")
     except jwt.PyJWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
+        )

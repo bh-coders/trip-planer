@@ -10,4 +10,3 @@ class UserSchema(BaseModel):
 class SignInSchema(BaseModel):
     username: str
     password: str
-
