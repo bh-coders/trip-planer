@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native';
 import StarRating from 'react-native-star-rating';
 
-const AddNew = () => {
+const AddNewAttraction = () => {
   const [coordinates, setCoordinates] = useState('');
   const [description, setDescription] = useState('');
   const [rating, setRating] = useState(0);
@@ -54,4 +54,4 @@ const AddNew = () => {
   );
 };
 
-export default AddNew;
+export default AddNewAttraction;

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { styles } from './styles';
 
-const Search = () => {
+const SearchAttractions = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.errorText}>Searcher not ready</Text>
@@ -10,4 +10,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default SearchAttractions;
