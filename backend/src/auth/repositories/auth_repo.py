@@ -3,10 +3,8 @@ from sqlalchemy.orm import Session
 
 from src.auth.interfaces.repository import Repository
 from src.auth.models import User
-from src.auth.schemas import UserSchema, SignInSchema
-from src.auth.utils import hash_password, check_password, return_token
-
-
+from src.auth.schemas import SignInSchema, UserSchema
+from src.auth.utils import check_password, hash_password, return_token
 
 
 class AuthRepository(Repository):
@@ -25,7 +23,6 @@ class AuthRepository(Repository):
         except Exception as e:
             print(f"Error during user creation: {e}")
             return False
-
 
     def sign_in(self, sign_in_user: SignInSchema, db: Session) -> dict:
         user = db.query(User).filter_by(username=sign_in_user.username).first()
