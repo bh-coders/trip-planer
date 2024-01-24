@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native';
 import StarRating from 'react-native-star-rating';
+<<<<<<< HEAD
 import OpeningHoursModal from './OpeningHour';
 import mapArrayToJson from '../tools/openingHourMapper';
 
@@ -27,15 +28,31 @@ const AddNewAttraction = () => {
       rating: rating
     };
     return attractionData;
+=======
+
+const AddNewAttraction = () => {
+  const [coordinates, setCoordinates] = useState('');
+  const [description, setDescription] = useState('');
+  const [rating, setRating] = useState(0);
+
+  const handleOpenHoursPress = () => {
+    // Napisz logikę do przeniesienia do ekranu formularza godzin otwarcia
+    console.log('Przejdź do formularza godzin otwarcia');
+>>>>>>> d7ffab7 (30-frontend-move_attractions_views_to_wo_expo)
   };
 
   const handleAddAttractionPress = () => {
     // Napisz logikę do dodania atrakcji (np. wysłanie danych na serwer)
+<<<<<<< HEAD
     console.log(createAttractionJson());
+=======
+    console.log('Dodaj atrakcję', coordinates, description, rating);
+>>>>>>> d7ffab7 (30-frontend-move_attractions_views_to_wo_expo)
   };
 
   return (
     <View style={{ padding: 16 }}>
+<<<<<<< HEAD
       <Text>Name:</Text>
       <TextInput
         style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 16 }}
@@ -44,6 +61,8 @@ const AddNewAttraction = () => {
         onChangeText={(text) => setName(text)}
       />
 
+=======
+>>>>>>> d7ffab7 (30-frontend-move_attractions_views_to_wo_expo)
       <Text>Coordinates:</Text>
       <TextInput
         style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 16 }}
@@ -61,6 +80,7 @@ const AddNewAttraction = () => {
         multiline
       />
 
+<<<<<<< HEAD
       <Button title="Set Opening Hours" onPress={() => setModalVisible(true)} />
       <OpeningHoursModal
         initialOpeningHours={openingHours}
@@ -86,6 +106,22 @@ const AddNewAttraction = () => {
       <View style={{ padding: 20, borderRadius: 10, marginTop: 50, alignItems: 'flex-end' }}>
         <Button title="Save" color={'green'} onPress={handleAddAttractionPress} />
       </View>
+=======
+      <TouchableOpacity onPress={handleOpenHoursPress}>
+        <Text style={{ color: 'blue', marginBottom: 16 }}>Formularz godzin otwarcia</Text>
+      </TouchableOpacity>
+
+      <Text>Attraction rate:</Text>
+      <StarRating
+        disabled={false}
+        maxStars={5}
+        rating={rating}
+        selectedStar={(rating) => setRating(rating)}
+        fullStarColor={'orange'}
+      />
+
+      <Button title="Add attraction" onPress={handleAddAttractionPress} />
+>>>>>>> d7ffab7 (30-frontend-move_attractions_views_to_wo_expo)
     </View>
   );
 };

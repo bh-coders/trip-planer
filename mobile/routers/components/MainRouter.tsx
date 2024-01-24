@@ -32,9 +32,6 @@ const MainRouter = () => {
               component={AddNewAttraction}
               options={{ drawerItemStyle: { display: 'none' } }}
             />
-        <Drawer.Screen name="Register" component={Register} />
-        <Drawer.Screen name="Sign In" component={SignIn} />
-        <Drawer.Screen name="My Account" component={UserDashbard} />
         {!userToken && <Drawer.Screen name="Register" component={Register} />}
         {!userToken && <Drawer.Screen name="Sign In" component={SignIn} />}
         {userToken && <Drawer.Screen name="My Account" component={UserDashbard} />}
