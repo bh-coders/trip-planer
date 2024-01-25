@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   page: {
@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    height: '100%',
+    height: '80%',
     width: '100%',
   },
   errorText: {
@@ -16,5 +16,12 @@ export const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+  searchInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    margin: 10,
   },
 });
