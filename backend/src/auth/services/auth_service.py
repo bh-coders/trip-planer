@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.auth.interfaces.repository import Repository
-from src.auth.schemas import UserSchema, SignInSchema
+from src.auth.schemas import SignInSchema, UserSchema
 
 
 class AuthService:
