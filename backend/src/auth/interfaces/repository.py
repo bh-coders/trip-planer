@@ -1,9 +1,19 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class Repository(ABC):
-    def register(self, user, db):
+    @abstractmethod
+    def get_user_by_id(self, user_id, db):
         pass
 
-    def sign_in(self, sign_in_user, db):
+    @abstractmethod
+    def authenticate(self, username, password, db):
+        pass
+
+    @abstractmethod
+    def get_user(self, username, db):
+        pass
+
+    @abstractmethod
+    def register(self, user, db):
         pass
