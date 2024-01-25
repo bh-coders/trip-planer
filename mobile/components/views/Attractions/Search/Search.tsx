@@ -1,10 +1,9 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, FlatList, TouchableOpacity, Image } from 'react-native';
 import FiltersModal from './FiltersModal';
 import { attractionsExamples, Attraction } from './api/apiMock';
 import AttractionModal from './AttractionModal';
-import AttractionTile from '../../Dashboard/components/AttractionTile';
+import AttractionTile from '../../common/AttractionTile';
 import { styles } from '../../Dashboard/styles';
 import { attractionSerchStyles } from './styles';
 
@@ -121,18 +120,3 @@ const AttractionSearchScreen: React.FC = () => {
 };
 
 export default AttractionSearchScreen;
-=======
-import React from 'react';
-import { View, Text } from 'react-native';
-import { styles } from './styles';
-
-const SearchAttractions = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.errorText}>Searcher not ready</Text>
-    </View>
-  );
-};
-
-export default SearchAttractions;
->>>>>>> d7ffab7 (30-frontend-move_attractions_views_to_wo_expo)
