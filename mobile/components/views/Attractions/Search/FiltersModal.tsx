@@ -3,18 +3,32 @@ import { Button, Modal, Text, TextInput, View } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 
 
-const FiltersModal = ({ visible, onSave, onClose, countries, cities, regions, categories }: any) => {
+const FiltersModal = ({ visible, onSave, onClose, countries, cities, regions, categories, radiuses }: any) => {
 
     const [keyword, setKeyword] = useState('');
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
     const [region, setRegion] = useState('');
     const [category, setCategory] = useState('');
+    const [radius, setRadius] = useState('10');
+
+    const [regionVisible, setRegionVisible] = useState(false);
+    const [furtherFiltersVisible, setFurtherFiltersVisible] = useState(false);
 
     const handleSearch = () => {
-        console.log(keyword, country, city, region, category);
-        
-        onSave({keyword, country, city, region, category});
+        console.log(keyword, country, city, region, category, radius);
+
+        onSave({ keyword, country, city, region, category, radius });
+    }
+
+    const handleCounrtySelected = (country) => {
+        setRegionVisible(true);
+        setCountry(country)        
+    }
+
+    const handleRegionSelected = (region) => {
+        setFurtherFiltersVisible(true);
+        setRegion(region);
     }
 
     return (
@@ -35,7 +49,7 @@ const FiltersModal = ({ visible, onSave, onClose, countries, cities, regions, ca
                     <Picker
                         selectedValue={country}
                         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                        onValueChange={(itemValue) => setCountry(itemValue)}
+                        onValueChange={(itemValue) => handleCounrtySelected(itemValue)}
                     >
                         <Picker.Item label="Select Country" value="" />
                         {countries.map((country, index) => (
@@ -45,8 +59,24 @@ const FiltersModal = ({ visible, onSave, onClose, countries, cities, regions, ca
                 </View>
 
                 <View>
+                    <Text>Region:</Text>
+                    <Picker
+                        enabled={regionVisible}
+                        selectedValue={region}
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onValueChange={(itemValue) => handleRegionSelected(itemValue)}
+                    >
+                        <Picker.Item label="Select Region" value="" />
+                        {regions.map((region, index) => (
+                            <Picker.Item key={index} label={region} value={region} />
+                        ))}
+                    </Picker>
+                </View>
+
+                <View>
                     <Text>City:</Text>
                     <Picker
+                        enabled={furtherFiltersVisible}
                         selectedValue={city}
                         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                         onValueChange={(itemValue) => setCity(itemValue)}
@@ -59,22 +89,9 @@ const FiltersModal = ({ visible, onSave, onClose, countries, cities, regions, ca
                 </View>
 
                 <View>
-                    <Text>Region:</Text>
-                    <Picker
-                        selectedValue={region}
-                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                        onValueChange={(itemValue) => setRegion(itemValue)}
-                    >
-                        <Picker.Item label="Select Region" value="" />
-                        {regions.map((region, index) => (
-                            <Picker.Item key={index} label={region} value={region} />
-                        ))}
-                    </Picker>
-                </View>
-
-                <View>
                     <Text>Category:</Text>
                     <Picker
+                        enabled={furtherFiltersVisible}
                         selectedValue={category}
                         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                         onValueChange={(itemValue) => setCategory(itemValue)}
@@ -82,6 +99,21 @@ const FiltersModal = ({ visible, onSave, onClose, countries, cities, regions, ca
                         <Picker.Item label="Select Category" value="" />
                         {categories.map((category, index) => (
                             <Picker.Item key={index} label={category} value={category} />
+                        ))}
+                    </Picker>
+                </View>
+
+                <View>
+                    <Text>Radius:</Text>
+                    <Picker
+                        enabled={furtherFiltersVisible}
+                        selectedValue={radius}
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onValueChange={(itemValue) => setRadius(itemValue)}
+                    >
+                        <Picker.Item label="Select Category" value="" />
+                        {radiuses.map((radius, index) => (
+                            <Picker.Item key={index} label={radius + " km"} value={radius} />
                         ))}
                     </Picker>
                 </View>

@@ -8,7 +8,7 @@ const AttractionSearchScreen = () => {
   const [attractions, setAttractions] = useState([]);
   const [attractionDetails, setAttractionDetails] = useState({});
   const [loading, setLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [filterModalVisible, setFilterModalVisible] = useState(true);
   const [attractionModalVisible, setAttractionModalVisible] = useState(false);
   const [filters, setFilters] = useState({});
 
@@ -16,19 +16,22 @@ const AttractionSearchScreen = () => {
   const [cities, setCities] = useState([]);
   const [regions, setRegions] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [radiuses, setRadiuses] = useState([]);
   const attractionData = attractionsExamples;
 
   useEffect(() => {
    
     const countriesData = ['Poland', 'Germany', 'France'];
     const citiesData = ['Warsaw', 'Berlin', 'Paris'];
-    const regionsData = ['Mazovia', 'Brandenburg', 'Île-de-France'];
+    const regionsData = ['Masovia', 'Brandenburg', 'Île-de-France'];
     const categoriesData = ['Park', 'Museum', 'Historical Site'];
+    const radiusData = ['5', '10', '15'];
 
     setCountries(countriesData);
     setCities(citiesData);
     setRegions(regionsData);
     setCategories(categoriesData);
+    setRadiuses(radiusData);
 
   }, []);
 
@@ -36,13 +39,13 @@ const AttractionSearchScreen = () => {
     console.log(filters);
 
     if (filters.country != "") {
-      const filtredAttractions = attractionData.filter(attraction => {
-        return (
+      const filtredAttractions = attractionData.filter(attraction => {        
+        return (          
           (filters.category === "" || attraction.category === filters.category) &&
           (filters.city === "" || attraction.city === filters.city) &&
           (filters.country === "" || attraction.country === filters.country) &&
           (filters.keyword === "" || attraction.name.toLowerCase().includes(filters.keyword.toLowerCase())) &&
-          (filters.region === "" || attraction.region === filters.region)
+          (filters.region === "" || attraction.region.toLowerCase().includes(filters.region.toLowerCase()))
         );
       });
 
@@ -53,7 +56,7 @@ const AttractionSearchScreen = () => {
   }, [filters])
 
   const handleSetFilters = (filtersProps: any) => {
-    setModalVisible(false);
+    setFilterModalVisible(false);
     setFilters(filtersProps);
   };
 
@@ -66,15 +69,16 @@ const AttractionSearchScreen = () => {
 
   return (
     <>
-      <Button title="Filters" onPress={() => setModalVisible(true)} />
+      <Button title="Filters" onPress={() => setFilterModalVisible(true)} />
       <FiltersModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        visible={filterModalVisible}
+        onClose={() => setFilterModalVisible(false)}
         onSave={handleSetFilters}
         countries={countries}
         cities={cities}
         regions={regions}
         categories={categories}
+        radiuses={radiuses}
       />
 
       <AttractionModal
