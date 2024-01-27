@@ -1,4 +1,3 @@
-from uuid import uuid4
 from sqlalchemy.orm import Session
 from src.attraction.schemas import AttractionSchema
 from src.attraction.interfaces.repository import Repository
@@ -30,3 +29,6 @@ class AttractionService:
         if attraction is None:
             return False
         return self._repository.delete(db, attraction)
+
+    def search_attraction(self, db: Session, name: str, country: str, state: str, city: str):
+        return self._repository.search(db, name, country, state, city)

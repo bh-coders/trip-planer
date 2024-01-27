@@ -7,4 +7,7 @@ class AttractionSchema(BaseModel):
     description: str
     latitude: float
     longitude: float
+    country: str
+    state: str
+    city: str
     open_hours: dict[str, dict[str, Union[int, float]]]

@@ -56,3 +56,9 @@ class AttractionRepository(Repository):
         except Exception as e:
             print(f"Error during delete: {e}")
             return False  # For now I will return False
+
+    def search(self, db: Session, name: str, country: str, state: str, city: str):
+        print(name)
+        print(country)
+        print(state)
+        print(city)

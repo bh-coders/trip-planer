@@ -19,3 +19,6 @@ class Repository(ABC):
 
     def delete(self, db, attraction):
         pass
+
+    def search(self, db, name, country, state, city):
+        pass
