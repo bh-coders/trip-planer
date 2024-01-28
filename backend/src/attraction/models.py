@@ -19,6 +19,10 @@ class Attraction(Base):
     longitude: float = Column(Float)
     latitude: float = Column(Float)
     open_hours: Optional[dict] = Column(JSON, nullable=True)
+    address: str = Column(String)
+    city: str = Column(String)
+    country: str = Column(String)
+    category: str = Column(String)
 
     profile_id: Optional[uuid.UUID] = Column(
         UUID(as_uuid=True), ForeignKey("profiles.id"), nullable=True
