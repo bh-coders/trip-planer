@@ -85,7 +85,7 @@ class CloudStorage:
 
     def list_bucket_objects(
         self, bucket_name: str, prefix: str | None = None, recursive: bool = False
-    ) -> list[Object] | None:
+    ) -> list[Object]:
         try:
             return self.client.list_objects(
                 bucket_name, prefix=prefix, recursive=recursive
