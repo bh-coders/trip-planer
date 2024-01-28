@@ -46,7 +46,7 @@ class CloudStorage:
             logger.error("Failed to connect to MinIO server: %s" % e)
             raise ConnectionError("Unable to connect to MinIO server: %s" % e)
 
-    def _check_connection(self, client: Minio) -> None:
+    def _check_connection(self, client: Minio):
         try:
             client.list_buckets()
         except S3Error as e:
@@ -60,7 +60,7 @@ class CloudStorage:
                 detail="General error when checking connection to MinIO: %s" % e,
             )
 
-    def create_bucket(self, bucket_name: str) -> None:
+    def create_bucket(self, bucket_name: str):
         try:
             if self.client.bucket_exists(bucket_name):
                 raise HTTPException(
