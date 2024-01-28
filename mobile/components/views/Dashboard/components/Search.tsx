@@ -1,27 +1,29 @@
+import React, { useState } from 'react';
+import { View, TextInput, Button, Keyboard } from 'react-native';
 import { styles } from '../styles';
-import { View, TextInput, Button, Alert, Keyboard } from 'react-native';
-import { useState } from 'react';
 import Config from 'react-native-config';
 
-const Search = ({ setLocation }: any) => {
+const Search = ({ setLocation, fetchAttractions, onSearch }: any) => {
   const [searchText, setSearchText] = useState('');
-  const handleSearch = () => {
-    const mapboxGeocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-      searchText
-    )}.json?access_token=${Config.MAPBOX_PUBLIC_TOKEN}`;
 
-    fetch(mapboxGeocodingUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        const { coordinates } = data.features[0].geometry;
-        setLocation({ latitude: coordinates[1], longitude: coordinates[0] });
+  const handleSearch = async () => {
+    try {
+      const response = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchText}.json?access_token=${Config.MAPBOX_PUBLIC_TOKEN}`
+      );
+      const data = await response.json();
+      if (data.features && data.features.length > 0) {
+        const coords = data.features[0].center;
+        setLocation({ latitude: coords[1], longitude: coords[0] });
+        fetchAttractions({ latitude: coords[1], longitude: coords[0] });
+        onSearch(searchText);
         Keyboard.dismiss();
-      })
-      .catch((error) => {
-        console.error('Error during Mapbox geocoding:', error);
-        Alert.alert('Error', 'Failed to find location');
-      });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+
   return (
     <View>
       <TextInput
@@ -34,4 +36,5 @@ const Search = ({ setLocation }: any) => {
     </View>
   );
 };
+
 export default Search;
