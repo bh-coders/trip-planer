@@ -18,13 +18,17 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         request_body = await request.body()
 
         request_content_type = request.headers.get("content-type", "")
+
         if "application/json" in request_content_type:
             try:
                 request_body_decoded = json.loads(request_body.decode())
             except json.JSONDecodeError:
                 request_body_decoded = "<invalid json>"
         elif "text" in request_content_type or "form" in request_content_type:
-            request_body_decoded = request_body.decode()
+            try:
+                request_body_decoded = request_body.decode()
+            except UnicodeDecodeError:
+                request_body_decoded = "<binary data>"
         else:
             request_body_decoded = "<binary data>"
 
