@@ -1,11 +1,17 @@
 import io
 import logging
-import os
 from mimetypes import guess_type
 from typing import BinaryIO, Union
 
 from minio import Minio, S3Error
 from minio.datatypes import Bucket, Object
+
+from src.core.configs import (
+    MINIO_ACCESS_KEY,
+    MINIO_HOST_URL,
+    MINIO_SECRET_KEY,
+    MINIO_SECURE,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -13,15 +19,16 @@ logger = logging.getLogger(__name__)
 class CloudStorage:
     def __init__(
         self,
-        api_url: str = None,
-        access_key: str = None,
-        secret_key: str = None,
-        secure: bool = None,
+        api_url: str | None,
+        access_key: str | None,
+        secret_key: str | None,
+        secure: bool | None,
     ):
-        self.url = api_url or os.getenv("MINIO_HOST_URL")
-        self.access_key = access_key or os.getenv("MINIO_ACCESS_KEY")
-        self.secret_key = secret_key or os.getenv("MINIO_SECRET_KEY")
-        self.secure: bool = secure or os.getenv("MINIO_SECURE", False) == "True"
+        self.url = api_url or MINIO_HOST_URL
+        self.access_key = access_key or MINIO_ACCESS_KEY
+        self.secret_key = secret_key or MINIO_SECRET_KEY
+        self.secure: bool = secure or MINIO_SECURE
+
         self.client = self._connect_to_cloudstorage()
 
     def _connect_to_cloudstorage(self) -> Minio:
@@ -35,17 +42,17 @@ class CloudStorage:
             self._check_connection(client)
             return client
         except Exception as e:
-            logger.error(f"Failed to connect to MinIO server: {e}")
-            raise ConnectionError(f"Unable to connect to MinIO server: {e}")
+            logger.error("Failed to connect to MinIO server: %s" % e)
+            raise ConnectionError("Unable to connect to MinIO server: %s" % e)
 
     def _check_connection(self, client: Minio) -> None:
         try:
             client.list_buckets()
         except S3Error as e:
-            logger.error(f"MinIO S3 Error: {e}")
+            logger.error("MinIO S3 Error: %s" % e)
             raise
         except Exception as e:
-            logger.error(f"General error when checking connection to MinIO: {e}")
+            logger.error("General error when checking connection to MinIO: %s" % e)
             raise
 
     def create_bucket(self, bucket_name: str) -> str:
@@ -56,7 +63,7 @@ class CloudStorage:
             else:
                 return f"Bucket '{bucket_name}' already exists."
         except S3Error as e:
-            logger.error(f"Error creating bucket: {e}")
+            logger.error("Error creating bucket: %s" % e)
             return f"Failed to create bucket '{bucket_name}': {e}"
 
     def check_bucket(self, bucket_name: str) -> bool:
@@ -66,18 +73,18 @@ class CloudStorage:
         try:
             return self.client.list_buckets()
         except S3Error as e:
-            logging.error(f"Error listing buckets: {e}")
+            logging.error("Error listing buckets: %s " % e)
             return f"Failed to list buckets: {e}"
 
     def list_bucket_objects(
-        self, bucket_name: str, prefix: str = None, recursive: bool = False
+        self, bucket_name: str, prefix: str | None, recursive: bool = False
     ) -> list[Object] | str:
         try:
             return self.client.list_objects(
                 bucket_name, prefix=prefix, recursive=recursive
             )
         except S3Error as e:
-            logger.error(f"Error listing objects in bucket '{bucket_name}': {e}")
+            logger.error("Error listing objects in bucket '%s': %s" % (bucket_name, e))
             return f"Failed to list objects in bucket '{bucket_name}': {e}"
 
     def upload_file(
@@ -86,7 +93,7 @@ class CloudStorage:
         filename: str,
         file: BinaryIO,
         file_size: int,
-        content_type: str = None,
+        content_type: str | None,
     ) -> str:
         if not self.client.bucket_exists(bucket_name):
             return f"Bucket '{bucket_name}' does not exist."
@@ -100,7 +107,8 @@ class CloudStorage:
             return f"File '{filename}' uploaded successfully to bucket '{bucket_name}'."
         except S3Error as e:
             logger.error(
-                f"Error uploading file '{filename}' to bucket '{bucket_name}': {e}"
+                "Error uploading file '%s' to bucket '%s': %s"
+                % (filename, bucket_name, e)
             )
             return f"Failed to upload file '{filename}' to bucket '{bucket_name}': {e}"
 
@@ -118,7 +126,8 @@ class CloudStorage:
 
         except S3Error as e:
             logger.error(
-                f"Error retrieving file '{filename}' from bucket '{bucket_name}': {e}"
+                "Error retrieving file '%s' from bucket '%s': %s"
+                % (filename, bucket_name, e)
             )
             return (
                 f"Failed to retrieve file '{filename}' from bucket '{bucket_name}': {e}",
