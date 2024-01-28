@@ -1,27 +1,23 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Keyboard } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Alert, Keyboard } from 'react-native';
 import { styles } from '../styles';
-import Config from 'react-native-config';
+import { fetchLocationFromMapbox } from '../api/mapboxApi';
+import { fetchAttractions } from '../api/attractionsApi';
 
-const Search = ({ setLocation, fetchAttractions, onSearch }: any) => {
-  const [searchText, setSearchText] = useState('');
-
-  const handleSearch = async () => {
-    try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchText}.json?access_token=${Config.MAPBOX_PUBLIC_TOKEN}`
-      );
-      const data = await response.json();
-      if (data.features && data.features.length > 0) {
-        const coords = data.features[0].center;
-        setLocation({ latitude: coords[1], longitude: coords[0] });
-        fetchAttractions({ latitude: coords[1], longitude: coords[0] });
-        onSearch(searchText);
-        Keyboard.dismiss();
-      }
-    } catch (error) {
-      console.error(error);
-    }
+const Search = ({ setLocation, setAttractions, setSearchText, searchText }: any) => {
+  const handleSearch = () => {
+    fetchLocationFromMapbox(searchText)
+      .then((location) => {
+        setLocation(location);
+        return fetchAttractions(searchText);
+      })
+      .then((attractions) => {
+        setAttractions(attractions);
+      })
+      .catch((error) => {
+        Alert.alert('Error', 'Failed to find location');
+      });
+    Keyboard.dismiss();
   };
 
   return (
@@ -32,7 +28,9 @@ const Search = ({ setLocation, fetchAttractions, onSearch }: any) => {
         value={searchText}
         onChangeText={setSearchText}
       />
-      <Button title="Search" onPress={handleSearch} />
+      <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+        <Text>Search</Text>
+      </TouchableOpacity>
     </View>
   );
 };
