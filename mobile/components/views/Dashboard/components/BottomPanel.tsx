@@ -51,7 +51,7 @@ const BottomPanel: React.FC<BottomPanelProps> = ({
             selectedValue={selectedCategory}
             onValueChange={(itemValue) => onCategoryChange(itemValue)}>
             <Picker.Item label="Culture" value="culture" />
-            <Picker.Item label="Wpierdalando" value="gastronomy" />
+            <Picker.Item label="Food" value="gastronomy" />
           </Picker>
         </View>
       </View>
