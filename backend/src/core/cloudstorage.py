@@ -126,7 +126,7 @@ class CloudStorage:
                 detail=f"Failed to upload file '{filename}' to bucket '{bucket_name}': {e}",
             )
 
-    def retrieve_file(self, bucket_name: str, filename: str) -> bytes | tuple[str]:
+    def retrieve_file(self, bucket_name: str, filename: str) -> bytes:
         if not self.client.bucket_exists(bucket_name):
             raise HTTPException(
                 status_code=404, detail=f"Bucket '{bucket_name}' does not exist."
