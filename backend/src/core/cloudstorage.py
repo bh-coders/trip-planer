@@ -44,7 +44,7 @@ class CloudStorage:
             return client
         except Exception as e:
             logger.error("Failed to connect to MinIO server: %s" % e)
-            raise ConnectionError("Unable to connect to MinIO server: %s" % e)
+            raise HTTPException(status_code=500, detail="Unable to connect to MinIO server: %s" % e)
 
     def _check_connection(self, client: Minio):
         try:
