@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import ChangePasswordForm from './components/ChangePasswordForm';
-import { makePostMessage } from './api/apiService';
+import { makeMessageWithBody } from './api/apiService';
 import { NavigationProp } from '@react-navigation/native';
 type ChangePasswordProps = {
   navigation: NavigationProp<any>;
@@ -10,11 +10,11 @@ type ChangePasswordProps = {
 const ChangePassword: FC<ChangePasswordProps> = ({ navigation, userToken }) => {
   const onPasswordChange = async (password: string, newPassword: string) => {
     try {
-      await makePostMessage({ password, newPassword }, 'change-password', 'PATCH', userToken);
+      await makeMessageWithBody({ password, newPassword }, 'change-password', 'PATCH', userToken);
 
-      navigation.navigate('User');
+      navigation.navigate('UserDashboard');
     } catch (error) {
-      alert(`Change Password Error: ${error}`);
+      Alert.alert(`Change Password Error: ${error}`);
     }
   };
 

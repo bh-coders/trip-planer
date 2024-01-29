@@ -1,10 +1,11 @@
 import Dashboard from '../../components/views/Dashboard/Dashboard';
 import Register from '../../components/views/Auth/Register/Register';
 import SignIn from '../../components/views/Auth/SignIn/SignIn';
-import User from '../../components/views/User/User';
+import UserDashbard from '../../components/views/User/UserDashboard';
 import ChangePassword from '../../components/views/User/ChangePassword';
 import ChangeEmail from '../../components/views/User/ChangeEmail';
 import DeleteAccount from '../../components/views/User/DeleteUser';
+import ProfileChangeDisplay from '../../components/views/User/ProfileChangeDisplay';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 const Drawer = createDrawerNavigator();
@@ -15,7 +16,7 @@ const MainRouter = () => {
         <Drawer.Screen name="Dashboard" component={Dashboard} />
         <Drawer.Screen name="Register" component={Register} />
         <Drawer.Screen name="Sign In" component={SignIn} />
-        <Drawer.Screen name="User" component={User} />
+        <Drawer.Screen name="My Account" component={UserDashbard} />
         <Drawer.Screen
           name="Change Password"
           component={ChangePassword}
@@ -29,6 +30,11 @@ const MainRouter = () => {
         <Drawer.Screen
           name="Delete Account"
           component={DeleteAccount}
+          options={{ drawerItemStyle: { display: 'none' } }}
+        />
+        <Drawer.Screen
+          name="Change Profil Informations"
+          component={ProfileChangeDisplay}
           options={{ drawerItemStyle: { display: 'none' } }}
         />
       </Drawer.Navigator>
