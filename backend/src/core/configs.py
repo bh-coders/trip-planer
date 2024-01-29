@@ -13,3 +13,6 @@ MINIO_HOST_URL = os.getenv("MINIO_HOST_URL")
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 MINIO_SECURE = os.getenv("MINIO_SECURE", False) == "True"
+
+CORS_ORIGINS_ENV = os.getenv("CORS_ORIGINS", "http://localhost:8081")
+CORS_ORIGINS = CORS_ORIGINS_ENV.split(',')
