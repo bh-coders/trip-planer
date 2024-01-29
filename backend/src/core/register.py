@@ -1,7 +1,9 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.attraction.routes.router import router as attraction_router
 from src.auth.routes.router import router as auth_router
+from src.core.configs import CORS_ORIGINS
 from src.core.database import Base, engine
 from src.core.logger import LoggerSetup
 from src.middleware.log_middleware import LoggingMiddleware
@@ -32,6 +34,13 @@ def register_app():
 
 def register_middleware(app: FastAPI):
     app.add_middleware(LoggingMiddleware)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=CORS_ORIGINS,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 
 def register_router(app: FastAPI):

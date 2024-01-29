@@ -11,7 +11,7 @@ function App(): React.JSX.Element {
     <AuthProvider>
       <View style={styles.container}>
         <Router />
-        <Footer />
+        {/* <Footer /> */}
       </View>
     </AuthProvider>
   );
