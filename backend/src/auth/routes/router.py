@@ -1,58 +1,49 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import ValidationError
+from typing import Annotated
+
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from src.auth.repositories.auth_repo import AuthRepository
+from src.auth.repositories import AuthRepository
 from src.auth.schemas import (
-    RegisterRequest,
+    GetToken,
+    GetUser,
+    LoginResponse,
+    RefreshTokenResponse,
     RegisterResponse,
-    SignInRequest,
-    SignInResponse,
+    UserCreate,
 )
 from src.auth.services import AuthService
 from src.core.database import get_db
+from src.core.exceptions import NotAuthenticated
 from src.core.interceptors.auth_interceptor import verify_jwt
-from src.route.schemas import Message, Response404, Response500
 
 router = APIRouter()
-_auth_service = AuthService(AuthRepository())
+auth_repository = AuthRepository()
+auth_service = AuthService(repository=auth_repository)
 
 
 @router.post(
     "/register",
     response_model=RegisterResponse,
-    status_code=201,
-    responses={
-        400: {"model": Message, "example": {"detail": "User already exists"}},
-        404: {"model": Response404},
-        500: {"model": Response500},
-    },
 )
-def register_user(
-    user: RegisterRequest,
-    db: Session = Depends(get_db),
+def register_view(
+    user: UserCreate,
+    db: Annotated[Session, Depends(get_db)],
 ):
-    try:
-        return _auth_service.register_user(user, db)
-    except ValidationError as e:
-        raise HTTPException(status_code=400, detail=e.errors())
+    return auth_service.register(user=user, db=db)
 
 
-@router.post("/sign-in", response_model=SignInResponse)
-def sign_in_user(
-    signin_user: SignInRequest,
-    db: Session = Depends(get_db),
+@router.post("/login", response_model=LoginResponse)
+def login_view(
+    user: GetUser,
+    db: Annotated[Session, Depends(get_db)],
 ):
-    return _auth_service.sign_in_user(signin_user, db)
+    return auth_service.login(user=user, db=db)
 
 
-@router.post("/refresh", response_model=SignInResponse)
-def refresh_token(user: SignInRequest, token: Request, db: Session = Depends(get_db)):
-    _refresh_token = token.cookies.get("refresh_token")
-    if _refresh_token:
-        try:
-            verify_jwt(_refresh_token)
-        except Exception:
-            raise HTTPException(status_code=401, detail="Invalid token")
-        return _auth_service.renew_token(user=user, db=db)
-    raise HTTPException(status_code=401, detail="Need login again")
+@router.post("/refresh/", response_model=RefreshTokenResponse)
+def refresh_view(
+    request: GetToken,
+    db: Annotated[Session, Depends(get_db)],
+):
+    return auth_service.refresh_credentials(token=request.refresh_token, db=db)

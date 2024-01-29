@@ -1,32 +1,42 @@
+import uuid
+from typing import TYPE_CHECKING, TypeVar
+
 from sqlalchemy import UUID, Column, ForeignKey, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, relationship
 
 from src.core.database import Base
+
+if TYPE_CHECKING:
+    from src.auth.models import User
+
+    UserType = TypeVar("UserType", bound=User)
 
 
 class Profile(Base):
     __tablename__ = "profiles"
 
-    id = Column(
+    id: Mapped[UUID] = Column(
         UUID(as_uuid=True),
         primary_key=True,
-        nullable=False,
+        default=uuid.uuid4,
     )
-    name = Column(
+    name: Mapped[str] = Column(
         String(100),
         index=True,
     )
-    surname = Column(
+    surname: Mapped[str] = Column(
         String(100),
         index=True,
+    )
+    image_url: Mapped[str] = Column(
+        String(255),
     )
     # One-to-one relationship with User
-    user_id = Column(
+    user_id: Mapped[UUID] = Column(
         UUID(as_uuid=True),
         ForeignKey("users.id"),
-        nullable=False,
     )
-    user = relationship(
+    user: Mapped["UserType"] = relationship(
         "User",
         back_populates="profile",
     )

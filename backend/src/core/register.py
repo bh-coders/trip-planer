@@ -1,5 +1,3 @@
-import logging
-
 from fastapi import FastAPI
 
 from src.attraction.routes.router import router as attraction_router
@@ -8,8 +6,6 @@ from src.core.database import Base, engine
 from src.core.logger import LoggerSetup
 from src.middleware.log_middleware import LoggingMiddleware
 from src.users.routes import router as users_router
-
-logger = logging.getLogger(__name__)
 
 
 def _init_app(version: str) -> FastAPI:
