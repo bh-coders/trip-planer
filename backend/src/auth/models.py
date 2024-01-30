@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, TypeVar
 
 from sqlalchemy import UUID, Boolean, Column, DateTime, String
 from sqlalchemy.orm import Mapped, relationship
@@ -8,38 +8,49 @@ from sqlalchemy.orm import Mapped, relationship
 from src.core.database import Base
 
 if TYPE_CHECKING:
+    from src.attraction.models import Attraction
     from src.users.models import Profile
+
+    ProfileType = TypeVar("ProfileType", bound=Profile)
+    AttractionType = TypeVar("AttractionType", bound=Attraction)
+    AttractionTypeList = TypeVar("AttractionTypeList", bound=list[Attraction])
 
 
 class User(Base):
     __tablename__ = "users"
 
-    id: uuid.UUID = Column(
+    id: Mapped[UUID] = Column(
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
     )
-    username: str = Column(String(length=100), nullable=False)
-    email: str = Column(String(length=100), unique=True, nullable=False)
-    password: str = Column(String(length=255), nullable=False)
-    created_at: datetime = Column(DateTime, default=datetime.utcnow())
-    updated_at: Optional[datetime] = Column(
+    username: Mapped[str] = Column(String(length=100), unique=True)
+    email: Mapped[str] = Column(String(length=100), unique=True)
+    password: Mapped[str] = Column(String(length=255))
+    created_at: Mapped[datetime] = Column(DateTime, default=datetime.utcnow())
+    updated_at: Mapped[datetime] = Column(
         DateTime,
         nullable=True,
     )
-    is_active: bool = Column(
+    is_active: Mapped[bool] = Column(
         Boolean,
         default=False,
     )
-    is_superuser: bool = Column(
+    is_superuser: Mapped[bool] = Column(
         Boolean,
         default=False,
     )
-
-    profile: Mapped["Profile"] = relationship(
-        argument="Profile",
-        uselist=False,
+    # One-to-one relationship with Profile
+    profile: Mapped["ProfileType"] = relationship(
+        "Profile",
         back_populates="user",
-        cascade="all, delete-orphan",
-        foreign_keys="Profile.user_id",
+        uselist=False,
+        cascade="all, delete",
+    )
+    # One-to-many relationship with Attraction
+    attractions: Mapped["AttractionTypeList"] = relationship(
+        "Attraction",
+        back_populates="user",
+        uselist=True,
+        cascade="all, delete",
     )

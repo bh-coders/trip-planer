@@ -6,7 +6,7 @@ import { AuthContext } from '../../../contexts/AuthContext';
 import { styles } from './styles';
 import AttractionsSlider from './components/AttractionSlider';
 import SettingsModal from './components/SettingModal';
-const User = ({ navigation }: any) => {
+const UserDashboard = ({ navigation }: any) => {
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [userCredentials, setUserCredentials] = useState<UserCredentials | null>(null);
   const { userToken } = useContext(AuthContext);
@@ -45,4 +45,4 @@ const User = ({ navigation }: any) => {
     </ScrollView>
   );
 };
-export default User;
+export default UserDashboard;

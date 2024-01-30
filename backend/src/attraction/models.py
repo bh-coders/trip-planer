@@ -1,13 +1,7 @@
-import uuid
-from typing import TYPE_CHECKING, Optional
-
 from sqlalchemy import JSON, UUID, Column, Float, ForeignKey, Integer, String
-from sqlalchemy.orm import Mapped, relationship
-
+from sqlalchemy.orm import relationship
+from typing import Optional
 from src.core.database import Base
-
-if TYPE_CHECKING:
-    from src.users.models import Profile
 
 
 class Attraction(Base):
@@ -24,9 +18,10 @@ class Attraction(Base):
     country: str = Column(String)
     category: str = Column(String)
 
-    profile_id: Optional[uuid.UUID] = Column(
-        UUID(as_uuid=True), ForeignKey("profiles.id"), nullable=True
+    # Many-to-one relationship with User
+    user_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id"),
+        nullable=False,
     )
-    profile: Mapped["Profile"] = relationship(
-        argument="Profile", back_populates="attractions"
-    )
+    user = relationship("User", back_populates="attractions")

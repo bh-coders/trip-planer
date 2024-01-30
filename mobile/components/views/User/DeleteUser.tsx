@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, Alert } from 'react-native';
 import { makeDeleteMessage } from './api/apiService';
 import { NavigationProp } from '@react-navigation/native';
 import { modalStyles } from './styles';
@@ -14,7 +14,7 @@ const DeleteAccount: FC<DeleteAccountProps> = ({ navigation, userToken }) => {
 
       navigation.navigate('Dashboard');
     } catch (error) {
-      alert(`Change Password Error: ${error}`);
+      Alert.alert(`Change Password Error: ${error}`);
     }
   };
 

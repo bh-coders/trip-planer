@@ -1,5 +1,5 @@
 import React, { useState, FC } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import { View, TextInput, Button, Alert } from 'react-native';
 import { formStyles } from '../styles';
 import { NavigationProp } from '@react-navigation/native';
 type ChangePasswordProps = {
@@ -12,7 +12,7 @@ const PasswordChangeForm: FC<ChangePasswordProps> = ({ onPasswordChange, navigat
   const [oldPassword, setOldPassword] = useState('');
   const handleSubmit = () => {
     if (newPassword !== reNewPassword) {
-      alert('New Passwords does not match');
+      Alert.alert('New Passwords does not match');
       return;
     }
     onPasswordChange(newPassword, oldPassword);
@@ -44,7 +44,7 @@ const PasswordChangeForm: FC<ChangePasswordProps> = ({ onPasswordChange, navigat
         <Button title="Change Password" onPress={handleSubmit} />
       </View>
       <View>
-        <Button title="Back To User Panel" onPress={() => navigation.navigate('User')} />
+        <Button title="Back To User Panel" onPress={() => navigation.navigate('My Account')} />
       </View>
     </View>
   );
