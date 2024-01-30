@@ -1,11 +1,10 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+export const attractionSerchStyles = StyleSheet.create({
+  attractionsList: {
+    width: '100%',
+    padding: 10,
+    marginVertical: 1
   },
   errorText: {
     fontSize: 24,

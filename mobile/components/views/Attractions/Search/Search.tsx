@@ -1,66 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Button, FlatList, TouchableOpacity, Image } from 'react-native';
 import FiltersModal from './FiltersModal';
-import { attractionsExamples } from './api/apiMock';
+import { attractionsExamples, Attraction } from './api/apiMock';
 import AttractionModal from './AttractionModal';
+import AttractionTile from '../../Dashboard/components/AttractionTile';
+import { styles } from '../../Dashboard/styles';
+import { attractionSerchStyles } from './styles';
 
-const AttractionSearchScreen = () => {
-  const [attractions, setAttractions] = useState([]);
-  const [attractionDetails, setAttractionDetails] = useState({});
+interface Filters {
+  category: string;
+  city: string;
+  country: string;
+  keyword: string;
+  radius: string;
+  region: string;
+}
+
+const AttractionSearchScreen: React.FC = () => {
+  const [attractions, setAttractions] = useState<Attraction[]>([]);
+  const [attractionDetails, setAttractionDetails] = useState<Attraction | {}>({});
   const [loading, setLoading] = useState(false);
-  const [filterModalVisible, setFilterModalVisible] = useState(true);
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [attractionModalVisible, setAttractionModalVisible] = useState(false);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState<Filters>({
+    category: "",
+    city: "",
+    country: "",
+    keyword: "",
+    radius: "10",
+    region: ""
+  });
 
-  const [countries, setCountries] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [regions, setRegions] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [radiuses, setRadiuses] = useState([]);
+  const [radiuses, setRadiuses] = useState<string[]>([]);
   const attractionData = attractionsExamples;
 
   useEffect(() => {
-   
-    const countriesData = ['Poland', 'Germany', 'France'];
-    const citiesData = ['Warsaw', 'Berlin', 'Paris'];
-    const regionsData = ['Masovia', 'Brandenburg', 'Île-de-France'];
-    const categoriesData = ['Park', 'Museum', 'Historical Site'];
     const radiusData = ['5', '10', '15'];
-
-    setCountries(countriesData);
-    setCities(citiesData);
-    setRegions(regionsData);
-    setCategories(categoriesData);
     setRadiuses(radiusData);
-
   }, []);
 
   useEffect(() => {
-    console.log(filters);
+    const filteredAttractions = attractionData.filter(attraction => {
+      return (
+        (filters.category === "" || attraction.category === filters.category) &&
+        (filters.city === "" || attraction.city === filters.city) &&
+        (filters.country === "" || attraction.country === filters.country) &&
+        (filters.keyword === "" || attraction.name.toLowerCase().includes(filters.keyword.toLowerCase())) &&
+        (filters.region === "" || attraction.region.toLowerCase().includes(filters.region.toLowerCase()))
+      );
+    });
+    setAttractions(filteredAttractions);
+  }, [filters]);
 
-    if (filters.country != "") {
-      const filtredAttractions = attractionData.filter(attraction => {        
-        return (          
-          (filters.category === "" || attraction.category === filters.category) &&
-          (filters.city === "" || attraction.city === filters.city) &&
-          (filters.country === "" || attraction.country === filters.country) &&
-          (filters.keyword === "" || attraction.name.toLowerCase().includes(filters.keyword.toLowerCase())) &&
-          (filters.region === "" || attraction.region.toLowerCase().includes(filters.region.toLowerCase()))
-        );
-      });
-
-      setAttractions(filtredAttractions);
-    } else {
-      setAttractions([]);
-    }
-  }, [filters])
-
-  const handleSetFilters = (filtersProps: any) => {
+  const handleSetFilters = (filtersProps: Filters) => {
     setFilterModalVisible(false);
     setFilters(filtersProps);
   };
 
-  const handleAttractionClick = (attraction) => {
+  const handleAttractionClick = (attraction: Attraction) => {
     setAttractionModalVisible(true);
     setAttractionDetails(attraction);
 
@@ -74,41 +71,49 @@ const AttractionSearchScreen = () => {
         visible={filterModalVisible}
         onClose={() => setFilterModalVisible(false)}
         onSave={handleSetFilters}
-        countries={countries}
-        cities={cities}
-        regions={regions}
-        categories={categories}
+        attractionList={attractionData}
         radiuses={radiuses}
       />
 
       <AttractionModal
         visible={attractionModalVisible}
-        attraction={attractionDetails}
+        attraction={attractionDetails as Attraction}
         onClose={() => setAttractionModalVisible(false)}
       />
 
-      <View>
-        <View style={{ marginTop: 20 }}>
-          {loading && <Text>Loading...</Text>}
+      <View style={styles.attractionsGrid}>
+        {loading && <Text>Loading...</Text>}
 
-          {!loading && attractions.length === 0 && <Text>Specify search details</Text>}
-
-          {!loading && attractions.length > 0 && (
-            <FlatList
-              data={attractions}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleAttractionClick(item)}>
-                  <View style={{ borderBottomWidth: 1, borderColor: 'gray', marginBottom: 10, padding: 10 }}>
-                    <Text>{item.name}</Text>
-                    <Text>{item.country}, {item.city}, {item.region}</Text>
-                    <Text>{item.category}</Text>
-                  </View>
-                </TouchableOpacity>
-              )}
+        {!loading && attractions.length === 0 && (
+          <View>
+            <Image
+              source={require('./../../../../resources/images/we_dont_have.png')}
+              style={{ width: 200, height: 200, margin: 20, padding: 10 }}
             />
-          )}
-        </View>
+          </View>
+        )}
+
+        {!loading && attractions.length > 0 && (
+          <FlatList
+            style={attractionSerchStyles.attractionsList}
+            data={attractions}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item: attraction }) => (
+              <TouchableOpacity onPress={() => handleAttractionClick(attraction)}>
+                <View>
+                  <AttractionTile
+                    attraction={{
+                      place_name: attraction.name,
+                      place_description: attraction.description,
+                      place_category: attraction.category,
+                      place_rating: attraction.rating
+                    }}
+                  />
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </View>
     </>
   );
