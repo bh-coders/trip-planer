@@ -127,4 +127,35 @@ export const formStyles = StyleSheet.create({
     padding: 10,
     borderRadius: 15,
   },
+  avatarButton: {
+    backgroundColor: '#007bff',
+    borderRadius: 15,
+    padding: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 30,
+  },
+  halfWidthButton: {
+    backgroundColor: '#00b35d',
+    borderRadius: 15,
+    padding: 10,
+    alignItems: 'center',
+    width: '48%',
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  descriptionInput: {
+    height: 120,
+    textAlignVertical: 'top',
+    marginBottom: 10,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 15,
+  },
 });

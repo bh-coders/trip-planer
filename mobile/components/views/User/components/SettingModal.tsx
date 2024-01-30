@@ -31,6 +31,11 @@ const SettingsModal: FC<SettingsModalProps> = ({
         <View style={modalStyles.modalView}>
           <TouchableOpacity
             style={modalStyles.settingsButton}
+            onPress={() => handleNavigationToModal('Change Profil Informations')}>
+            <Text style={modalStyles.textStyle}>Change Credentials</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={modalStyles.settingsButton}
             onPress={() => handleNavigationToModal('Change Email')}>
             <Text style={modalStyles.textStyle}>Change Email</Text>
           </TouchableOpacity>
@@ -50,7 +55,6 @@ const SettingsModal: FC<SettingsModalProps> = ({
             onPress={() => setSettingsModalVisible(false)}>
             <Text style={modalStyles.textStyle}>My Attractions</Text>
           </TouchableOpacity>
-
           <TouchableOpacity
             style={modalStyles.buttonClose}
             onPress={() => setSettingsModalVisible(false)}>

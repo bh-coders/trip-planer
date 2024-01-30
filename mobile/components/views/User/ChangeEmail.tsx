@@ -2,7 +2,7 @@
 import React, { FC } from 'react';
 import { View, Alert } from 'react-native';
 import ChangeEmailForm from './components/ChangeEmailForm';
-import { makePostMessage } from './api/apiService';
+import { makeMessageWithBody } from './api/apiService';
 import { NavigationProp } from '@react-navigation/native';
 
 type ChangeEmailProps = {
@@ -12,14 +12,14 @@ type ChangeEmailProps = {
 const ChangeEmail: FC<ChangeEmailProps> = ({ navigation, userToken }: any) => {
   const onEmailChange = async (currentEmail: string, newEmail: string, password: string) => {
     try {
-      await makePostMessage(
+      await makeMessageWithBody(
         { currentEmail, newEmail, password },
         'change-email',
         'PATCH',
-        userToken,
+        userToken
       );
 
-      navigation.navigate('User');
+      navigation.navigate('UserDashboard');
     } catch (error) {
       Alert.alert('Change Email Error');
     }

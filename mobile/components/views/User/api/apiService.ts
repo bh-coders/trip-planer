@@ -2,11 +2,11 @@
 /// And deconstruct props, {...props} in body, we should maybe also add endpoint
 /// generic, idk - to consider
 
-export const makePostMessage = async (
+export const makeMessageWithBody = async (
   body: any,
   fetchMethod: string,
   address: string,
-  token: string,
+  token: string
 ) => {
   console.log('Fetch post ', body, fetchMethod, address, token);
   try {
