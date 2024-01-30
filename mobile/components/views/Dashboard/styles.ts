@@ -61,16 +61,23 @@ export const styles = StyleSheet.create({
 export const attractionTileStyles = StyleSheet.create({
   attractionTile: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     backgroundColor: '#fff',
     padding: 20,
     marginVertical: 10,
     borderRadius: 10,
-    alignItems: 'flex-start',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
+    width: '100%',
+  },
+  leftContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
   },
   imageContainer: {
     marginRight: 15,
@@ -87,11 +94,6 @@ export const attractionTileStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#000',
     backgroundColor: 'transparent',
-  },
-  infoContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   textContainer: {
     flexShrink: 1,
