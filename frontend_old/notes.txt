@@ -1,4 +1,0 @@
-export ANDROID_HOME=$HOME/AppData/Local/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-source $HOME/.bashrc
