@@ -51,10 +51,10 @@ def register_middleware(app: FastAPI):
 
 
 def register_router(app: FastAPI):
-    app.include_router(attraction_router, prefix="/attractions")
-    app.include_router(auth_router, prefix="/auth", tags=["auth"])
-    app.include_router(users_router, prefix="/me")
-    app.include_router(file_router, prefix="/files", tags=["files"])
+    app.include_router(attraction_router, prefix="/attractions", tags=["Attractions"])
+    app.include_router(auth_router, prefix="/auth", tags=["Authorizations"])
+    app.include_router(users_router, prefix="/me", tags=["Users"])
+    app.include_router(file_router, prefix="/files", tags=["Files"])
 
 
 def register_logger() -> LoggerSetup:
