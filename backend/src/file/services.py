@@ -5,6 +5,19 @@ from src.core.cloudstorage import CloudStorage
 
 
 def guess_media_type(data: bytes) -> str:
+    """
+    Determine the MIME type of the given byte data.
+
+    This function uses the `magic` library to analyze the bytes of the input data and
+    returns the corresponding MIME type as a string. The MIME type can be used to identify
+    the format of the data (e.g., 'image/jpeg', 'text/plain').
+
+    Parameters:
+    - data (bytes): The data whose MIME type needs to be determined.
+
+    Returns:
+    - str: The MIME type of the input data.
+    """
     mime = magic.Magic(mime=True)
     return mime.from_buffer(data)
 
