@@ -42,7 +42,7 @@ const ChangeEmailForm: FC<ChangeEmailFormProps> = ({ onEmailChange, navigation }
         <Button title="Update Email" onPress={() => onEmailChange(newEmail, oldEmail, password)} />
       </View>
       <View>
-        <Button title="Back To User Panel" onPress={() => navigation.navigate('User')} />
+        <Button title="Back To User Panel" onPress={() => navigation.navigate('My Account')} />
       </View>
     </View>
   );

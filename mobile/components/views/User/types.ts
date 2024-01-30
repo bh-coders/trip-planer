@@ -11,6 +11,7 @@ export type Attraction = {
   id: number;
   name: string;
   openingHours?: { [key: string]: { [key: string]: string } };
+  photo_uri?: string;
 };
 
 export type Token = {
