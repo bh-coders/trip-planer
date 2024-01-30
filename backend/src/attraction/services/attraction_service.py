@@ -35,7 +35,7 @@ class AttractionService:
         return self._repository.delete(db, attraction)
 
     def get_attraction_images(self, db: Session, attraction_id: int) -> AttractionsImages:
-        cloud_service = CloudStorage()
+        cloud_storage = CloudStorage()
         attraction = self.get_attraction_by_id(db, attraction_id)
 
         if attraction is None:
@@ -46,7 +46,7 @@ class AttractionService:
         prefix_bucket = f"{attraction.id}/"
 
         try:
-            objects = cloud_service.list_bucket_objects(bucket_name, prefix_bucket)
+            objects = cloud_storage.list_bucket_objects(bucket_name, prefix_bucket)
         except Exception as e:
             logger.error("Error retrieving objects from cloud server: %s " % e)
             return AttractionsImages(id=attraction.id, image_urls=[default_path])
