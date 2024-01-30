@@ -18,3 +18,8 @@ class AttractionSchema(BaseModel):
     address: str
     city: str
     country: str
+
+
+class AttractionsImages(BaseModel):
+    id: int | None
+    image_urls: list[str] = []
