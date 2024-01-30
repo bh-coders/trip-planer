@@ -45,6 +45,11 @@ POSTGRES_DB=
 SECRET_KEY=
 ALGORITHM=
 ACCESS_TOKEN_EXPIRE_MINUTES=
+
+MINIO_HOST_URL=
+MINIO_ACCESS_KEY=
+MINIO_SECRET_KEY=
+MINIO_SECURE=
 ```
 
 ### Start application
@@ -72,7 +77,6 @@ To run the frontend in a developer environment, you should install the following
 **For web:**
 - Node.js (Specify the version according to your OS)
 - React Native: `npm install react-native`
-- Expo: `npm install expo`
 
 **For Android:**
 All the requirements mentioned for the web, and additionally:
@@ -88,3 +92,20 @@ To start, run the following command:
 npm start
 ```
 Then, choose the desired option from the Expo menu.
+
+If cannot find android SDK
+```bash
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+If you have error with local.properties:
+
+android/local.properties
+```bash
+
+sdk.dir = /Users/<your_name>/Library/Android/sdk
+```
+
+
