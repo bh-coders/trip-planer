@@ -31,7 +31,6 @@ const UserDashboard = ({ navigation }: any) => {
         userToken={userToken}
       />
       <View style={styles.userSection}>
-        {/* Avatar */}
         <Image
           source={{
             uri:
