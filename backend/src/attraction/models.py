@@ -1,6 +1,8 @@
+from typing import Optional
+
 from sqlalchemy import JSON, UUID, Column, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-from typing import Optional
+
 from src.core.database import Base
 
 
