@@ -10,13 +10,13 @@ from src.auth.exceptions import (
     UsernameTaken,
 )
 from src.auth.models import User
-from src.auth.repositories import AuthRepository
+from src.auth.repositories import UserRepository
 from src.auth.schemas import (
     GetUser,
     LoginResponse,
     RefreshTokenResponse,
     RegisterResponse,
-    UserCreate,
+    CreateUser,
 )
 from src.auth.utils import (
     decode_jwt_token,
@@ -31,27 +31,27 @@ from src.core.exceptions import (
 
 
 class AuthService:
-    def __init__(self, repository: AuthRepository):
-        self.repository = repository
+    def __init__(self, repository: UserRepository):
+        self.user_repository = repository
 
     def authenticate_user(
         self, username: str, password: str, db: Session
     ) -> Optional[User]:
-        user = self.repository.get_by_username(username=username, db=db)
+        user = self.user_repository.get_by_username(username=username, db=db)
         if not user:
             raise UserDoesNotExist
         if not verify_passwords(password, user.password):
             raise InvalidPassword
         return user
 
-    def register(self, user: UserCreate, db: Session) -> Optional[RegisterResponse]:
+    def register(self, user: CreateUser, db: Session) -> Optional[RegisterResponse]:
         user.password = hash_password(user.password)
-        if self.repository.get_by_username(user.username, db):
+        if self.user_repository.get_by_username(user.username, db):
             raise UsernameTaken
-        elif self.repository.get_by_email(user.email, db):
+        elif self.user_repository.get_by_email(user.email, db):
             raise EmailTaken
         try:
-            self.repository.create_user(user, db)
+            self.user_repository.create_model(user, db)
             return RegisterResponse(
                 message="User registered successfully",
             )
@@ -66,7 +66,7 @@ class AuthService:
         )
         if not auth_user:
             raise NotAuthenticated
-        self.repository.set_is_active(auth_user, db)
+        self.user_repository.set_is_active(auth_user, db)
         token = encode_jwt_token(username=auth_user.username, user_id=auth_user.id)
         return LoginResponse(**token)
 
@@ -75,7 +75,7 @@ class AuthService:
             raise TokenDoesNotExist
         user_payload = decode_jwt_token(token)
         user_id = user_payload.get("user_id")
-        user = self.repository.get_by_id(user_id=user_id, db=db)
+        user = self.user_repository.get_by_id(user_id=user_id, db=db)
         if not user:
             raise UserDoesNotExist
         token = encode_jwt_token(username=user.username, user_id=user.id)

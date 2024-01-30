@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Optional, TypeVar
 
 from sqlalchemy.orm import Session as SessionType
 
-from src.auth.schemas import UserCreate
+from src.auth.schemas import CreateUser
 from src.auth.schemas.model_schema import UserModel
 
 if TYPE_CHECKING:
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     UserType = TypeVar("UserType", bound=User)
 
 
-class Repository(ABC):
+class AbstractUserRepository(ABC):
     @abstractmethod
     def get_by_id(self, user_id: uuid.UUID, db: SessionType) -> Optional["UserType"]:
         raise NotImplementedError
@@ -27,7 +27,7 @@ class Repository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def create_user(self, user: UserCreate, db: SessionType) -> bool:
+    def create_model(self, user: CreateUser, db: SessionType) -> bool:
         raise NotImplementedError
 
     @abstractmethod

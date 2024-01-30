@@ -7,13 +7,13 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from starlette import status
 
-from src.auth.repositories.auth_repo import AuthRepository
+from src.auth.repositories.user_repo import UserRepository
 from src.auth.utils import decode_jwt_token
 from src.core.configs import ALGORITHM, SECRET_KEY
 from src.core.database import get_db
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-auth_repository = AuthRepository()
+auth_repository = UserRepository()
 
 logger = logging.getLogger(__name__)
 

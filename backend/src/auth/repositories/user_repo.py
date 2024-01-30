@@ -1,20 +1,19 @@
 import logging
 import uuid
-from datetime import timedelta
 from typing import Optional
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from src.auth.interfaces import Repository
+from src.auth.interfaces import AbstractUserRepository
 from src.auth.models import User
-from src.auth.schemas import UserCreate
+from src.auth.schemas import CreateUser
 from src.auth.schemas.model_schema import UserModel
 
 logger = logging.getLogger(__name__)
 
 
-class AuthRepository(Repository):
+class UserRepository(AbstractUserRepository):
     def get_by_id(self, user_id: uuid.UUID, db: Session) -> Optional[User]:
         try:
             user = db.query(User).filter_by(id=user_id).first()
@@ -39,7 +38,7 @@ class AuthRepository(Repository):
             logger.error("Error getting user: %s", error)
             return None
 
-    def create_user(self, user: UserCreate, db: Session) -> bool:
+    def create_model(self, user: CreateUser, db: Session) -> bool:
         try:
             with db.begin_nested():
                 new_user = User(

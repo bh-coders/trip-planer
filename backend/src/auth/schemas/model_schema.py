@@ -70,7 +70,7 @@ class UserModel(BaseModel):
     #     return email
 
 
-class UserCreate(UserModel, PasswordModel, RegisterRequest):
+class CreateUser(UserModel, PasswordModel, RegisterRequest):
     username: str
     email: str
     password: str

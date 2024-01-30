@@ -5,10 +5,10 @@ from src.auth.schemas.endpoint_schema import (
     RegisterRequest,
     RegisterResponse,
 )
-from src.auth.schemas.model_schema import GetUser, GetToken, UserCreate
+from src.auth.schemas.model_schema import GetUser, GetToken, CreateUser
 
 __all__ = [
-    "UserCreate",
+    "CreateUser",
     "GetUser",
     "RegisterRequest",
     "RegisterResponse",

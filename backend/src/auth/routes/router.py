@@ -3,21 +3,21 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from src.auth.repositories import AuthRepository
+from src.auth.repositories import UserRepository
 from src.auth.schemas import (
+    CreateUser,
     GetToken,
     GetUser,
     LoginResponse,
     RefreshTokenResponse,
     RegisterResponse,
-    UserCreate,
 )
 from src.auth.services import AuthService
 from src.core.database import get_db
 
 router = APIRouter()
-auth_repository = AuthRepository()
-auth_service = AuthService(repository=auth_repository)
+user_repository = UserRepository()
+auth_service = AuthService(repository=user_repository)
 
 
 @router.post(
@@ -25,7 +25,7 @@ auth_service = AuthService(repository=auth_repository)
     response_model=RegisterResponse,
 )
 def register_view(
-    user: UserCreate,
+    user: CreateUser,
     db: Annotated[Session, Depends(get_db)],
 ):
     return auth_service.register(user=user, db=db)
