@@ -8,6 +8,7 @@ from src.core.database import Base, engine
 from src.core.logger import LoggerSetup
 from src.middleware.log_middleware import LoggingMiddleware
 from src.users.routes import router as users_router
+from src.file.router import file_router
 
 
 def _init_app(version: str) -> FastAPI:
@@ -16,9 +17,14 @@ def _init_app(version: str) -> FastAPI:
 
 
 def _read_version() -> str:
-    with open("src/VERSION.txt", "r") as version_file:
-        version = version_file.read()
-        return version
+    try:
+        with open("src/VERSION.txt", "r") as version_file:
+            version = version_file.read()
+            return version.strip()
+    except FileNotFoundError:
+        with open("src/VERSION.txt", "w") as version_file:
+            version_file.write("0.0.0")
+        return "0.0.0"
 
 
 def register_app():
@@ -48,6 +54,7 @@ def register_router(app: FastAPI):
     app.include_router(attraction_router, prefix="/attractions")
     app.include_router(auth_router, prefix="/auth", tags=["auth"])
     app.include_router(users_router, prefix="/me")
+    app.include_router(file_router, prefix="/files", tags=["files"])
 
 
 def register_logger() -> LoggerSetup:
