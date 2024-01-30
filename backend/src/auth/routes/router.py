@@ -14,8 +14,6 @@ from src.auth.schemas import (
 )
 from src.auth.services import AuthService
 from src.core.database import get_db
-from src.core.exceptions import NotAuthenticated
-from src.core.interceptors.auth_interceptor import verify_jwt
 
 router = APIRouter()
 auth_repository = AuthRepository()

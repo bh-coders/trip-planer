@@ -37,7 +37,7 @@ def register_middleware(app: FastAPI):
 
 def register_router(app: FastAPI):
     app.include_router(attraction_router, prefix="/attractions")
-    app.include_router(auth_router, prefix="/auth")
+    app.include_router(auth_router, prefix="/auth", tags=["auth"])
     app.include_router(users_router, prefix="/me")
 
 
