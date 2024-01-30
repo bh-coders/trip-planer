@@ -20,6 +20,6 @@ class AttractionSchema(BaseModel):
     country: str
 
 
-class AttractionsImages(BaseModel):
+class AttractionImages(BaseModel):
     id: int | None
     image_urls: list[str] = []
