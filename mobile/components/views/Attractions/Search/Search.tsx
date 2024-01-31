@@ -4,6 +4,7 @@ import FiltersModal from './FiltersModal';
 import { attractionsExamples, Attraction } from './api/apiMock';
 import AttractionModal from './AttractionModal';
 import AttractionTile from '../../common/AttractionTile';
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import { styles } from '../../Dashboard/styles';
 import { attractionSerchStyles } from './styles';
 
