@@ -4,12 +4,19 @@ import { makeGetMessage } from './api/apiService';
 import { UserCredentials } from './types';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { styles } from './styles';
+import { removeToken } from '../../utils/tokenUtils';
 import AttractionsSlider from './components/AttractionSlider';
 import SettingsModal from './components/SettingModal';
 const UserDashboard = ({ navigation }: any) => {
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
   const [userCredentials, setUserCredentials] = useState<UserCredentials | null>(null);
-  const { userToken } = useContext(AuthContext);
+  const { userToken, setUserToken } = useContext(AuthContext);
+
+  const logout = async () => {
+    await removeToken();
+    setUserToken(null);
+  };
+
   useEffect(() => {
     const fetchUserCredentials = async () => {
       if (userToken) {
@@ -23,6 +30,9 @@ const UserDashboard = ({ navigation }: any) => {
     <ScrollView style={styles.container}>
       <TouchableOpacity style={styles.settingsButton} onPress={() => setSettingsModalVisible(true)}>
         <Text style={styles.settingsButtonText}>Settings</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+        <Text style={styles.settingsButtonText}>Logout</Text>
       </TouchableOpacity>
       <SettingsModal
         isVisible={settingsModalVisible}

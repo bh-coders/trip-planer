@@ -1,15 +1,17 @@
-import { View, Text } from 'react-native';
+import { View, Alert } from 'react-native';
 import RegisterForm from './RegisterForm';
 import { makePostMessage } from '../api/apiService';
 import { storeToken } from '../../../utils/tokenUtils';
+import { RegisterProps } from '../types';
+
 const Register = ({ navigation }: any) => {
-  const onRegister = async (username: string, password: string, email: string) => {
+  const onRegister = async (body: RegisterProps) => {
     try {
-      const response = await makePostMessage({ username, password, email }, 'POST', 'register');
+      const response = await makePostMessage(body, 'POST', 'register');
       await storeToken(response.token);
       navigation.navigate('Dashboard');
     } catch (error) {
-      alert(`Login Error:${error}`);
+      Alert.alert(`Login Error:${error}`);
     }
   };
   return (
