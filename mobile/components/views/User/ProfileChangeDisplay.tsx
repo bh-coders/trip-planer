@@ -4,7 +4,6 @@ import ChangeCredentialsProfileForm from './components/ChangeCredentialsProfileF
 import { makeMessageWithBody } from './api/apiService';
 const ProfileChangeDisplay = ({ navigation, userToken }: any) => {
   const onProfileCredentialsChange = async (profile: any) => {
-    console.log(profile, 'lalala');
     try {
       await makeMessageWithBody(profile, 'change-profile-credentials', 'PATCH', userToken);
     } catch {

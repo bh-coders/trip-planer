@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { View, PermissionsAndroid, Platform, Alert } from 'react-native';
 import { styles } from '../styles';
 import Mapbox from '@rnmapbox/maps';
-import Config from 'react-native-config';
 import Search from './Search';
 import BottomPanel from './BottomPanel';
 import Geolocation from 'react-native-geolocation-service';
 import { fetchAttractions } from '../api/attractionsApi';
-Mapbox.setAccessToken(Config.MAPBOX_PUBLIC_TOKEN as any);
+import { MAPBOX_PUBLIC_TOKEN } from '../../../../consts';
+Mapbox.setAccessToken(MAPBOX_PUBLIC_TOKEN as any);
 
 const MapboxBoard = () => {
   const [location, setLocation] = useState<any>(null);
