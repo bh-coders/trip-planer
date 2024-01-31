@@ -64,6 +64,26 @@ const AttractionSearchScreen: React.FC = () => {
     console.log('Clicked Attraction:', attraction);
   };
 
+  const RightSwipeActions = (item: Attraction) => {
+    return (
+      <View style={{ alignItems: 'flex-end', flex: 1, marginTop: 40, padding: 10 }} >
+        <Button title='Add to favorite' onPress={() => {
+          console.log('add to favorite: ', item);
+          // swip.close();
+          }} />
+      </View>
+    );
+  };
+
+  const LeftSwipeActions = (item: Attraction) => {
+    return (
+      <View style={{ alignItems: 'flex-start', flex: 1, marginTop: 40, padding: 10 }} >
+        <Button title='Add to trip' color='green' onPress={() => console.log('add to trip: ', item)} />
+      </View>
+    );
+  };
+
+
   return (
     <>
       <Button title="Filters" onPress={() => setFilterModalVisible(true)} />
@@ -100,16 +120,21 @@ const AttractionSearchScreen: React.FC = () => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item: attraction }) => (
               <TouchableOpacity onPress={() => handleAttractionClick(attraction)}>
-                <View>
-                  <AttractionTile
-                    attraction={{
-                      place_name: attraction.name,
-                      place_description: attraction.description,
-                      place_category: attraction.category,
-                      place_rating: attraction.rating
-                    }}
-                  />
-                </View>
+                <Swipeable
+                  renderRightActions={() => RightSwipeActions(attraction)}
+                  renderLeftActions={() => LeftSwipeActions(attraction)}
+                >
+                  <View>
+                    <AttractionTile
+                      attraction={{
+                        place_name: attraction.name,
+                        place_description: attraction.description,
+                        place_category: attraction.category,
+                        place_rating: attraction.rating
+                      }}
+                    />
+                  </View>
+                </Swipeable>
               </TouchableOpacity>
             )}
           />
