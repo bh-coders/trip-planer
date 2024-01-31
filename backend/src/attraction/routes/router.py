@@ -1,4 +1,5 @@
 import logging
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -37,12 +38,21 @@ def create_attraction(
     return _attraction_service.create_attraction(db, attraction)
 
 
+@router.get("/{attraction_id}/images")
+def get_attraction_images(
+        attraction_id: int,
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
+):
+    return _attraction_service.get_attraction_images(db, attraction_id)
+
+
 @router.patch("/{attraction_id}/update")
 def update_attraction(
-    attraction_id: int,
-    updated_attraction: AttractionSchema,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+        attraction_id: int,
+        updated_attraction: AttractionSchema,
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
 ):
     return _attraction_service.update_attraction(db, attraction_id, updated_attraction)
 
