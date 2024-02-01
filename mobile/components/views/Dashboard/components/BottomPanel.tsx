@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { styles } from '../styles';
-import AttractionTile from './AttractionTile';
+import AttractionTile from '../../common/AttractionTile';
 interface Attraction {
   place_name: string;
 }
@@ -25,6 +25,8 @@ const getPlaceholderAttractions = () => {
     }Lorem Ipsum Opis Kwiatuh ${index + 1} Lorem Ipsum Opis Kwiatuh ${
       index + 1
     }Lorem Ipsum Opis Kwiatuh ${index + 1}`,
+    image_url:
+      'https://media.cntraveler.com/photos/58de89946c3567139f9b6cca/16:9/w_1920,c_limit/GettyImages-468366251.jpg',
   }));
 };
 
@@ -39,7 +41,6 @@ const BottomPanel: React.FC<BottomPanelProps> = ({
   const snapPoints = useMemo(() => ['5%', '80%'], []);
   const placeholderAttractions = useMemo(() => getPlaceholderAttractions(), []);
 
-  console.log(searchText, 'sText');
   return (
     <BottomSheet ref={sheetRef} index={isVisible ? 1 : 0} snapPoints={snapPoints}>
       <View style={{ padding: 10 }}>

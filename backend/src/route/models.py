@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from backend.src.attraction.models import Attraction
+
+from src.attraction.models import Attraction
 
 
 class Route(BaseModel):

@@ -1,8 +1,9 @@
 import React, { useState, FC } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import { View, TextInput, Button, Alert } from 'react-native';
 import { styles } from '../styles';
+import { RegisterProps } from '../types';
 type RegisterFormProps = {
-  onRegister: (username: string, password: string, email: string) => void;
+  onRegister: (body: RegisterProps) => void;
 };
 const RegisterForm: FC<RegisterFormProps> = ({ onRegister }) => {
   const [username, setUsername] = useState('');
@@ -13,10 +14,15 @@ const RegisterForm: FC<RegisterFormProps> = ({ onRegister }) => {
 
   const handleSubmit = () => {
     if (password !== rePassword) {
-      alert('Password does not match');
+      Alert.alert('Password does not match');
       return;
     }
-    onRegister(username, password, email);
+    onRegister({
+      username: username,
+      password: password,
+      email: email,
+      rewrite_password: rePassword,
+    });
   };
 
   return (
@@ -42,7 +48,7 @@ const RegisterForm: FC<RegisterFormProps> = ({ onRegister }) => {
         onChangeText={setRePassword}
         secureTextEntry
       />
-      <Button title="Change Email" onPress={handleSubmit} />
+      <Button title="Register" onPress={handleSubmit} />
     </View>
   );
 };
