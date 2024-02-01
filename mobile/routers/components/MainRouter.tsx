@@ -13,6 +13,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import CustomDrawerContent from './CustomDrawnerContent';
 import SearchAttractions from '../../components/views/Attractions/Search/Search';
 import AddNewAttraction from '../../components/views/Attractions/AddNew/AddNew';
+import AttractionDetailScreen from '../../components/views/common/AttractionDetail';
 const Drawer = createDrawerNavigator();
 const MainRouter = () => {
   const { userToken } = useContext(AuthContext);
@@ -34,6 +35,11 @@ const MainRouter = () => {
         {!userToken && <Drawer.Screen name="Register" component={Register} />}
         {!userToken && <Drawer.Screen name="Sign In" component={SignIn} />}
         {userToken && <Drawer.Screen name="My Account" component={UserDashbard} />}
+        <Drawer.Screen
+          name="AttractionDetailScreen"
+          component={AttractionDetailScreen}
+          options={{ drawerItemStyle: {display: 'none'}}}
+        />
         <Drawer.Screen
           name="Change Password"
           component={ChangePassword}

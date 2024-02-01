@@ -72,3 +72,16 @@ export const attractionTileStyles = StyleSheet.create({
     color: '#FFD700',
   },
 });
+export const imagePlaceholder = StyleSheet.create({
+  imageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  placeholder: {
+    width: 350,
+    height: 300,
+    backgroundColor: '#abc',
+    marginRight: 10,
+  },
+});

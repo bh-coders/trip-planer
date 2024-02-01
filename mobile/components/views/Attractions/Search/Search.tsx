@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { View, Text, Button, FlatList, TouchableOpacity, Image } from 'react-native';
 import FiltersModal from './FiltersModal';
 import { attractionsExamples, Attraction } from './api/apiMock';
@@ -34,6 +35,8 @@ const AttractionSearchScreen: React.FC = () => {
 
   const [radiuses, setRadiuses] = useState<string[]>([]);
   const attractionData = attractionsExamples;
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     const radiusData = ['5', '10', '15'];
@@ -59,8 +62,9 @@ const AttractionSearchScreen: React.FC = () => {
   };
 
   const handleAttractionClick = (attraction: Attraction) => {
-    setAttractionModalVisible(true);
+    // setAttractionModalVisible(true);
     setAttractionDetails(attraction);
+    navigation.navigate('AttractionDetailScreen', {attraction});
 
     console.log('Clicked Attraction:', attraction);
   };
