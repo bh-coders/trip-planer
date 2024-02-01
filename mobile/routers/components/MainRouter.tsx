@@ -13,7 +13,6 @@ import { AuthContext } from '../../contexts/AuthContext';
 import CustomDrawerContent from './CustomDrawnerContent';
 import SearchAttractions from '../../components/views/Attractions/Search/Search';
 import AddNewAttraction from '../../components/views/Attractions/AddNew/AddNew';
-import { AuthContext } from '../../contexts/AuthContext';
 const Drawer = createDrawerNavigator();
 const MainRouter = () => {
   const { userToken } = useContext(AuthContext);

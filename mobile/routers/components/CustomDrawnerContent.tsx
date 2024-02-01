@@ -13,8 +13,6 @@ const CustomDrawerContent: React.FC<any> = (props) => {
       <DrawerItemList {...props} />
       <AttractionSubMenu {...props} />
       <TestSubMenu {...props} />
-      <AttractionSubMenu {...props} />
-      <TestSubMenu {...props} />
     </DrawerContentScrollView>
   );
 };
