@@ -3,8 +3,6 @@ import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navi
 import { View } from 'react-native';
 import AttractionSubMenu from '../../components/views/Attractions/Router';
 import TestSubMenu from '../../components/views/test/Router';
-import AttractionSubMenu from '../../components/views/Attractions/Router';
-import TestSubMenu from '../../components/views/test/Router';
 
 
 const CustomDrawerContent: React.FC<any> = (props) => {
