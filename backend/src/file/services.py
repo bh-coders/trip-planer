@@ -1,3 +1,5 @@
+import uuid
+
 import magic
 from fastapi import HTTPException, Response
 
@@ -22,7 +24,7 @@ def guess_media_type(data: bytes) -> str:
     return mime.from_buffer(data)
 
 
-def _load_file_from_cloud(filename: str, bucket: str, id_object: int | str | None = None) -> Response:
+def _load_file_from_cloud(filename: str, bucket: str, id_object:  int | str | uuid.UUID | None = None) -> Response:
     try:
         cloud_storage = CloudStorage()
         full_filename = f"{filename}"
