@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from fastapi import HTTPException, Request
+from fastapi import HTTPException, Request, Response
 from sqlalchemy.orm import Session
 
 from src.auth.utils import get_user_id_from_request
@@ -18,8 +18,8 @@ class CommentService:
         self.repository = repository
 
     def comment_thread(
-        self, request: Request, comment: CommentCreate, db: Session
-    ) -> bool:
+            self, request: Request, comment: CommentCreate, db: Session
+    ) -> Response:
         user_id = get_user_id_from_request(request)
         if not user_id:
             raise HTTPException(
@@ -31,19 +31,27 @@ class CommentService:
             content=comment.content,
             created_at=datetime.utcnow(),
         )
-        return self.repository.add_comment_to_review(new_comment, db)
+        if not self.repository.add_comment_to_review(new_comment, db):
+            raise HTTPException(
+                status_code=400, detail="Comment could not be created."
+            )
+        return Response(status_code=201, content='Comment created successfully')
 
-    def delete_comment(self, db: Session, comment_id: uuid.UUID):
+    def delete_comment(self, db: Session, comment_id: uuid.UUID) -> Response:
         comment = self.repository.get_comment_by_id(comment_id, db)
         if comment is None:
             raise HTTPException(
                 status_code=404, detail=f"Not found comment_id={comment_id}."
             )
-        return self.repository.delete_comment(db, comment)
+        if not self.repository.delete_comment(db, comment):
+            raise HTTPException(
+                status_code=400, detail="Comment could not be deleted ."
+            )
+        return Response(status_code=200, content='Comment deleted successfully')
 
     def update_comment(
-        self, db: Session, comment_id: uuid.UUID, updated_comment: CommentUpdate
-    ):
+            self, db: Session, comment_id: uuid.UUID, updated_comment: CommentUpdate
+    ) -> CommentSchema:
         comment = self.repository.get_comment_by_id(comment_id, db)
         if comment is None:
             raise HTTPException(
