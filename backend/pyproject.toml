@@ -63,8 +63,10 @@ docstring-code-format = false
 docstring-code-line-length = "dynamic"
 
 [tool.mypy]
+
 plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
 python_version = "3.11"
+mypy_path = 'src'
 warn_return_any = true
 warn_unused_configs = true
 disable_error_code = ["empty-body"]
