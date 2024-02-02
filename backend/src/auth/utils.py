@@ -123,7 +123,5 @@ def get_user_id_from_request(request: Request) -> Optional[uuid.UUID]:
         return None
     auth_token = authorization.split(" ")[1]
     payload_token = decode_jwt_token(auth_token)
-    user_id: Optional[uuid.UUID] = payload_token.get("user_id")
-    if user_id:
-        return user_id
-    return None
+    return payload_token.get("user_id")
+
