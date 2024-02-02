@@ -29,25 +29,24 @@ class CommentSchema(CommentBase):
     created_at: Optional[datetime] = None
 
 
-class ReviewUpdate(BaseModel):
+class ReviewBase(BaseModel):
     attraction_id: int
-    rating: int = Field(gt=0, lt=6)  # Zakres od 1 do 5
-    price: int = Field(gt=0, lt=6)  # Zakres od 1 do 5
-    time_spent: int
-    title: str
-    description: str
-
-
-class ReviewCreate(BaseModel):
-    attraction_id: int
-    rating: int = Field(gt=0, lt=6)  # Zakres od 1 do 5
-    price: int = Field(gt=0, lt=6)  # Zakres od 1 do 5
+    rating: int = Field(gt=0, lt=6)  # Range from 1 to 5
+    price: int = Field(gt=0, lt=6)  # (1 $, 2 $-$$, 3 $$, 4 $$-$$$, 5 $$$)
     time_spent: int
     title: str
     description: str
 
     class Config:
         from_attributes = True
+
+
+class ReviewUpdate(ReviewBase):
+    pass
+
+
+class ReviewCreate(ReviewBase):
+    pass
 
 
 class ReviewSchema(ReviewCreate):
