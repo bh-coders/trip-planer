@@ -44,6 +44,15 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     zIndex: 1,
   },
+  logoutButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    backgroundColor: '#f0f0f0',
+    padding: 8,
+    borderRadius: 5,
+    zIndex: 1,
+  },
   settingsButtonText: {
     color: 'black',
     fontSize: 14,

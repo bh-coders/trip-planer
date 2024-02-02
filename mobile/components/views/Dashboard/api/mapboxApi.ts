@@ -1,5 +1,5 @@
 import Config from 'react-native-config';
-
+import { MAPBOX_PUBLIC_TOKEN } from '../../../../consts';
 interface Coordinates {
   latitude: number;
   longitude: number;
@@ -8,7 +8,7 @@ interface Coordinates {
 export const fetchLocationFromMapbox = (searchText: string): Promise<Coordinates> => {
   const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
     searchText
-  )}.json?access_token=${Config.MAPBOX_PUBLIC_TOKEN}`;
+  )}.json?access_token=${MAPBOX_PUBLIC_TOKEN}`;
 
   return fetch(url)
     .then((response) => response.json())

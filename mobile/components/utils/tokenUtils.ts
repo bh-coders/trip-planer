@@ -3,7 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const storeToken = async (userToken: string) => {
   try {
     await AsyncStorage.setItem('userToken', userToken);
-  } catch (error) {}
+  } catch (error) {
+    console.error(`error: ${error}`);
+  }
 };
 
 export const getToken = async () => {
@@ -11,12 +13,14 @@ export const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
     return userToken;
   } catch (error) {
-    return null;
+    console.error(`error: ${error}`);
   }
 };
 
 export const removeToken = async () => {
   try {
     await AsyncStorage.removeItem('userToken');
-  } catch (error) {}
+  } catch (error) {
+    console.error(`error: ${error}`);
+  }
 };
