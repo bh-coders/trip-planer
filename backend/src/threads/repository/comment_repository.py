@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class CommentRepository:
     def get_comment_by_id(
-            self, comment_id: uuid.UUID, db: Session
+        self, comment_id: uuid.UUID, db: Session
     ) -> Optional[Comment]:
         return db.query(Comment).filter(Comment.id == comment_id).first()
 
@@ -48,7 +48,7 @@ class CommentRepository:
             return False
 
     def update_comment(
-            self, db: Session, db_comment: Comment, updated_comment: CommentUpdate
+        self, db: Session, db_comment: Comment, updated_comment: CommentUpdate
     ) -> Optional[Comment]:
         try:
             # we using begin_nested, because we already used session to get db_item

@@ -40,7 +40,5 @@ class Repository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def add_comment_to_review(
-        self, comment: CommentSchema, db: SessionType
-    ) -> Comment:
+    def add_comment_to_review(self, comment: CommentSchema, db: SessionType) -> Comment:
         raise NotImplementedError

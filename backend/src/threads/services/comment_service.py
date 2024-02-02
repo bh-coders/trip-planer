@@ -18,7 +18,7 @@ class CommentService:
         self.repository = repository
 
     def comment_thread(
-            self, request: Request, comment: CommentCreate, db: Session
+        self, request: Request, comment: CommentCreate, db: Session
     ) -> bool:
         user_id = get_user_id_from_request(request)
         if not user_id:
@@ -42,7 +42,7 @@ class CommentService:
         return self.repository.delete_comment(db, comment)
 
     def update_comment(
-            self, db: Session, comment_id: uuid.UUID, updated_comment: CommentUpdate
+        self, db: Session, comment_id: uuid.UUID, updated_comment: CommentUpdate
     ):
         comment = self.repository.get_comment_by_id(comment_id, db)
         if comment is None:
@@ -51,7 +51,5 @@ class CommentService:
             )
         updated = self.repository.update_comment(db, comment, updated_comment)
         if not updated:
-            raise HTTPException(
-                status_code=402, detail=f"Cannot update comment."
-            )
+            raise HTTPException(status_code=402, detail="Cannot update comment.")
         return CommentSchema(**updated.as_dict())

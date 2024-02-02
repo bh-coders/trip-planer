@@ -38,7 +38,7 @@ class ReviewService:
         return self.repository.create_review(new_review, db)
 
     def get_thread_by_id(
-            self, thread_id: uuid.UUID, db: Session
+        self, thread_id: uuid.UUID, db: Session
     ) -> Optional[ReviewSchema]:
         review = self.repository.get_review_by_id(thread_id, db)
         if not review:
@@ -48,13 +48,13 @@ class ReviewService:
         return ReviewSchema(**review.as_dict())
 
     def get_threads_attraction_filtered_sorted(
-            self,
-            db: Session,
-            attraction_id: str | int,
-            sort_by: Optional[str] = None,
-            rating: Optional[int] = None,
-            price: Optional[int] = None,
-            time_spent: Optional[int] = None,
+        self,
+        db: Session,
+        attraction_id: str | int,
+        sort_by: Optional[str] = None,
+        rating: Optional[int] = None,
+        price: Optional[int] = None,
+        time_spent: Optional[int] = None,
     ) -> List[ReviewSchema]:
         reviews: Optional[List[Review]] = self.repository.get_reviews_filtered_sorted(
             db, attraction_id, sort_by, rating, price, time_spent
@@ -78,7 +78,7 @@ class ReviewService:
         return self.repository.delete(db, thread)
 
     def update_thread(
-            self, db: Session, review_id: uuid.UUID, updated_review: ReviewUpdate
+        self, db: Session, review_id: uuid.UUID, updated_review: ReviewUpdate
     ) -> ReviewSchema:
         thread = self.repository.get_review_by_id(review_id, db)
         if thread is None:
@@ -87,7 +87,5 @@ class ReviewService:
             )
         updated = self.repository.update_review(db, thread, updated_review)
         if not updated:
-            raise HTTPException(
-                status_code=402, detail=f"Cannot update review."
-            )
+            raise HTTPException(status_code=402, detail="Cannot update review.")
         return ReviewSchema(**updated.as_dict())
