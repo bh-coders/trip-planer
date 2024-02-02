@@ -21,7 +21,7 @@ class Repository(ABC):
     def get_review_by_id(
         self, review_id: uuid.UUID, db: SessionType
     ) -> Optional[Review]:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def get_reviews_filtered_sorted(
@@ -33,12 +33,12 @@ class Repository(ABC):
         price: Optional[int] = None,
         time_spent: Optional[int] = None,
     ) -> List[Review]:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def create_review(self, review: ReviewSchema, db: SessionType) -> Review:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def add_comment_to_review(self, comment: CommentSchema, db: SessionType) -> Comment:
-        raise NotImplementedError
+        pass
