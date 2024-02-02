@@ -7,8 +7,7 @@ from sqlalchemy.orm import Session
 
 from src.auth.interfaces import AbstractUserRepository
 from src.auth.models import User
-from src.auth.schemas import CreateUser
-from src.auth.schemas.model_schema import UserModel
+from src.auth.schemas import CreateUserSchema
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +37,7 @@ class UserRepository(AbstractUserRepository):
             logger.error("Error getting user: %s", error)
             return None
 
-    def create_model(self, user: CreateUser, db: Session) -> bool:
+    def create_model(self, user: CreateUserSchema, db: Session) -> bool:
         try:
             with db.begin_nested():
                 new_user = User(
@@ -54,8 +53,7 @@ class UserRepository(AbstractUserRepository):
             logger.error("Error registering user: %s", error)
             return False
 
-    def set_is_active(self, user: UserModel, db: Session) -> bool:
-        user = self.get_by_email(email=user.email, db=db)
+    def set_is_active(self, user: User, db: Session) -> bool:
         try:
             setattr(user, "is_active", True)
             db.add(user)
@@ -64,4 +62,36 @@ class UserRepository(AbstractUserRepository):
         except SQLAlchemyError as error:
             db.rollback()
             logger.error("Error setting user as active: %s", error)
+            return False
+
+    def update_email(self, new_email: str, user: User, db: Session) -> bool:
+        try:
+            setattr(user, "email", new_email)
+            db.add(user)
+            db.commit()
+            return True
+        except SQLAlchemyError as error:
+            db.rollback()
+            logger.error("Error updating user email: %s", error)
+            return False
+
+    def update_password(self, new_password: str, user: User, db: Session) -> bool:
+        try:
+            setattr(user, "password", new_password)
+            db.add(user)
+            db.commit()
+            return True
+        except SQLAlchemyError as error:
+            db.rollback()
+            logger.error("Error updating user password: %s", error)
+            return False
+
+    def delete_model(self, user: User, db: Session) -> bool:
+        try:
+            db.delete(user)
+            db.commit()
+            return True
+        except SQLAlchemyError as error:
+            db.rollback()
+            logger.error("Error deleting user: %s", error)
             return False

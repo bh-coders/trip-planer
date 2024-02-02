@@ -1,6 +1,7 @@
 import logging
 import uuid
 from datetime import datetime, timedelta
+from typing import Tuple
 
 import jwt
 from fastapi import HTTPException
@@ -114,3 +115,11 @@ def encode_jwt_token(username: str, user_id: uuid.UUID) -> dict:
     }
     logger.info("Tokens set: %s", data)
     return data
+
+
+def extract_passwords(user_model: dict) -> Tuple[str, str, str]:
+    return (
+        user_model.old_password,
+        user_model.new_password,
+        user_model.rewrite_password,
+    )

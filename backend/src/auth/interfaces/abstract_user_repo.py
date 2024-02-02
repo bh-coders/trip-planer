@@ -4,8 +4,7 @@ from typing import TYPE_CHECKING, Optional, TypeVar
 
 from sqlalchemy.orm import Session as SessionType
 
-from src.auth.schemas import CreateUser
-from src.auth.schemas.model_schema import UserModel
+from src.auth.schemas import CreateUserSchema
 
 if TYPE_CHECKING:
     from src.auth.models import User
@@ -16,20 +15,34 @@ if TYPE_CHECKING:
 class AbstractUserRepository(ABC):
     @abstractmethod
     def get_by_id(self, user_id: uuid.UUID, db: SessionType) -> Optional["UserType"]:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def get_by_username(self, username: str, db: SessionType) -> Optional["UserType"]:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def get_by_email(self, email: str, db: SessionType) -> Optional["UserType"]:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
-    def create_model(self, user: CreateUser, db: SessionType) -> bool:
-        raise NotImplementedError
+    def create_model(self, user: CreateUserSchema, db: SessionType) -> bool:
+        pass
 
     @abstractmethod
     def set_is_active(self, user: UserModel, db: SessionType) -> bool:
-        raise NotImplementedError
+        pass
+
+    @abstractmethod
+    def update_email(self, new_email: str, user: "UserType", db: SessionType) -> bool:
+        pass
+
+    @abstractmethod
+    def update_password(
+        self, new_password: str, user: "UserType", db: SessionType
+    ) -> bool:
+        pass
+
+    @abstractmethod
+    def delete_model(self, user: "UserType", db: SessionType) -> bool:
+        pass

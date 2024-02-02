@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from src.auth.exceptions import (
     EmailTaken,
     InvalidPassword,
+    RegisterFailed,
     TokenDoesNotExist,
     UserDoesNotExist,
     UsernameTaken,
@@ -12,11 +13,11 @@ from src.auth.exceptions import (
 from src.auth.models import User
 from src.auth.repositories import UserRepository
 from src.auth.schemas import (
-    GetUser,
+    CreateUserSchema,
     LoginResponse,
+    LoginUserSchema,
     RefreshTokenResponse,
     RegisterResponse,
-    CreateUser,
 )
 from src.auth.utils import (
     decode_jwt_token,
@@ -25,7 +26,6 @@ from src.auth.utils import (
     verify_passwords,
 )
 from src.core.exceptions import (
-    DetailedHTTPException,
     NotAuthenticated,
 )
 
@@ -44,7 +44,9 @@ class AuthService:
             raise InvalidPassword
         return user
 
-    def register(self, user: CreateUser, db: Session) -> Optional[RegisterResponse]:
+    def register(
+        self, user: CreateUserSchema, db: Session
+    ) -> Optional[RegisterResponse]:
         user.password = hash_password(user.password)
         if self.user_repository.get_by_username(user.username, db):
             raise UsernameTaken
@@ -56,9 +58,9 @@ class AuthService:
                 message="User registered successfully",
             )
         except Exception:
-            raise DetailedHTTPException
+            raise RegisterFailed
 
-    def login(self, user: GetUser, db) -> Optional[LoginResponse]:
+    def login(self, user: LoginUserSchema, db: Session) -> Optional[LoginResponse]:
         auth_user = self.authenticate_user(
             username=user.username,
             password=user.password,
@@ -70,7 +72,7 @@ class AuthService:
         token = encode_jwt_token(username=auth_user.username, user_id=auth_user.id)
         return LoginResponse(**token)
 
-    def refresh_credentials(self, token: str, db):
+    def refresh_credentials(self, token: str, db: Session):
         if not token:
             raise TokenDoesNotExist
         user_payload = decode_jwt_token(token)

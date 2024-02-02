@@ -5,10 +5,10 @@ from sqlalchemy.orm import Session
 
 from src.auth.repositories import UserRepository
 from src.auth.schemas import (
-    CreateUser,
-    GetToken,
-    GetUser,
+    CreateUserSchema,
+    GetRefreshTokenSchema,
     LoginResponse,
+    LoginUserSchema,
     RefreshTokenResponse,
     RegisterResponse,
 )
@@ -25,7 +25,7 @@ auth_service = AuthService(repository=user_repository)
     response_model=RegisterResponse,
 )
 def register_view(
-    user: CreateUser,
+    user: CreateUserSchema,
     db: Annotated[Session, Depends(get_db)],
 ):
     return auth_service.register(user=user, db=db)
@@ -33,7 +33,7 @@ def register_view(
 
 @router.post("/login", response_model=LoginResponse)
 def login_view(
-    user: GetUser,
+    user: LoginUserSchema,
     db: Annotated[Session, Depends(get_db)],
 ):
     return auth_service.login(user=user, db=db)
@@ -41,7 +41,7 @@ def login_view(
 
 @router.post("/refresh/", response_model=RefreshTokenResponse)
 def refresh_view(
-    request: GetToken,
+    request: GetRefreshTokenSchema,
     db: Annotated[Session, Depends(get_db)],
 ):
     return auth_service.refresh_credentials(token=request.refresh_token, db=db)
