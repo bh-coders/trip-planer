@@ -18,7 +18,7 @@ class CommentService:
         self.repository = repository
 
     def comment_thread(
-            self, request: Request, comment: CommentCreate, db: Session
+        self, request: Request, comment: CommentCreate, db: Session
     ) -> Response:
         user_id = get_user_id_from_request(request)
         if not user_id:
@@ -32,10 +32,8 @@ class CommentService:
             created_at=datetime.utcnow(),
         )
         if not self.repository.add_comment_to_review(new_comment, db):
-            raise HTTPException(
-                status_code=400, detail="Comment could not be created."
-            )
-        return Response(status_code=201, content='Comment created successfully')
+            raise HTTPException(status_code=400, detail="Comment could not be created.")
+        return Response(status_code=201, content="Comment created successfully")
 
     def delete_comment(self, db: Session, comment_id: uuid.UUID) -> Response:
         comment = self.repository.get_comment_by_id(comment_id, db)
@@ -47,10 +45,10 @@ class CommentService:
             raise HTTPException(
                 status_code=400, detail="Comment could not be deleted ."
             )
-        return Response(status_code=200, content='Comment deleted successfully')
+        return Response(status_code=200, content="Comment deleted successfully")
 
     def update_comment(
-            self, db: Session, comment_id: uuid.UUID, updated_comment: CommentUpdate
+        self, db: Session, comment_id: uuid.UUID, updated_comment: CommentUpdate
     ) -> CommentSchema:
         comment = self.repository.get_comment_by_id(comment_id, db)
         if comment is None:
