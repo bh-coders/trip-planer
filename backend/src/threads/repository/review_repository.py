@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class ReviewRepository:
     def create_review(self, review: ReviewSchema, db: Session) -> bool:
         try:
-            with db.begin_nested():
+            with db.begin():
                 new_review = Review(
                     user_id=review.user_id,
                     attraction_id=review.attraction_id,
@@ -28,7 +28,6 @@ class ReviewRepository:
                     description=review.description,
                 )
                 db.add(new_review)
-            db.commit()
             return True
         except SQLAlchemyError as error:
             db.rollback()
