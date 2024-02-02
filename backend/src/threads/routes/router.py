@@ -6,18 +6,22 @@ from sqlalchemy.orm import Session
 
 from src.core.database import get_db
 from src.core.interceptors.auth_interceptor import verify_jwt
-from src.threads.repository.thread_repository import ThreadsRepository
+from src.threads.repository.comment_repository import CommentRepository
+from src.threads.repository.review_repository import ReviewRepository
 from src.threads.schemas.model_schema import (
     CommentCreate,
     CommentUpdate,
     ReviewCreate,
     ReviewUpdate,
 )
-from src.threads.services.thread_service import ThreadsService
+from src.threads.services.comment_service import CommentService
+from src.threads.services.review_service import ReviewService
 
 threads_router = APIRouter()
-threads_repository = ThreadsRepository()
-threads_service = ThreadsService(repository=threads_repository)
+review_repository = ReviewRepository()
+comment_repository = CommentRepository()
+comment_service = CommentService(repository=comment_repository)
+review_service = ReviewService(repository=review_repository)
 
 
 @threads_router.post("/create")
@@ -27,7 +31,7 @@ def create_thread(
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
 ):
-    return threads_service.create(request=request, thread=thread, db=db)
+    return review_service.create(request=request, thread=thread, db=db)
 
 
 @threads_router.get("/{review_id}")
@@ -36,7 +40,7 @@ def get_thread(
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
 ):
-    return threads_service.get_thread_by_id(thread_id=review_id, db=db)
+    return review_service.get_thread_by_id(thread_id=review_id, db=db)
 
 
 @threads_router.delete("/{review_id}")
@@ -45,7 +49,7 @@ def delete_thread(
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
 ):
-    return threads_service.delete_thread(db=db, review_id=review_id)
+    return review_service.delete_thread(db=db, review_id=review_id)
 
 
 @threads_router.delete("/comment/{comment_id}")
@@ -54,7 +58,7 @@ def delete_comment(
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
 ):
-    return threads_service.delete_comment(db=db, comment_id=comment_id)
+    return comment_service.delete_comment(db=db, comment_id=comment_id)
 
 
 @threads_router.patch("/{review_id}")
@@ -64,7 +68,9 @@ def update_thread(
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
 ):
-    return threads_service.update_thread(db=db, review_id=review_id, updated_review=review)
+    return review_service.update_thread(
+        db=db, review_id=review_id, updated_review=review
+    )
 
 
 @threads_router.patch("/comment/{comment_id}")
@@ -74,7 +80,9 @@ def update_comment(
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
 ):
-    return threads_service.update_comment(db=db, comment_id=comment_id, updated_comment=comment)
+    return comment_service.update_comment(
+        db=db, comment_id=comment_id, updated_comment=comment
+    )
 
 
 @threads_router.get("/attraction/{attraction_id}")
@@ -87,7 +95,7 @@ def get_threads_attraction(
     time_spent: Optional[int] = None,
     is_token_valid: bool = Depends(verify_jwt),
 ):
-    return threads_service.get_threads_attraction_filtered_sorted(
+    return review_service.get_threads_attraction_filtered_sorted(
         db=db,
         attraction_id=attraction_id,
         sort_by=sort_by,
@@ -104,4 +112,4 @@ def comment_thread(
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
 ):
-    return threads_service.comment_thread(request=request, comment=comment, db=db)
+    return comment_service.comment_thread(request=request, comment=comment, db=db)

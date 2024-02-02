@@ -1,17 +1,12 @@
 import uuid
-from datetime import datetime
 from typing import TYPE_CHECKING, List, Optional
 
 from fastapi import HTTPException, Request
 from sqlalchemy.orm import Session
 
 from src.auth.utils import get_user_id_from_request
-# from src.threads.models import Review
-from src.threads.repository.thread_repository import ThreadsRepository
+from src.threads.repository.review_repository import ReviewRepository
 from src.threads.schemas.model_schema import (
-    CommentCreate,
-    CommentSchema,
-    CommentUpdate,
     ReviewCreate,
     ReviewSchema,
     ReviewUpdate,
@@ -21,8 +16,8 @@ if TYPE_CHECKING:
     from src.threads.models import Review
 
 
-class ThreadsService:
-    def __init__(self, repository: ThreadsRepository):
+class ReviewService:
+    def __init__(self, repository: ReviewRepository):
         self.repository = repository
 
     def create(self, request: Request, thread: ReviewCreate, db: Session) -> bool:
@@ -74,22 +69,6 @@ class ThreadsService:
 
         return review_schemas
 
-    def comment_thread(
-            self, request: Request, comment: CommentCreate, db: Session
-    ) -> bool:
-        user_id = get_user_id_from_request(request)
-        if not user_id:
-            raise HTTPException(
-                status_code=401, detail="Cannot find user_id in token payload."
-            )
-        new_comment = CommentSchema(
-            review_id=comment.review_id,
-            user_id=user_id,
-            content=comment.content,
-            created_at=datetime.utcnow(),
-        )
-        return self.repository.add_comment_to_review(new_comment, db)
-
     def delete_thread(self, db: Session, review_id: uuid.UUID):
         thread = self.repository.get_review_by_id(review_id, db)
         if thread is None:
@@ -97,14 +76,6 @@ class ThreadsService:
                 status_code=404, detail=f"Not found review_id={review_id}."
             )
         return self.repository.delete(db, thread)
-
-    def delete_comment(self, db: Session, comment_id: uuid.UUID):
-        comment = self.repository.get_comment_by_id(comment_id, db)
-        if comment is None:
-            raise HTTPException(
-                status_code=404, detail=f"Not found comment_id={comment_id}."
-            )
-        return self.repository.delete_comment(db, comment)
 
     def update_thread(
             self, db: Session, review_id: uuid.UUID, updated_review: ReviewUpdate
@@ -115,16 +86,8 @@ class ThreadsService:
                 status_code=404, detail=f"Not found review_id={review_id}."
             )
         updated = self.repository.update_review(db, thread, updated_review)
-        return ReviewSchema(**updated.as_dict())
-
-    def update_comment(
-            self, db: Session, comment_id: uuid.UUID, updated_comment: CommentUpdate
-    ):
-        comment = self.repository.get_comment_by_id(comment_id, db)
-        if comment is None:
+        if not updated:
             raise HTTPException(
-                status_code=404, detail=f"Not found comment_id={comment_id}."
+                status_code=402, detail=f"Cannot update review."
             )
-        updated = self.repository.update_comment(db, comment, updated_comment)
-
-        return CommentSchema(**updated.as_dict())
+        return ReviewSchema(**updated.as_dict())

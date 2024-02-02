@@ -29,7 +29,7 @@ class Review(Base):
         back_populates="review",
         cascade="all, delete-orphan",
         passive_deletes=True,
-        order_by="Comment.created_at.asc()"
+        order_by="Comment.created_at.asc()",
     )
 
     def as_dict(self):
