@@ -1,9 +1,10 @@
 import logging
 import uuid
 from datetime import datetime, timedelta
+from typing import Optional
 
 import jwt
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 from passlib.context import CryptContext
 
 from src.auth.exceptions import InvalidPassword
@@ -114,3 +115,15 @@ def encode_jwt_token(username: str, user_id: uuid.UUID) -> dict:
     }
     logger.info("Tokens set: %s", data)
     return data
+
+
+def get_user_id_from_request(request: Request) -> Optional[uuid.UUID]:
+    authorization = request.headers.get("Authorization")
+    if not authorization:
+        return None
+    auth_token = authorization.split(" ")[1]
+    payload_token = decode_jwt_token(auth_token)
+    user_id: Optional[uuid.UUID] = payload_token.get("user_id")
+    if user_id:
+        return user_id
+    return None
