@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
-import { attractionTileStyles } from '../styles';
+import { attractionTileStyles } from './styles';
 
 const AttractionTile = ({ attraction }: any) => {
   const hasImage = attraction.image_url && attraction.image_url.trim() !== '';
