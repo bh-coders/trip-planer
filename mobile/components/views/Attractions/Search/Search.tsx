@@ -1,27 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, Button, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Button, FlatList, TouchableOpacity, Image, Alert, Text } from 'react-native';
 import FiltersModal from './FiltersModal';
-import { attractionsExamples, Attraction } from './api/apiMock';
+import { attractionsExamples } from './api/apiMock';
 import AttractionModal from './AttractionModal';
 import AttractionTile from '../../common/AttractionTile';
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { styles } from '../../Dashboard/styles';
 import { attractionSerchStyles } from './styles';
-
-interface Filters {
-  category: string;
-  city: string;
-  country: string;
-  keyword: string;
-  radius: string;
-  region: string;
-}
+import { Attraction, Filters, NavigationProps } from '../types';
+import { fetchUsersAttractions } from './api/attractionsApi';
 
 const AttractionSearchScreen: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const [userAttractionsData, setUserAttractionsData] = useState<Attraction[]>(attractionsExamples);
   const [attractions, setAttractions] = useState<Attraction[]>([]);
   const [attractionDetails, setAttractionDetails] = useState<Attraction | {}>({});
-  const [loading, setLoading] = useState(false);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [attractionModalVisible, setAttractionModalVisible] = useState(false);
   const [filters, setFilters] = useState<Filters>({
@@ -34,17 +28,27 @@ const AttractionSearchScreen: React.FC = () => {
   });
 
   const [radiuses, setRadiuses] = useState<string[]>([]);
-  const attractionData = attractionsExamples;
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProps>();
 
 
   useEffect(() => {
     const radiusData = ['5', '10', '15'];
     setRadiuses(radiusData);
+    fetchUsersAttractions(1)
+      .then((attractions) => setUserAttractionsData(attractions))
+      .catch((error) => {
+        if (userAttractionsData === attractionsExamples) {
+          Alert.alert('Error', 'Failed getting user attractions. Loading demo data');
+        } else {
+          Alert.alert('Error', 'Failed getting user attractions.');
+        }
+      })
+      .then(() => setLoading(false));
   }, []);
 
+
   useEffect(() => {
-    const filteredAttractions = attractionData.filter(attraction => {
+    const filteredAttractions = userAttractionsData.filter(attraction => {
       return (
         (filters.category === "" || attraction.category === filters.category) &&
         (filters.city === "" || attraction.city === filters.city) &&
@@ -64,7 +68,7 @@ const AttractionSearchScreen: React.FC = () => {
   const handleAttractionClick = (attraction: Attraction) => {
     // setAttractionModalVisible(true);
     setAttractionDetails(attraction);
-    navigation.navigate('AttractionDetailScreen', {attraction});
+    navigation.navigate('AttractionDetailScreen', { id: attraction.id });
 
     console.log('Clicked Attraction:', attraction);
   };
@@ -75,7 +79,7 @@ const AttractionSearchScreen: React.FC = () => {
         <Button title='Add to favorite' onPress={() => {
           console.log('add to favorite: ', item);
           // swip.close();
-          }} />
+        }} />
       </View>
     );
   };
@@ -96,7 +100,7 @@ const AttractionSearchScreen: React.FC = () => {
         visible={filterModalVisible}
         onClose={() => setFilterModalVisible(false)}
         onSave={handleSetFilters}
-        attractionList={attractionData}
+        attractionList={userAttractionsData}
         radiuses={radiuses}
       />
 
@@ -107,7 +111,10 @@ const AttractionSearchScreen: React.FC = () => {
       />
 
       <View style={styles.attractionsGrid}>
-        {loading && <Text>Loading...</Text>}
+
+        {loading && (
+          <Text>Loading data</Text>
+        )}
 
         {!loading && attractions.length === 0 && (
           <View>
@@ -135,7 +142,7 @@ const AttractionSearchScreen: React.FC = () => {
                         place_name: attraction.name,
                         place_description: attraction.description,
                         place_category: attraction.category,
-                        place_rating: attraction.rating
+                        place_rating: attraction.rating.toFixed(1)
                       }}
                     />
                   </View>

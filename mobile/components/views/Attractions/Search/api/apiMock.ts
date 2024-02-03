@@ -1,15 +1,3 @@
-export interface Attraction {
-  id: number;
-  name: string;
-  country: string;
-  city: string;
-  region: string;
-  category: string;
-  description: string;
-  rating: number;
-}
-
-
 export const attractionsExamples = [
     {
         id: 1,
