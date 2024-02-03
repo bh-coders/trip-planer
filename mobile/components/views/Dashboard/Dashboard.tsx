@@ -3,10 +3,10 @@ import { View } from 'react-native';
 import { styles } from './styles';
 import MapboxBoard from './components/MapboxBoard';
 
-const Dashboard = () => {
+const Dashboard = ({ navigation }: any) => {
   return (
     <View style={styles.page}>
-      <MapboxBoard />
+      <MapboxBoard navigation={navigation} />
     </View>
   );
 };

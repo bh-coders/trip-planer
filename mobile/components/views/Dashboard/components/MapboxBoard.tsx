@@ -9,7 +9,7 @@ import { fetchAttractions } from '../api/attractionsApi';
 import { MAPBOX_PUBLIC_TOKEN } from '../../../../consts';
 Mapbox.setAccessToken(MAPBOX_PUBLIC_TOKEN as any);
 
-const MapboxBoard = () => {
+const MapboxBoard = ({ navigation }: any) => {
   const [location, setLocation] = useState<any>(null);
   const [attractions, setAttractions] = useState<any>();
   const [panelVisible, setPanelVisible] = useState(false);
@@ -80,6 +80,7 @@ const MapboxBoard = () => {
         selectedCategory={selectedCategory}
         onCategoryChange={onCategoryChange}
         attractions={attractions}
+        navigation={navigation}
       />
     </View>
   );

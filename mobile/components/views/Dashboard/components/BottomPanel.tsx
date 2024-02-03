@@ -1,11 +1,12 @@
 import React, { useMemo, useRef } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { styles } from '../styles';
 import AttractionTile from '../../common/AttractionTile';
 interface Attraction {
   place_name: string;
+  id: number;
 }
 
 interface BottomPanelProps {
@@ -14,6 +15,7 @@ interface BottomPanelProps {
   onCategoryChange: (category: string) => void;
   attractions: Attraction[];
   selectedCategory: any;
+  navigation: any;
 }
 const getPlaceholderAttractions = () => {
   return Array.from({ length: 8 }, (_, index) => ({
@@ -36,6 +38,7 @@ const BottomPanel: React.FC<BottomPanelProps> = ({
   onCategoryChange,
   attractions,
   selectedCategory,
+  navigation,
 }) => {
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['5%', '80%'], []);
@@ -60,7 +63,12 @@ const BottomPanel: React.FC<BottomPanelProps> = ({
         <View style={styles.attractionsGrid}>
           {(attractions && attractions.length > 0 ? attractions : placeholderAttractions).map(
             (attraction, index) => (
-              <AttractionTile key={index} attraction={attraction} />
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('AttractionDetailScreen', { id: attraction.id })
+                }>
+                <AttractionTile key={index} attraction={attraction} />
+              </TouchableOpacity>
             )
           )}
         </View>
