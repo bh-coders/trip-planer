@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from src.auth.utils import get_user_id_from_request
 from src.core.json_encoder import JSONEncoder
-from src.db.cache_storage import CacheStorage
+from src.db.cache_storage import CacheStorage, CacheKeys
 from src.threads.repository.review_repository import ReviewRepository
 from src.threads.schemas.model_schema import (
     ReviewCreate,
@@ -45,7 +45,8 @@ class ReviewService:
         return Response(status_code=201, content="Review successfully created.")
 
     def get_thread_by_id(self, thread_id: uuid.UUID, db: Session) -> ReviewSchema:
-        cache_review = cache.get_value(f"thread:{thread_id}")
+        cache_key = CacheKeys.THREAD.value + str(thread_id)
+        cache_review = cache.get_value(cache_key)
         if cache_review:
             review_data = json.loads(cache_review)
             return ReviewSchema(**review_data)
@@ -57,7 +58,7 @@ class ReviewService:
             )
 
         cache.set_value(
-            f"thread:{thread_id}", json.dumps(review.as_dict(), cls=JSONEncoder)
+            cache_key, json.dumps(review.as_dict(), cls=JSONEncoder)
         )
         return ReviewSchema(**review.as_dict())
 
@@ -97,6 +98,7 @@ class ReviewService:
     def update_thread(
         self, db: Session, review_id: uuid.UUID, updated_review: ReviewUpdate
     ) -> ReviewSchema:
+        cache_key = CacheKeys.THREAD.value + str(review_id)
         thread = self.repository.get_review_by_id(review_id, db)
         if thread is None:
             raise HTTPException(
@@ -106,6 +108,6 @@ class ReviewService:
         if not updated:
             raise HTTPException(status_code=402, detail="Cannot update review.")
         cache.set_value(
-            f"thread:{review_id}", json.dumps(updated.as_dict(), cls=JSONEncoder)
+            cache_key, json.dumps(updated.as_dict(), cls=JSONEncoder)
         )
         return ReviewSchema(**updated.as_dict())

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from src.attraction.interfaces.repository import Repository
 from src.attraction.schemas import AttractionImages, AttractionSchema
 from src.core.json_encoder import JSONEncoder
-from src.db.cache_storage import CacheStorage
+from src.db.cache_storage import CacheStorage, CacheKeys
 from src.db.cloudstorage import CloudStorage
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,8 @@ class AttractionService:
         return [AttractionSchema(**attraction.as_dict()) for attraction in attractions]
 
     def get_attraction_by_id(self, db: Session, attraction_id: int) -> AttractionSchema:
-        cache_attraction = cache.get_value(f"attraction:{attraction_id}")
+        cache_key = CacheKeys.ATTRACTION.value + str(attraction_id)
+        cache_attraction = cache.get_value(cache_key)
         if cache_attraction:
             attraction = json.loads(cache_attraction)
             return AttractionSchema(**attraction)
@@ -33,7 +34,7 @@ class AttractionService:
         if not attraction:
             raise HTTPException(status_code=404, detail="Attraction does not exist")
         cache.set_value(
-            f"attraction:{attraction_id}",
+            cache_key,
             json.dumps(attraction.as_dict(), cls=JSONEncoder),
         )
         return AttractionSchema(**attraction.as_dict())
@@ -71,7 +72,8 @@ class AttractionService:
     def get_attraction_images(
         self, db: Session, attraction_id: int
     ) -> AttractionImages:
-        cache_attraction_images = cache.get_value(f"attraction_images:{attraction_id}")
+        cache_key = CacheKeys.ATTRACTION_IMAGES.value + str(attraction_id)
+        cache_attraction_images = cache.get_value(cache_key)
         if cache_attraction_images:
             attraction_images = json.loads(cache_attraction_images)
             return AttractionImages(**attraction_images)
@@ -95,7 +97,7 @@ class AttractionService:
                 result.image_urls.remove(default_path)
             result.image_urls.append(f"{bucket_name}/{obj.object_name}")
         cache.set_value(
-            f"attraction_images:{attraction_id}",
+            cache_key,
             json.dumps(result.model_dump(), cls=JSONEncoder),
         )
         return result
