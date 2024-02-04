@@ -30,7 +30,7 @@ export type Filters = {
 export type OpenHours = {
     open: number;
     close: number;
-}
+};
 
 type StackParamList = {
     AttractionDetailScreen: { id: number }
