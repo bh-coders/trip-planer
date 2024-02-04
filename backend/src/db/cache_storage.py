@@ -15,19 +15,19 @@ logger = logging.getLogger(__name__)
 
 
 class CacheKeys(Enum):
-    THREAD = 'thread:'
-    COMMENT = 'thread-comment:'
-    ATTRACTION = 'attraction:'
-    ATTRACTION_IMAGES = 'attraction-images:'
+    THREAD = "thread:"
+    COMMENT = "thread-comment:"
+    ATTRACTION = "attraction:"
+    ATTRACTION_IMAGES = "attraction-images:"
 
 
 class CacheStorage:
     def __init__(
-            self,
-            host: Optional[str] = None,
-            port: Optional[str] = None,
-            password: Optional[str] = None,
-            expiration: Optional[int] = None,
+        self,
+        host: Optional[str] = None,
+        port: Optional[str] = None,
+        password: Optional[str] = None,
+        expiration: Optional[int] = None,
     ):
         self._host = host or CACHE_STORAGE_HOST
         self._port = port or CACHE_STORAGE_PORT
