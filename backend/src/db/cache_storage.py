@@ -36,7 +36,6 @@ class CacheStorage:
                 password=self._password,
                 decode_responses=True,
             )
-            redis.ping()
             return redis
         except Exception as e:
             logger.error("Could not connect to redis server: %s" % e)
