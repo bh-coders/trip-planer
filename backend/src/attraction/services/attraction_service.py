@@ -1,13 +1,13 @@
 import json
 import logging
 
+import orjson
 from fastapi import HTTPException, Response
 from sqlalchemy.orm import Session
 
 from src.attraction.interfaces.repository import Repository
 from src.attraction.schemas import AttractionImages, AttractionSchema
-from src.core.json_encoder import JSONEncoder
-from src.db.cache_storage import CacheStorage, CacheKeys
+from src.db.cache_storage import CacheKeys, CacheStorage
 from src.db.cloudstorage import CloudStorage
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ class AttractionService:
             raise HTTPException(status_code=404, detail="Attraction does not exist")
         cache.set_value(
             cache_key,
-            json.dumps(attraction.as_dict(), cls=JSONEncoder),
+            orjson.dumps(attraction.as_dict()),
         )
         return AttractionSchema(**attraction.as_dict())
 
@@ -98,6 +98,6 @@ class AttractionService:
             result.image_urls.append(f"{bucket_name}/{obj.object_name}")
         cache.set_value(
             cache_key,
-            json.dumps(result.model_dump(), cls=JSONEncoder),
+            orjson.dumps(result.model_dump()),
         )
         return result

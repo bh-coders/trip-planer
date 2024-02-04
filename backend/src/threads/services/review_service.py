@@ -2,12 +2,12 @@ import json
 import uuid
 from typing import TYPE_CHECKING, List, Optional
 
+import orjson
 from fastapi import HTTPException, Request, Response
 from sqlalchemy.orm import Session
 
 from src.auth.utils import get_user_id_from_request
-from src.core.json_encoder import JSONEncoder
-from src.db.cache_storage import CacheStorage, CacheKeys
+from src.db.cache_storage import CacheKeys, CacheStorage
 from src.threads.repository.review_repository import ReviewRepository
 from src.threads.schemas.model_schema import (
     ReviewCreate,
@@ -57,9 +57,7 @@ class ReviewService:
                 status_code=404, detail=f"Cannot find review with review_id={thread_id}"
             )
 
-        cache.set_value(
-            cache_key, json.dumps(review.as_dict(), cls=JSONEncoder)
-        )
+        cache.set_value(cache_key, orjson.dumps(review.as_dict()))
         return ReviewSchema(**review.as_dict())
 
     def get_threads_attraction_filtered_sorted(
@@ -107,7 +105,5 @@ class ReviewService:
         updated = self.repository.update_review(db, thread, updated_review)
         if not updated:
             raise HTTPException(status_code=402, detail="Cannot update review.")
-        cache.set_value(
-            cache_key, json.dumps(updated.as_dict(), cls=JSONEncoder)
-        )
+        cache.set_value(cache_key, orjson.dumps(updated.as_dict()))
         return ReviewSchema(**updated.as_dict())
