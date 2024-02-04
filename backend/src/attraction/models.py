@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Optional
 
 from sqlalchemy import (
@@ -13,7 +14,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, column_property, relationship
 
-from src.core.database import Base
+from src.db.database import Base
 from src.threads.models import Review
 
 
@@ -39,23 +40,43 @@ class Attraction(Base):
     )
     user = relationship("User", back_populates="attractions")
 
-    average_rating: Mapped[float] = column_property(
+    rating: Mapped[Decimal] = column_property(
         select(func.coalesce(func.avg(Review.rating), 0))
         .where(Review.attraction_id == id)
         .correlate_except(Review)
         .scalar_subquery()
     )
 
-    average_time_spent: Mapped[float] = column_property(
+    time_spent: Mapped[Decimal] = column_property(
         select(func.coalesce(func.avg(Review.time_spent), 0))
         .where(Review.attraction_id == id)
         .correlate_except(Review)
         .scalar_subquery()
     )
 
-    average_price: Mapped[float] = column_property(
+    price: Mapped[Decimal] = column_property(
         select(func.coalesce(func.avg(Review.price), 0))
         .where(Review.attraction_id == id)
         .correlate_except(Review)
         .scalar_subquery()
     )
+
+    visits: Mapped[Decimal] = column_property(
+        select(func.coalesce(func.count(Review.id), 0))
+        .where(Review.attraction_id == id)
+        .correlate_except(Review)
+        .scalar_subquery()
+    )
+
+    def as_dict(self):
+        data = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+        decimal_fields = ["price", "rating", "time_spent", "visits"]
+        for field in decimal_fields:
+            value = getattr(self, field, None)
+            if isinstance(value, Decimal):
+                data[field] = float(value)
+            elif value is not None:
+                data[field] = value
+
+        return data
