@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { imagePlaceholder, attractionDetails } from './styles';
 import { Attraction } from '../Attractions/types';
-import { fetchAttraction } from '../Attractions/Search/api/attractionsApi';
-import { attractionsExamples } from '../Attractions/Search/api/apiMock';
+import { fetchAttraction } from '../Attractions/api/attractionsApi';
+import { attractionsExamples } from '../Attractions/api/apiMock';
 
 const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = ({ route }) => {
     

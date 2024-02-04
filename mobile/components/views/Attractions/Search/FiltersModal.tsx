@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Text, TextInput, View } from "react-native";
 import { Picker } from '@react-native-picker/picker';
-import { Attraction } from "./api/apiMock";
+import { Attraction } from "../api/apiMock";
 
 interface FiltersModalProps {
   visible: boolean;

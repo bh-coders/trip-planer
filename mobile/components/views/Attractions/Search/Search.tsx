@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Button, FlatList, TouchableOpacity, Image, Alert, Text } from 'react-native';
 import FiltersModal from './FiltersModal';
-import { attractionsExamples } from './api/apiMock';
+import { attractionsExamples } from '../api/apiMock';
 import AttractionModal from './AttractionModal';
 import AttractionTile from '../../common/AttractionTile';
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { styles } from '../../Dashboard/styles';
 import { attractionSerchStyles } from './styles';
 import { Attraction, Filters, NavigationProps } from '../types';
-import { fetchUsersAttractions } from './api/attractionsApi';
+import { fetchUsersAttractions } from '../api/attractionsApi';
 
 const AttractionSearchScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
