@@ -102,4 +102,4 @@ class ReviewRepository:
             return db_review
         except Exception as e:
             logger.error("Error update review: %s", e)
-            return None  # For now I will return False
+            return None
