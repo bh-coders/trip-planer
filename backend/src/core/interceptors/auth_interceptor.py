@@ -9,8 +9,7 @@ from starlette import status
 
 from src.auth.repositories.auth_repo import AuthRepository
 from src.auth.utils import decode_jwt_token
-from src.core.configs import ALGORITHM, SECRET_KEY
-from src.core.database import get_db
+from src.db.database import get_db
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 auth_repository = AuthRepository()
@@ -22,8 +21,7 @@ def verify_jwt(
     token: str = Depends(oauth2_scheme),
 ) -> bool:
     try:
-        payload = decode_jwt_token(token=token)
-        logger.info(payload)
+        decode_jwt_token(token=token)
         return True
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=403, detail="Token expired")
