@@ -1,10 +1,17 @@
-import { useState } from "react";
-import {DrawerItem} from '@react-navigation/drawer';
+import React, { useState } from "react";
+import {DrawerItem, DrawerNavigationProp} from '@react-navigation/drawer';
 import { View } from "react-native";
 
+type DrawerParamList = {
+  Search: undefined;
+  AddNew: undefined;
+};
 
+type AttractionSubMenuProps = {
+  navigation: DrawerNavigationProp<DrawerParamList>;
+};
 
-const AttractionSubMenu: React.FC<any> = (props) => {
+const AttractionSubMenu: React.FC<AttractionSubMenuProps> = (props) =>{
     const [nestedMenuOpen, setNestedMenuOpen] = useState(false);
 
     return(

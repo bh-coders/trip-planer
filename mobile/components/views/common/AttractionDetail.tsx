@@ -6,7 +6,7 @@ import { fetchAttraction } from '../Attractions/api/attractionsApi';
 import { attractionsExamples } from '../Attractions/api/apiMock';
 
 const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = ({ route }) => {
-    
+
     const [attractionData, setAttractionData] = useState<Attraction>();
     const [attractionImages, setAttractionImages] = useState<any>();
 
@@ -26,49 +26,53 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = 
     }, []);
 
     return (
-        <>
-            <ScrollView style={attractionDetails.container}>
-                <View style={attractionDetails.header}>
-                    <Text style={attractionDetails.name}>{attractionData?.name}</Text>
-                    <TouchableOpacity style={attractionDetails.ratingContainer}>
-                        <View style={attractionDetails.ratingBox}>
-                            <Text style={attractionDetails.ratingText}>
-                                {attractionData?.rating.toFixed(1)}
-                            </Text>
-                            <View style={attractionDetails.addOpinionIcon}>
-                                <Text style={attractionDetails.addOpinionText}>+</Text>
+        attractionDetails ? (
+            <>
+                <ScrollView style={attractionDetails.container}>
+                    <View style={attractionDetails.header}>
+                        <Text style={attractionDetails.name}>{attractionData?.name}</Text>
+                        <TouchableOpacity style={attractionDetails.ratingContainer}>
+                            <View style={attractionDetails.ratingBox}>
+                                <Text style={attractionDetails.ratingText}>
+                                    {attractionData?.rating.toFixed(1)}
+                                </Text>
+                                <View style={attractionDetails.addOpinionIcon}>
+                                    <Text style={attractionDetails.addOpinionText}>+</Text>
+                                </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                        </TouchableOpacity>
+                    </View>
 
-                <View style={attractionDetails.categoryContainer}>
-                    <Text style={attractionDetails.category}>{attractionData?.category}</Text>
-                    <Text style={attractionDetails.views}>[100 views]</Text>
-                </View>
+                    <View style={attractionDetails.categoryContainer}>
+                        <Text style={attractionDetails.category}>{attractionData?.category}</Text>
+                        <Text style={attractionDetails.views}>[100 views]</Text>
+                    </View>
 
-                <ScrollView horizontal style={attractionDetails.imageContainer}>
-                    <View style={imagePlaceholder.imageContainer}>{attractionImages}</View>
+                    <ScrollView horizontal style={attractionDetails.imageContainer}>
+                        <View style={imagePlaceholder.imageContainer}>{attractionImages}</View>
+                    </ScrollView>
+
+                    <View style={attractionDetails.openingHoursContainer}>
+                        <Text style={attractionDetails.openingHours}>[⌚ opening hours]</Text>
+                        <Text style={attractionDetails.price}>[Price]</Text>
+                    </View>
+
+                    <Text style={attractionDetails.description}>{attractionData?.description}</Text>
                 </ScrollView>
 
-                <View style={attractionDetails.openingHoursContainer}>
-                    <Text style={attractionDetails.openingHours}>[⌚ opening hours]</Text>
-                    <Text style={attractionDetails.price}>[Price]</Text>
+                <View style={attractionDetails.buttonsContainer}>
+                    <TouchableOpacity style={attractionDetails.addToRouteButton}>
+                        <Text style={attractionDetails.addToRouteText}>Add to route</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={attractionDetails.favoriteButton}>
+                        <Text style={attractionDetails.favoriteText}>❤️</Text>
+                    </TouchableOpacity>
                 </View>
-
-                <Text style={attractionDetails.description}>{attractionData?.description}</Text>
-            </ScrollView>
-
-            <View style={attractionDetails.buttonsContainer}>
-                <TouchableOpacity style={attractionDetails.addToRouteButton}>
-                    <Text style={attractionDetails.addToRouteText}>Add to route</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={attractionDetails.favoriteButton}>
-                    <Text style={attractionDetails.favoriteText}>❤️</Text>
-                </TouchableOpacity>
-            </View>
-        </>
-    );
+            </>
+        ) : (
+            <Text> Loading or something else</Text>
+        )
+    )
 };
 
 export default AttractionDetailScreen;

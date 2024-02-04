@@ -13,7 +13,7 @@ import { fetchUsersAttractions } from '../api/attractionsApi';
 
 const AttractionSearchScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [userAttractionsData, setUserAttractionsData] = useState<Attraction[]>(attractionsExamples);
+  const [userAttractions, setUserAttractions] = useState<Attraction[]>(attractionsExamples);
   const [attractions, setAttractions] = useState<Attraction[]>([]);
   const [attractionDetails, setAttractionDetails] = useState<Attraction | {}>({});
   const [filterModalVisible, setFilterModalVisible] = useState(false);
@@ -35,9 +35,9 @@ const AttractionSearchScreen: React.FC = () => {
     const radiusData = ['5', '10', '15'];
     setRadiuses(radiusData);
     fetchUsersAttractions(1)
-      .then((attractions) => setUserAttractionsData(attractions))
+      .then((attractions) => setUserAttractions(attractions))
       .catch((error) => {
-        if (userAttractionsData === attractionsExamples) {
+        if (userAttractions === attractionsExamples) {
           Alert.alert('Error', 'Failed getting user attractions. Loading demo data');
         } else {
           Alert.alert('Error', 'Failed getting user attractions.');
@@ -48,7 +48,7 @@ const AttractionSearchScreen: React.FC = () => {
 
 
   useEffect(() => {
-    const filteredAttractions = userAttractionsData.filter(attraction => {
+    const filteredAttractions = userAttractions.filter(attraction => {
       return (
         (filters.category === "" || attraction.category === filters.category) &&
         (filters.city === "" || attraction.city === filters.city) &&
@@ -100,7 +100,7 @@ const AttractionSearchScreen: React.FC = () => {
         visible={filterModalVisible}
         onClose={() => setFilterModalVisible(false)}
         onSave={handleSetFilters}
-        attractionList={userAttractionsData}
+        attractionList={userAttractions}
         radiuses={radiuses}
       />
 
@@ -116,7 +116,7 @@ const AttractionSearchScreen: React.FC = () => {
           <Text>Loading data</Text>
         )}
 
-        {!loading && attractions.length === 0 && (
+        {!loading && attractions?.length === 0 && (
           <View>
             <Image
               source={require('./../../../../resources/images/we_dont_have.png')}
@@ -125,7 +125,7 @@ const AttractionSearchScreen: React.FC = () => {
           </View>
         )}
 
-        {!loading && attractions.length > 0 && (
+        {!loading && attractions?.length > 0 && (
           <FlatList
             style={attractionSerchStyles.attractionsList}
             data={attractions}
