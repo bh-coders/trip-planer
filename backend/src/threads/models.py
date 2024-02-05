@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import UUID, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, relationship
 
-from src.core.database import Base
+from src.db.database import Base
 
 
 class Review(Base):
