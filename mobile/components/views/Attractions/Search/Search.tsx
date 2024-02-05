@@ -9,7 +9,7 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 import { styles } from '../../Dashboard/styles';
 import { attractionSerchStyles } from './styles';
 import { Attraction, Filters, NavigationProps } from '../types';
-import { fetchUsersAttractions } from '../api/attractionsApi';
+import { fetchUserAttractions } from '../api/attractionsApi';
 
 const AttractionSearchScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ const AttractionSearchScreen: React.FC = () => {
   useEffect(() => {
     const radiusData = ['5', '10', '15'];
     setRadiuses(radiusData);
-    fetchUsersAttractions(1)
+    fetchUserAttractions(1)
       .then((attractions) => setUserAttractions(attractions))
       .catch((error) => {
         if (userAttractions === attractionsExamples) {

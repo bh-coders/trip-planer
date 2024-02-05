@@ -41,6 +41,16 @@ export type OpenHours = {
     close: number;
 };
 
+export type Opinion = {
+    author: number;
+    description: string;
+    images: string[];
+    rating: number;
+    title: string;
+    price: number;
+    time_spent: number;
+};
+
 type StackParamList = {
     AttractionDetailScreen: { id: number }
 }
