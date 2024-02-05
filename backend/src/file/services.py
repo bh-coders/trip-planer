@@ -3,7 +3,7 @@ import uuid
 import magic
 from fastapi import HTTPException, Response
 
-from src.core.cloudstorage import CloudStorage
+from src.db.cloudstorage import CloudStorage
 
 
 def guess_media_type(data: bytes) -> str:
