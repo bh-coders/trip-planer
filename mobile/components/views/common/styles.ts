@@ -237,5 +237,24 @@ export const attractionDetails = StyleSheet.create({
     fontSize: 15,
     color: '#fff',
     fontWeight: 'bold' 
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontFamily: 'Inter',
+    fontSize: 22,
+    marginVertical: 10,
+    color: '#0C0C0C',
+    fontWeight: 'bold',
+  },
 });

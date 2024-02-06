@@ -4,6 +4,7 @@ export const attractionsExamples: Attraction[] = [
   {
     id: 1,
     name: 'Royal Castle',
+    user_id: 1,
     country: 'Poland',
     city: 'Warsaw',
     region: 'Masovian',
@@ -21,6 +22,7 @@ export const attractionsExamples: Attraction[] = [
   {
     id: 2,
     name: 'Wawel Castle',
+    user_id: 2,
     country: 'Poland',
     city: 'Krakow',
     region: 'Lesser Poland',
@@ -38,6 +40,7 @@ export const attractionsExamples: Attraction[] = [
   {
     id: 3,
     name: 'Malbork Castle',
+    user_id: 3,
     country: 'Poland',
     city: 'Malbork',
     region: 'Pomeranian',
@@ -55,6 +58,7 @@ export const attractionsExamples: Attraction[] = [
   {
     id: 4,
     name: 'Berlin Wall',
+    user_id: 1,
     country: 'Germany',
     city: 'Berlin',
     region: 'Brandenburg',
@@ -72,6 +76,7 @@ export const attractionsExamples: Attraction[] = [
   {
     id: 5,
     name: 'Neuschwanstein Castle',
+    user_id: 2,
     country: 'Germany',
     city: 'Füssen',
     region: 'Bavaria',
@@ -89,6 +94,7 @@ export const attractionsExamples: Attraction[] = [
   {
     id: 6,
     name: 'Cologne Cathedral',
+    user_id: 3,
     country: 'Germany',
     city: 'Cologne',
     region: 'North Rhine-Westphalia',
@@ -106,6 +112,7 @@ export const attractionsExamples: Attraction[] = [
   {
     id: 7,
     name: 'Eiffel Tower',
+    user_id: 1,
     country: 'France',
     city: 'Paris',
     region: 'Île-de-France',
@@ -123,6 +130,7 @@ export const attractionsExamples: Attraction[] = [
   {
     id: 8,
     name: 'Louvre Museum',
+    user_id: 2,
     country: 'France',
     city: 'Paris',
     region: 'Île-de-France',
@@ -140,6 +148,7 @@ export const attractionsExamples: Attraction[] = [
   {
     id: 9,
     name: 'Mont Saint-Michel',
+    user_id: 3,
     country: 'France',
     city: 'Le Mont-Saint-Michel',
     region: 'Normandy',

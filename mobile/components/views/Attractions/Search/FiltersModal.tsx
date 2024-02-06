@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Text, TextInput, View } from "react-native";
 import { Picker } from '@react-native-picker/picker';
-import { Attraction } from "../api/apiMock";
+import { Attraction } from "../types";;
 
 interface FiltersModalProps {
   visible: boolean;
@@ -33,7 +33,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, onClose, a
   const [regionVisible, setRegionVisible] = useState(false);
   const [furtherFiltersVisible, setFurtherFiltersVisible] = useState(false);
 
-  const countries: string[] = [...new Set(attractionList.map(attraction => attraction.country))];
+  const countries: string[] = [...new Set(attractionList.map(attraction => attraction?.country))];
 
   const handleSearch = () => {
     onSave({ keyword, country, city, region, category, radius });
