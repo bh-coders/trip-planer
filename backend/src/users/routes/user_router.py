@@ -4,8 +4,8 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from src.core.database import get_db
 from src.core.interceptors.auth_interceptor import get_current_user_id
+from src.db.database import get_db
 from src.users.repositories import UserRepository
 from src.users.schemas.user import (
     DeleteEndpoint,

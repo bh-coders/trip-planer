@@ -7,10 +7,10 @@ from pydantic import (
 )
 
 from src.users.schemas.profile import (
-    CreateProfileModel as CreateProfileModel,
+    CreateProfileModel,
 )
 from src.users.schemas.user import (
-    CreateUserModel as CreateUserModel,
+    CreateUserModel,
 )
 from src.users.validations import (
     validate_password,

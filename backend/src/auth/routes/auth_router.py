@@ -13,7 +13,7 @@ from src.auth.schemas import (
     RegisterUserModel,
 )
 from src.auth.services import AuthService
-from src.core.database import get_db
+from src.db.database import get_db
 from src.users.repositories import ProfileRepository, UserRepository
 
 router = APIRouter()

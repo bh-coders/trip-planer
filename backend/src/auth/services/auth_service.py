@@ -20,10 +20,8 @@ from src.auth.utils import (
 from src.core.exceptions import (
     NotAuthenticated,
 )
-
-# TODO to check
-# from src.db.cache_storage import CacheStorage
-# from src.db.cloudstorage import CloudStorage
+from src.db.cache_storage import CacheStorage
+from src.db.cloudstorage import CloudStorage
 from src.users.exceptions import (
     EmailTaken,
     InvalidPassword,
@@ -36,10 +34,10 @@ from src.users.exceptions import (
 )
 from src.users.models.user_model import User
 from src.users.repositories import ProfileRepository, UserRepository
+from src.users.utils import prepare_profile_image
 
-# TODO to check
-# cache = CacheStorage()
-# cloud_storage = CloudStorage()
+cache = CacheStorage()
+cloud_storage = CloudStorage()
 
 
 class AuthService:
@@ -74,15 +72,16 @@ class AuthService:
             if not user:
                 db.rollback()
                 raise InvalidUserData
-            # TODO to check
-            # if not user.profile.image_file_data and not user.profile.bucket_name:
-            #     raise HTTPException(status_code=400, detail="Profile image is required")
-            # cloud_storage.upload_file(
-            #     bucket_name=user_data.profile.bucket_name,
-            #     file_io=user_data.profile.image_file_data.file_io,
-            #     filename=f"{self.user_id}/{user_data.profile.image_file_data.filename}",
-            #     file_size=user_data.profile.image_file_data.file_size,
-            # )
+
+            if not user_data.profile.image_url:
+                raise HTTPException(status_code=400, detail="Profile image is required")
+            image = prepare_profile_image(
+                image_url=user_data.profile.image_url,
+                user_id=user.id,
+            )
+            cloud_storage.upload_file(
+                **image,
+            )
 
             profile = self.profile_repository.create_model(
                 name=user_data.profile.name,
@@ -111,11 +110,8 @@ class AuthService:
         if not auth_user:
             raise NotAuthenticated
 
-        # TODO to check
-        # user_data = auth_user.dict().pop("password")
-        # profile = user_data.pop("profile")
-        # user_data["name"], user_data["surname"] = profile["name"], profile["surname"]
-        # cache.set_value(key="user:", value=user_data, expiration=None)
+        user_data = auth_user.dict().pop("password")
+        cache.set_value(key="user:", value=user_data, expiration=None)
 
         self.user_repository.set_is_active(auth_user, db)
         token = encode_jwt_token(username=auth_user.username, user_id=auth_user.id)
