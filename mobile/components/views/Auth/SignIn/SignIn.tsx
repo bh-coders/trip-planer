@@ -1,16 +1,24 @@
-import { View, Text } from 'react-native';
+import { View, Alert } from 'react-native';
 import SignInForm from './SignInForm';
 import { makePostMessage } from '../api/apiService';
 import { storeToken } from '../../../utils/tokenUtils';
+import { useContext } from 'react';
+import { AuthContext } from '../../../../contexts/AuthContext';
+
 const SignIn = ({ navigation }: any) => {
+  const { setUserToken } = useContext(AuthContext);
+
   const onLogin = async (username: string, password: string) => {
     try {
-      const response = await makePostMessage({ username, password }, 'login', 'POST');
-      await storeToken(response.token);
-
+      const response = await makePostMessage({ username, password }, 'POST', 'login');
+      const newToken = response?.access_token;
+      if (newToken) {
+        await storeToken(newToken);
+        setUserToken(newToken);
+      }
       navigation.navigate('Dashboard');
     } catch (error) {
-      alert(`Login Error:${error}`);
+      Alert.alert(`Login Error:${error}`);
     }
   };
   return (

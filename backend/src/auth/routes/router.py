@@ -13,7 +13,7 @@ from src.auth.schemas import (
     RegisterResponse,
 )
 from src.auth.services import AuthService
-from src.core.database import get_db
+from src.db.database import get_db
 
 router = APIRouter()
 user_repository = UserRepository()

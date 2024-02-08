@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, TypeVar
 from sqlalchemy import UUID, Boolean, Column, DateTime, String
 from sqlalchemy.orm import Mapped, relationship
 
-from src.core.database import Base
+from src.db.database import Base
 
 if TYPE_CHECKING:
     from src.attraction.models import Attraction

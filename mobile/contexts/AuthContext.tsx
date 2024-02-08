@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, useEffect, ReactNode } from
 import { getToken } from '../components/utils/tokenUtils';
 
 interface AuthContextType {
-  userToken: string | null;
+  userToken: string | null | undefined;
   setUserToken: (token: string | null) => void;
 }
 interface AuthProviderProps {
@@ -21,7 +21,7 @@ interface AuthProviderProps {
 
 ///Provider
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [userToken, setUserToken] = useState<string | null>(null);
+  const [userToken, setUserToken] = useState<string | null | undefined>(null);
 
   useEffect(() => {
     const fetchToken = async () => {

@@ -7,7 +7,7 @@ type SettingsModalProps = {
   isVisible: boolean;
   setSettingsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   navigation: NavigationProp<any>;
-  userToken: string | null;
+  userToken: string | null | undefined;
 };
 
 const SettingsModal: FC<SettingsModalProps> = ({

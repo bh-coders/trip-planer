@@ -1,4 +1,3 @@
-alembic==1.13.1
 annotated-types==0.6.0
 anyio==4.2.0
 argon2-cffi==23.1.0
@@ -10,16 +9,12 @@ click==8.1.7
 colorama==0.4.6
 dnspython==2.5.0
 email-validator==2.1.0.post1
-factory-boy==3.3.0
-Faker==22.4.0
 fastapi==0.109.0
 greenlet==3.0.3
 h11==0.14.0
 httptools==0.6.1
 idna==3.6
 jose==1.0.0
-Mako==1.3.0
-MarkupSafe==2.1.4
 minio==7.2.3
 mypy==1.8.0
 mypy-extensions==1.0.0
@@ -29,17 +24,14 @@ pycparser==2.21
 pycryptodome==3.20.0
 pydantic==2.5.3
 pydantic-extra-types==2.4.1
-pydantic-settings==2.1.0
 pydantic_core==2.14.6
 PyJWT==2.8.0
-python-dateutil==2.8.2
 python-dotenv==1.0.0
 python-json-logger==2.0.7
 python-magic==0.4.27
 python-multipart==0.0.6
 PyYAML==6.0.1
 ruff==0.1.13
-six==1.16.0
 sniffio==1.3.0
 SQLAlchemy==2.0.25
 starlette==0.35.1
@@ -48,3 +40,5 @@ urllib3==2.1.0
 uvicorn==0.25.0
 watchfiles==0.21.0
 websockets==12.0
+redis==5.0.1
+orjson==3.9.13
