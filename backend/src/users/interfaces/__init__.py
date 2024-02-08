@@ -1,5 +1,7 @@
-from src.users.interfaces.abstract import Repository as RepositoryInterface
+from src.users.interfaces.abstract_profile_repo import AbstractProfileRepository
+from src.users.interfaces.abstract_user_repo import AbstractUserRepository
 
 __all__ = [
-    "RepositoryInterface",
+    "AbstractProfileRepository",
+    "AbstractUserRepository",
 ]

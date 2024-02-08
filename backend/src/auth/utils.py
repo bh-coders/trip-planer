@@ -7,13 +7,13 @@ import jwt
 from fastapi import HTTPException, Request
 from passlib.context import CryptContext
 
-from src.auth.exceptions import InvalidPassword
 from src.core.configs import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     ALGORITHM,
     REFRESH_TOKEN_EXPIRE_DAYS,
     SECRET_KEY,
 )
+from src.users.exceptions import InvalidPassword
 
 password_hashing = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

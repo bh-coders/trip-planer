@@ -18,11 +18,17 @@ class PermissionDenied(DetailedHTTPException):
 
 class NotFound(DetailedHTTPException):
     STATUS_CODE = status.HTTP_404_NOT_FOUND
+    DETAIL = "Not found"
 
 
 class BadRequest(DetailedHTTPException):
     STATUS_CODE = status.HTTP_400_BAD_REQUEST
     DETAIL = "Bad Request"
+
+
+class Conflict(DetailedHTTPException):
+    STATUS_CODE = status.HTTP_409_CONFLICT
+    DETAIL = "Conflict"
 
 
 class NotAuthenticated(DetailedHTTPException):
