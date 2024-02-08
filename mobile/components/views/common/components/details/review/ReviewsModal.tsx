@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { Alert, FlatList, Modal, Text, TouchableOpacity, View } from "react-native"
-import { reviewModal, reviewTile } from "../../../styles";
+import { reviewModal } from "../../../styles";
 import { fetchAttraction, fetchAttractionOpinions } from "../../../../Attractions/api/attractionsApi";
 import { Attraction, Opinion } from "../../../../Attractions/types";
-import { attractionsExamples, reviewsExamples } from "../../../../Attractions/api/apiMock";
+import { attractionsExamples, reviewsExamples } from "../../../../Attractions/api/fake/apiMock";
 import ReviewTile from "./ReviewTile";
+import AttractionTile from "../../../AttractionTile";
 
 interface ReviewsModalProps {
     attractionId: number,
@@ -15,14 +16,14 @@ interface ReviewsModalProps {
 
 const ReviewsModal: React.FC<ReviewsModalProps> = ({ attractionId, visible, hideMenu: onHide }) => {
 
-    const [attractionData, setAttractionData] = useState<Attraction>();
+    const [attraction, setAttraction] = useState<Attraction>();
     const [attractionOpinions, setAttractionOpinions] = useState<Opinion[]>([]);
 
     useEffect(() => {
         fetchAttraction(attractionId)
-            .then((attraction) => setAttractionData(attraction))
+            .then((attraction) => setAttraction(attraction))
             .catch((error) => {
-                setAttractionData(attractionsExamples.find(attraction => attraction.id === attractionId));
+                setAttraction(attractionsExamples.find(attraction => attraction.id === attractionId));
             });
         fetchAttractionOpinions(attractionId)
             .then((opinion) => setAttractionOpinions(opinion))
@@ -40,14 +41,22 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ attractionId, visible, hide
     return (
         <Modal
             transparent={false}
-            animationType="slide"
+            animationType='slide'
             visible={visible}
             onRequestClose={onHide}
         >
             <View style={reviewModal.modalContainer}>
                 <TouchableOpacity onPress={onBack}>
-                    <Text style={reviewModal.backArrow}>⧏</Text>
+                    <Text style={reviewModal.backArrow}>⇦</Text>
                 </TouchableOpacity>
+                <AttractionTile
+                    attraction={{
+                        place_name: attraction?.name,
+                        place_description: attraction?.description,
+                        place_category: attraction?.category,
+                        place_rating: attraction?.rating.toFixed(1)
+                    }}
+                />
                 <View style={reviewModal.modalContent}>
                     <FlatList
                         // style={attractionSerchStyles.attractionsList}
@@ -64,12 +73,14 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ attractionId, visible, hide
                         )}
                     />
                 </View>
-                <View style={reviewTile.buttonsContainer}>
-                    <TouchableOpacity style={reviewTile.addOpinionIcon}>
-                        <Text style={reviewTile.addOpinionText}>+</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
+
+            <View style={reviewModal.buttonsContainer}>
+                <TouchableOpacity style={reviewModal.addOpinionIcon}>
+                    <Text style={reviewModal.addOpinionText}>+</Text>
+                </TouchableOpacity>
+            </View>
+
         </Modal >
     );
 };

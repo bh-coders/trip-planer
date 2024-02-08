@@ -1,4 +1,4 @@
-import { Attraction, Opinion } from "../types";
+import { Attraction, Opinion } from "../../types";
 
 export const attractionsExamples: Attraction[] = [
   {
@@ -214,7 +214,10 @@ export const reviewsExamples: Opinion[] = [
   {
     author: 1,
     description: 'Great place! I enjoyed my time there.',
-    images: [],
+    images: ['https://bi.im-g.pl/im/43/6c/1b/z28756547AMP,Jezioro-Czyste.jpg',
+      'https://bydgoszczinformuje.pl/wp-content/uploads/2023/10/Dab-Napoleona.jpg',
+      'https://domyinterstyl.pl/wp-content/uploads/2023/09/Projekt-bez-nazwy-13.jpg'
+    ],
     rating: 4,
     title: 'Awesome Experience',
     price: 3,

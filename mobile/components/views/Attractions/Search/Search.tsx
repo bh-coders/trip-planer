@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Button, FlatList, TouchableOpacity, Image, Alert, Text } from 'react-native';
 import FiltersModal from './FiltersModal';
-import { attractionsExamples } from '../api/apiMock';
+import { attractionsExamples } from '../api/fake/apiMock';
 import AttractionModal from './AttractionModal';
 import AttractionTile from '../../common/AttractionTile';
 import Swipeable from "react-native-gesture-handler/Swipeable";

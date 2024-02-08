@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { imagePlaceholder, attractionDetails } from './styles';
 import { Attraction } from '../Attractions/types';
 import { fetchAttraction } from '../Attractions/api/attractionsApi';
-import { attractionsExamples } from '../Attractions/api/apiMock';
+import { attractionsExamples } from '../Attractions/api/fake/apiMock';
 import EditSubMenuModal from './components/details/edit/EditSubMenu';
 import ReviewsModal from './components/details/review/ReviewsModal';
 
