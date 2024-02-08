@@ -1,8 +1,10 @@
+import uuid
 from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from src.auth.exceptions import (
+from src.auth.utils import verify_passwords
+from src.users.exceptions import (
     DeleteFailed,
     EmailChangeFailed,
     InvalidNewOldEmail,
@@ -10,15 +12,14 @@ from src.auth.exceptions import (
     InvalidOldEmail,
     InvalidOldPassword,
     PasswordChangeFailed,
+    UserDoesNotExist,
 )
-from src.auth.models import User
-from src.auth.repositories import UserRepository
-from src.auth.schemas import (
-    DeleteResponse,
-    EmailChangeResponse,
-    PasswordChangeResponse,
+from src.users.repositories import UserRepository
+from src.users.schemas.user import (
+    DeleteEndpoint,
+    EmailChangeEndpoint,
+    PasswordChangeEndpoint,
 )
-from src.auth.utils import verify_passwords
 
 
 class UserService:
@@ -27,11 +28,14 @@ class UserService:
 
     def change_email(
         self,
-        user: User,
+        user_id: uuid.UUID,
         new_email: str,
         old_email: str,
         db: Session,
-    ) -> Optional[EmailChangeResponse]:
+    ) -> Optional[EmailChangeEndpoint]:
+        user = self.user_repository.get_by_id(user_id=user_id, db=db)
+        if not user:
+            raise UserDoesNotExist
         if old_email != user.email:
             raise InvalidOldEmail
 
@@ -39,7 +43,7 @@ class UserService:
             raise InvalidNewOldEmail
         try:
             self.user_repository.update_email(new_email, user, db)
-            return EmailChangeResponse(
+            return EmailChangeEndpoint(
                 message="Email changed successfully",
             )
         except Exception:
@@ -47,12 +51,15 @@ class UserService:
 
     def change_password(
         self,
-        user: User,
+        user_id: uuid.UUID,
         old_password,
         new_password,
         rewrite_password,
         db: Session,
-    ) -> Optional[PasswordChangeResponse]:
+    ) -> Optional[PasswordChangeEndpoint]:
+        user = self.user_repository.get_by_id(user_id=user_id, db=db)
+        if not user:
+            raise UserDoesNotExist
         if new_password != rewrite_password:
             raise InvalidNewOrRewritePassword
 
@@ -60,16 +67,23 @@ class UserService:
             raise InvalidOldPassword
         try:
             self.user_repository.update_password(new_password, user, db)
-            return PasswordChangeResponse(
+            return PasswordChangeEndpoint(
                 message="Password changed successfully",
             )
         except Exception:
             raise PasswordChangeFailed
 
-    def delete_user(self, user: User, db: Session) -> Optional[DeleteResponse]:
+    def delete_user(
+        self,
+        user_id: uuid.UUID,
+        db: Session,
+    ) -> Optional[DeleteEndpoint]:
+        user = self.user_repository.get_by_id(user_id=user_id, db=db)
+        if not user:
+            raise UserDoesNotExist
         try:
             self.user_repository.delete_model(user, db)
-            return DeleteResponse(
+            return DeleteEndpoint(
                 message="User deleted successfully",
             )
         except Exception:

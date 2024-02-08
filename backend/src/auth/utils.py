@@ -1,19 +1,18 @@
 import logging
 import uuid
 from datetime import datetime, timedelta
-from typing import Tuple
 
 import jwt
 from fastapi import HTTPException
 from passlib.context import CryptContext
 
-from src.auth.exceptions import InvalidPassword
 from src.core.configs import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     ALGORITHM,
     REFRESH_TOKEN_EXPIRE_DAYS,
     SECRET_KEY,
 )
+from src.users.exceptions import InvalidPassword
 
 password_hashing = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -115,11 +114,3 @@ def encode_jwt_token(username: str, user_id: uuid.UUID) -> dict:
     }
     logger.info("Tokens set: %s", data)
     return data
-
-
-def extract_passwords(user_model: dict) -> Tuple[str, str, str]:
-    return (
-        user_model.old_password,
-        user_model.new_password,
-        user_model.rewrite_password,
-    )

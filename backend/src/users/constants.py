@@ -8,6 +8,8 @@ class ErrorCode:
     INVALID_CREDENTIALS = "Invalid credentials."
     INVALID_OLD_PASSWORD = "Invalid old password."
     INVALID_NEW_OR_REWRITE_PASSWORD = "New password cannot be the same as old password."
+    INVALID_PROFILE_DATA = "Invalid profile data."
+    INVALID_USER_DATA = "Invalid user data."
 
     # taken
     USERNAME_TAKEN = "Username is already taken."

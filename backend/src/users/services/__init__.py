@@ -1,4 +1,4 @@
-from src.users.services.service import UserService
+from src.users.services.user_service import UserService
 
 __all__ = [
     "UserService",

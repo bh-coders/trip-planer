@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, relationship
 from src.core.database import Base
 
 if TYPE_CHECKING:
-    from src.auth.models import User
+    from src.users.models.user_model import User
 
     UserType = TypeVar("UserType", bound=User)
 
@@ -27,9 +27,6 @@ class Profile(Base):
     surname: Mapped[str] = Column(
         String(100),
         index=True,
-    )
-    image_url: Mapped[str] = Column(
-        String(255),
     )
     # One-to-one relationship with User
     user_id: Mapped[UUID] = Column(

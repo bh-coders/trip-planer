@@ -1,63 +1,44 @@
-from src.auth.schemas.endpoint import Message, Token
+from pydantic import BaseModel, ConfigDict
+
+from src.core.schemas import Message
+
+
+class Token(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "title": "User",
+            "description": "User model",
+            "example": {
+                "access_token": "test_token_access",
+                "refresh_token": "test_token_refresh",
+                "token_type": "Bearer",
+            },
+        }
+    )
 
 
 # register_view
-class RegisterResponse(Message):
-    model_config = {
-        "json_schema_extra": {
+class RegisterEndpoint(Message):
+    model_config = ConfigDict(
+        json_schema_extra={
             "title": "User",
             "description": "User model",
             "example": {
                 "message": "User registered successfully",
             },
-        },
-    }
+        }
+    )
 
 
 # login_view
-class LoginResponse(Token):
+class LoginEndpoint(Token):
     pass
 
 
 # refresh_view
-class RefreshTokenResponse(Token):
+class RefreshTokenEndpoint(Token):
     pass
-
-
-# email_change_view
-class EmailChangeResponse(Message):
-    model_config = {
-        "json_schema_extra": {
-            "title": "User",
-            "description": "User model",
-            "example": {
-                "message": "Email changed successfully",
-            },
-        },
-    }
-
-
-# password_change_view
-class PasswordChangeResponse(Message):
-    model_config = {
-        "json_schema_extra": {
-            "title": "User",
-            "description": "User model",
-            "example": {
-                "message": "Password changed successfully",
-            },
-        },
-    }
-
-
-# delete_view
-class DeleteResponse(Message):
-    model_config = {
-        "json_schema_extra": {
-            "title": "User",
-            "description": "User model",
-            "example": {
-                "message": "User deleted successfully",
-            },
-        },
-    }

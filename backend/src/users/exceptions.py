@@ -1,6 +1,5 @@
 from fastapi import status
 
-from src.auth.constants import ErrorCode
 from src.core.exceptions import (
     BadRequest,
     Conflict,
@@ -9,6 +8,7 @@ from src.core.exceptions import (
     NotFound,
     PermissionDenied,
 )
+from src.users.constants import ErrorCode
 
 
 class InvalidPassword(BadRequest):
@@ -97,3 +97,13 @@ class DeleteFailed(DetailedHTTPException):
 class RegisterFailed(DetailedHTTPException):
     STATUS_CODE = status.HTTP_500_INTERNAL_SERVER_ERROR
     DETAIL = ErrorCode.REGISTER_FAILED
+
+
+class InvalidProfileData(DetailedHTTPException):
+    STATUS_CODE = status.HTTP_500_INTERNAL_SERVER_ERROR
+    DETAIL = ErrorCode.INVALID_PROFILE_DATA
+
+
+class InvalidUserData(DetailedHTTPException):
+    STATUS_CODE = status.HTTP_500_INTERNAL_SERVER_ERROR
+    DETAIL = ErrorCode.INVALID_USER_DATA

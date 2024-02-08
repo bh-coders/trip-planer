@@ -1,24 +1,20 @@
 import logging
-from typing import Annotated, Optional
+import uuid
+from typing import Annotated
 
 import jwt
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
 
-from src.auth.exceptions import (
+from src.auth.utils import decode_jwt_token
+from src.users.exceptions import (
     InvalidCredentials,
     InvalidToken,
     TokenExpired,
     UserDoesNotExist,
 )
-from src.auth.models import User
-from src.auth.repositories.user_repo import UserRepository
-from src.auth.utils import decode_jwt_token
-from src.core.database import get_db
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-auth_repository = UserRepository()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 logger = logging.getLogger(__name__)
 
@@ -38,17 +34,16 @@ def verify_jwt(
         raise InvalidCredentials
 
 
-def get_current_user(
+def get_current_user_id(
     token: Annotated[str, Depends(oauth2_scheme)],
-    db: Annotated[Session, Depends(get_db)],
-) -> Optional[User]:
+) -> uuid.UUID:
     try:
         payload = decode_jwt_token(token=token)
         logger.info(payload)
         user_id = payload.get("user_id")
-        if user := auth_repository.get_by_id(user_id=user_id, db=db):
-            return user
-        raise UserDoesNotExist
+        if not user_id:
+            raise UserDoesNotExist
+        return user_id
     except jwt.ExpiredSignatureError:
         raise TokenExpired
     except jwt.InvalidTokenError:

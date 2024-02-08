@@ -5,9 +5,9 @@ from typing import Optional
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from src.auth.interfaces import AbstractUserRepository
-from src.auth.models import User
-from src.auth.schemas import CreateUserSchema
+from src.users.interfaces import AbstractUserRepository
+from src.users.models.user_model import User
+from src.users.schemas.user import CreateUserModel
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class UserRepository(AbstractUserRepository):
     def get_by_id(self, user_id: uuid.UUID, db: Session) -> Optional[User]:
         try:
-            user = db.query(User).filter_by(id=user_id).first()
+            user = db.query(User).filter(User.id == user_id).first()
             return user
         except SQLAlchemyError as error:
             logger.error("Error getting user: %s", error)
@@ -23,7 +23,7 @@ class UserRepository(AbstractUserRepository):
 
     def get_by_username(self, username: str, db: Session) -> Optional[User]:
         try:
-            user = db.query(User).filter_by(username=username).first()
+            user = db.query(User).filter(User.username == username).first()
             return user
         except SQLAlchemyError as error:
             logger.error("Error getting user: %s", error)
@@ -31,13 +31,13 @@ class UserRepository(AbstractUserRepository):
 
     def get_by_email(self, email: str, db: Session) -> Optional[User]:
         try:
-            user = db.query(User).filter_by(email=email).first()
+            user = db.query(User).filter(User.email == email).first()
             return user
         except SQLAlchemyError as error:
             logger.error("Error getting user: %s", error)
             return None
 
-    def create_model(self, user: CreateUserSchema, db: Session) -> bool:
+    def create_model(self, user: CreateUserModel, db: Session) -> Optional[User]:
         try:
             with db.begin_nested():
                 new_user = User(
@@ -47,16 +47,18 @@ class UserRepository(AbstractUserRepository):
                 )
                 db.add(new_user)
             db.commit()
-            return True
+            db.refresh(new_user)
+            return new_user
         except SQLAlchemyError as error:
             db.rollback()
             logger.error("Error registering user: %s", error)
-            return False
+            return None
 
     def set_is_active(self, user: User, db: Session) -> bool:
         try:
-            setattr(user, "is_active", True)
-            db.add(user)
+            with db.begin_nested():
+                setattr(user, "is_active", True)
+                db.add(user)
             db.commit()
             return True
         except SQLAlchemyError as error:
@@ -66,8 +68,9 @@ class UserRepository(AbstractUserRepository):
 
     def update_email(self, new_email: str, user: User, db: Session) -> bool:
         try:
-            setattr(user, "email", new_email)
-            db.add(user)
+            with db.begin_nested():
+                setattr(user, "email", new_email)
+                db.add(user)
             db.commit()
             return True
         except SQLAlchemyError as error:
@@ -77,8 +80,9 @@ class UserRepository(AbstractUserRepository):
 
     def update_password(self, new_password: str, user: User, db: Session) -> bool:
         try:
-            setattr(user, "password", new_password)
-            db.add(user)
+            with db.begin_nested():
+                setattr(user, "password", new_password)
+                db.add(user)
             db.commit()
             return True
         except SQLAlchemyError as error:
@@ -88,7 +92,8 @@ class UserRepository(AbstractUserRepository):
 
     def delete_model(self, user: User, db: Session) -> bool:
         try:
-            db.delete(user)
+            with db.begin_nested():
+                db.delete(user)
             db.commit()
             return True
         except SQLAlchemyError as error:

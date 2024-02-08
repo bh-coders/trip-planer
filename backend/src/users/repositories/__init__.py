@@ -1,8 +1,7 @@
-from src.users.repositories.repo import UserRepository
-
-repo = UserRepository()
+from src.users.repositories.profile_repo import ProfileRepository
+from src.users.repositories.user_repo import UserRepository
 
 __all__ = [
-    "repo",
     "UserRepository",
+    "ProfileRepository",
 ]
