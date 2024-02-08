@@ -26,5 +26,12 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     restart: on-failure
 
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: on-failure
+
 volumes:
   postgres-data:

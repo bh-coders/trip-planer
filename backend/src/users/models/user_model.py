@@ -54,3 +54,20 @@ class User(Base):
         uselist=True,
         cascade="all, delete",
     )
+
+    def as_dict(self):
+        return {
+            c.name: str(getattr(self, c.name))
+            if c.name == "id"
+            else getattr(self, c.name)
+            for c in self.__table__.columns
+            if c.name != "password"
+            and c.name != "created_at"
+            and c.name != "updated_at"
+        }
+
+    def __repr__(self):
+        return f"<User {self.username}>"
+
+    def __str__(self):
+        return self.username

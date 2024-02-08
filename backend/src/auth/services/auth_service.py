@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 from fastapi import HTTPException
@@ -110,10 +111,14 @@ class AuthService:
         if not auth_user:
             raise NotAuthenticated
 
-        user_data = auth_user.dict().pop("password")
-        cache.set_value(key="user:", value=user_data, expiration=None)
-
         self.user_repository.set_is_active(auth_user, db)
+        cache.set_value(
+            key=f"user:{str(auth_user.id)}",
+            value=json.dumps(
+                auth_user.as_dict()
+            ),  # TODO .encode("utf-8"), bytes or not for me better json
+            expiration=None,
+        )
         token = encode_jwt_token(username=auth_user.username, user_id=auth_user.id)
         return JSONResponse(
             content=LoginEndpoint(**token).model_dump(),
