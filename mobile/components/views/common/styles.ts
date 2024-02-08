@@ -138,6 +138,11 @@ export const attractionDetails = StyleSheet.create({
     marginTop: 2,
     marginBottom: -18
   },
+  addOpinionText: {
+    fontSize: 15,
+    color: '#fff',
+    fontWeight: 'bold'
+  },
   categoryContainer: {
     padding: 5,
     flexDirection: 'row',
@@ -207,9 +212,10 @@ export const attractionDetails = StyleSheet.create({
     marginBottom: 20,
     marginLeft: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -233,11 +239,6 @@ export const attractionDetails = StyleSheet.create({
     color: 'red',
     fontSize: 24,
   },
-  addOpinionText: {
-    fontSize: 15,
-    color: '#fff',
-    fontWeight: 'bold' 
-  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -256,5 +257,112 @@ export const attractionDetails = StyleSheet.create({
     marginVertical: 10,
     color: '#0C0C0C',
     fontWeight: 'bold',
+  },
+});
+export const reviewModal = StyleSheet.create({
+  backArrow: {
+    fontFamily: 'Inter',
+    fontSize: 28,
+    margin: 10,
+    color: '#0C0C0C',
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    marginBottom: 250,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+});
+export const reviewTile = StyleSheet.create({
+  reviewTile: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 10,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+    width: '100%',
+  },
+  leftContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
+  imageContainer: {
+    marginRight: 15,
+  },
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 15,
+  },
+  emptyImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#000',
+    backgroundColor: 'transparent',
+  },
+  textContainer: {
+    flexShrink: 1,
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: '#000',
+  },
+  author: {
+    fontSize: 14,
+    color: 'grey',
+    marginBottom: 10,
+  },
+  description: {
+    fontSize: 12,
+    color: 'grey',
+  },
+  rate: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFD700',
+  },
+  buttonsContainer: {
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 5,
+    backgroundColor: '#fff',
+  },
+  addOpinionIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'black',
+    alignItems: 'center',
+    // marginLeft: -10,
+    // marginRight: -50,
+    // marginTop: 2,
+    // marginBottom: -18
+  },
+  addOpinionText: {
+    fontSize: 28,
+    color: '#fff',
+    fontWeight: 'bold'
   },
 });

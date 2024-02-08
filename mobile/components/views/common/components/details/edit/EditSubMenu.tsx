@@ -1,6 +1,6 @@
 import React from "react"
 import { Modal, Text, TouchableOpacity, View } from "react-native"
-import { attractionDetails } from "../styles";
+import { attractionDetails } from "../../../styles";
 
 interface EditModalProps {
   attractionId: number | undefined,

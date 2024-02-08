@@ -33,7 +33,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, onClose, a
   const [regionVisible, setRegionVisible] = useState(false);
   const [furtherFiltersVisible, setFurtherFiltersVisible] = useState(false);
 
-  const countries: string[] = [...new Set(attractionList.map(attraction => attraction?.country))];
+  const countries: string[] = [...new Set(attractionList.map(attraction => attraction?.country as string))];
 
   const handleSearch = () => {
     onSave({ keyword, country, city, region, category, radius });
@@ -56,7 +56,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, onClose, a
     setRegion(selectedRegion);
     if (selectedRegion) {
       setFurtherFiltersVisible(true);
-      const regionCities = attractionList.filter(attraction => attraction.region === selectedRegion).map(attraction => attraction.city);
+      const regionCities = attractionList.filter(attraction => attraction.region === selectedRegion).map(attraction => attraction.city as string);
       setCities([...new Set(regionCities)]);
       const regionCategories = attractionList.filter(attraction => attraction.region === selectedRegion).map(attraction => attraction.category);
       setCategories([...new Set(regionCategories)]);

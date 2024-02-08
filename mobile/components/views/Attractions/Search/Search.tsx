@@ -65,7 +65,7 @@ const AttractionSearchScreen: React.FC = () => {
     setFilters(filtersProps);
   };
 
-  const handleAttractionClick = (attraction: Attraction) => {
+  const onAttractionClick = (attraction: Attraction) => {
     // setAttractionModalVisible(true);
     setAttractionDetails(attraction);
     navigation.navigate('AttractionDetailScreen', { id: attraction.id });
@@ -131,7 +131,7 @@ const AttractionSearchScreen: React.FC = () => {
             data={attractions}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item: attraction }) => (
-              <TouchableOpacity onPress={() => handleAttractionClick(attraction)}>
+              <TouchableOpacity onPress={() => onAttractionClick(attraction)}>
                 <Swipeable
                   renderRightActions={() => RightSwipeActions(attraction)}
                   renderLeftActions={() => LeftSwipeActions(attraction)}

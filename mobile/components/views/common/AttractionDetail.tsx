@@ -4,7 +4,8 @@ import { imagePlaceholder, attractionDetails } from './styles';
 import { Attraction } from '../Attractions/types';
 import { fetchAttraction } from '../Attractions/api/attractionsApi';
 import { attractionsExamples } from '../Attractions/api/apiMock';
-import EditSubMenuModal from './components/EditSubMenu';
+import EditSubMenuModal from './components/details/edit/EditSubMenu';
+import ReviewsModal from './components/details/review/ReviewsModal';
 
 const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = ({ route }) => {
 
@@ -12,6 +13,7 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = 
     const [attractionImages, setAttractionImages] = useState<any>();
     const [favorite, setFavorite] = useState<boolean>(false);
     const [ editMenuVisible, setEditMenuVisible] = useState<boolean>(false);
+    const [reviewsModalVisible, setReviewsModalVisible] = useState<boolean>(false);
     const userId = 1; //it's temporary
 
 
@@ -39,6 +41,10 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = 
         }
     }
 
+    const onReviewClick = () => {
+        setReviewsModalVisible(true);
+    }
+
     return (
         attractionDetails ? (
             <>
@@ -50,7 +56,7 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = 
                         visible={editMenuVisible}
                         hideMenu={() => setEditMenuVisible(false)}
                         />
-                        <TouchableOpacity style={attractionDetails.ratingContainer}>
+                        <TouchableOpacity style={attractionDetails.ratingContainer} onPress={onReviewClick}>
                             <View style={attractionDetails.ratingBox}>
                                 <Text style={attractionDetails.ratingText}>
                                     {attractionData?.rating.toFixed(1)}
@@ -60,6 +66,11 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = 
                                 </View>
                             </View>
                         </TouchableOpacity>
+                        <ReviewsModal
+                        attractionId={attractionData?.id as number}
+                        visible={reviewsModalVisible}
+                        hideMenu={() => setReviewsModalVisible(false)}
+                        />
                     </View>
 
                     <View style={attractionDetails.categoryContainer}>

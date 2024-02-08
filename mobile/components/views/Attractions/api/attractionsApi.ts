@@ -40,7 +40,7 @@ export const fetchAttractionImages = async (
   }
 };
 
-export const fetchAttractionComments = async (
+export const fetchAttractionOpinions = async (
   id: number
 ): Promise<Opinion[]> => {
   const url = '';
@@ -49,7 +49,7 @@ export const fetchAttractionComments = async (
     const data = await response.json();
     return data as Opinion[];
   } catch (error) {
-    console.error('Error fetching comments:', error);
+    console.error('Error fetching opinions:', error);
     throw error;
   }
 };
