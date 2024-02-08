@@ -12,7 +12,7 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = 
     const [attractionData, setAttractionData] = useState<Attraction>();
     const [attractionImages, setAttractionImages] = useState<any>();
     const [favorite, setFavorite] = useState<boolean>(false);
-    const [ editMenuVisible, setEditMenuVisible] = useState<boolean>(false);
+    const [editMenuVisible, setEditMenuVisible] = useState<boolean>(false);
     const [reviewsModalVisible, setReviewsModalVisible] = useState<boolean>(false);
     const userId = 1; //it's temporary
 
@@ -33,7 +33,7 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = 
 
     const editBox = (attrractionAuthor: number | undefined) => {
         if (attrractionAuthor && attrractionAuthor == userId) {
-            return(
+            return (
                 <TouchableOpacity onPress={() => setEditMenuVisible(true)}>
                     <Text style={attractionDetails.name}>✎</Text>
                 </TouchableOpacity>
@@ -52,9 +52,9 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = 
                     <View style={attractionDetails.header}>
                         <Text style={attractionDetails.name}>{attractionData?.name} {editBox(attractionData?.user_id)}</Text>
                         <EditSubMenuModal
-                        attractionId={attractionData?.id}
-                        visible={editMenuVisible}
-                        hideMenu={() => setEditMenuVisible(false)}
+                            Id={attractionData?.id}
+                            visible={editMenuVisible}
+                            hideMenu={() => setEditMenuVisible(false)}
                         />
                         <TouchableOpacity style={attractionDetails.ratingContainer} onPress={onReviewClick}>
                             <View style={attractionDetails.ratingBox}>
@@ -67,9 +67,9 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = 
                             </View>
                         </TouchableOpacity>
                         <ReviewsModal
-                        attractionId={attractionData?.id as number}
-                        visible={reviewsModalVisible}
-                        hideMenu={() => setReviewsModalVisible(false)}
+                            attractionId={attractionData?.id as number}
+                            visible={reviewsModalVisible}
+                            hideMenu={() => setReviewsModalVisible(false)}
                         />
                     </View>
 
@@ -95,7 +95,7 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } } }> = 
                         <Text style={attractionDetails.addToRouteText}>Add to route</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={attractionDetails.favoriteButton} onPress={() => setFavorite(!favorite)}>
-                        <Text style={attractionDetails.favoriteText}>{favorite ? '❤️' : '♡' }</Text>
+                        <Text style={attractionDetails.favoriteText}>{favorite ? '❤️' : '♡'}</Text>
                     </TouchableOpacity>
                 </View>
             </>

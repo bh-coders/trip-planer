@@ -42,6 +42,7 @@ export type OpenHours = {
 };
 
 export type Opinion = {
+    id: number;
     author: number;
     description: string;
     images: string[];

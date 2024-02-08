@@ -3,13 +3,13 @@ import { Modal, Text, TouchableOpacity, View } from "react-native"
 import { attractionDetails } from "../../../styles";
 
 interface EditModalProps {
-  attractionId: number | undefined,
+  Id: number | undefined,
   visible: boolean,
   hideMenu: () => void
 }
 
 
-const EditSubMenuModal: React.FC<EditModalProps> = ({attractionId, visible, hideMenu: onMenu}) => {
+const EditSubMenuModal: React.FC<EditModalProps> = ({Id: attractionId, visible, hideMenu: onMenu}) => {
 
   const onEdit = () => {
     console.log(`Edit attraction ${attractionId}`);

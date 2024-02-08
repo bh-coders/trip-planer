@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { reviewTile } from '../../../styles';
 import { Opinion } from '../../../../Attractions/types';
+import EditSubMenuModal from '../edit/EditSubMenu';
 
 interface AttractionTileProps {
     opinion: Opinion;
@@ -12,6 +13,10 @@ const AttractionTile: React.FC<AttractionTileProps> = ({ opinion }) => {
     const [shortReview, setShortReview] = useState(true);
     const [showImage, setShowImage] = useState(false);
     const [selectedImage, setSelectedImage] = useState('');
+    const [editMenuVisible, setEditMenuVisible] = useState<boolean>(false);
+    const userId = 1; //it's temporary
+
+
 
     const toggleReview = () => {
         setShortReview(!shortReview);
@@ -21,6 +26,17 @@ const AttractionTile: React.FC<AttractionTileProps> = ({ opinion }) => {
         setSelectedImage(image);
         setShowImage(!showImage);
     };
+
+    const editBox = (attrractionAuthor: number | undefined) => {
+        if (attrractionAuthor && attrractionAuthor == userId) {
+            return (
+                <TouchableOpacity onPress={() => setEditMenuVisible(true)}>
+                    <Text style={reviewTile.title}>✎</Text>
+                </TouchableOpacity>
+            )
+        }
+    }
+
 
     const renderShortReview = () => (
         <TouchableOpacity style={reviewTile.reviewTile} onPress={toggleReview}>
@@ -36,9 +52,14 @@ const AttractionTile: React.FC<AttractionTileProps> = ({ opinion }) => {
         <TouchableOpacity style={reviewTile.reviewTile} onPress={toggleReview}>
             <View style={reviewTile.tileContainer}>
                 <Text style={reviewTile.author}>Author: {opinion.author}</Text>
-                <Text style={reviewTile.title}>{opinion.title}</Text>
+                <Text style={reviewTile.title}>{opinion.title}  {editBox(opinion.author)}</Text>
                 <Text style={reviewTile.rate}>{opinion.rating}</Text>
             </View>
+            <EditSubMenuModal
+                Id={opinion.id}
+                visible={editMenuVisible}
+                hideMenu={() => setEditMenuVisible(false)}
+            />
             <View style={reviewTile.tileContainer}>
                 <ScrollView>
                     <Text style={reviewTile.description}>{opinion.description}</Text>

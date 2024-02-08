@@ -167,6 +167,7 @@ export const attractionsExamples: Attraction[] = [
 
 export const reviewsExamples: Opinion[] = [
   {
+    id: 1,
     author: 1,
     description: 'Great place! I enjoyed my time there.',
     images: [],
@@ -176,6 +177,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 2,
   },
   {
+    id: 2,
     author: 2,
     description: 'Beautiful attraction. Highly recommended.',
     images: [],
@@ -185,6 +187,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 3,
   },
   {
+    id: 3,
     author: 3,
     description: 'Not bad, but a bit overpriced.',
     images: [],
@@ -194,6 +197,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 1,
   },
   {
+    id: 4,
     author: 4,
     description: 'Terrible. I regret going there.',
     images: [],
@@ -203,6 +207,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 1,
   },
   {
+    id: 5,
     author: 5,
     description: 'Decent attraction. Could be better.',
     images: [],
@@ -212,6 +217,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 2,
   },
   {
+    id: 6,
     author: 1,
     description: 'Great place! I enjoyed my time there.',
     images: ['https://bi.im-g.pl/im/43/6c/1b/z28756547AMP,Jezioro-Czyste.jpg',
@@ -224,6 +230,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 2,
   },
   {
+    id: 7,
     author: 2,
     description: 'Beautiful attraction. Highly recommended.',
     images: [],
@@ -233,6 +240,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 3,
   },
   {
+    id: 8,
     author: 3,
     description: 'Not bad, but a bit overpriced.',
     images: [],
@@ -242,6 +250,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 1,
   },
   {
+    id: 9,
     author: 4,
     description: 'Terrible. I regret going there.',
     images: [],
@@ -251,6 +260,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 1,
   },
   {
+    id: 10,
     author: 5,
     description: 'Decent attraction. Could be better.',
     images: [],
@@ -260,6 +270,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 2,
   },
   {
+    id: 11,
     author: 1,
     description: 'Great place! I enjoyed my time there.',
     images: [],
@@ -269,6 +280,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 2,
   },
   {
+    id: 12,
     author: 2,
     description: 'Beautiful attraction. Highly recommended.',
     images: [],
@@ -278,6 +290,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 3,
   },
   {
+    id: 13,
     author: 3,
     description: 'Not bad, but a bit overpriced.',
     images: [],
@@ -287,6 +300,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 1,
   },
   {
+    id: 14,
     author: 4,
     description: 'Terrible. I regret going there.',
     images: [],
@@ -296,6 +310,7 @@ export const reviewsExamples: Opinion[] = [
     time_spent: 1,
   },
   {
+    id: 15,
     author: 5,
     description: 'Decent attraction. Could be better.',
     images: [],
