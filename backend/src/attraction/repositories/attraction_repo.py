@@ -10,9 +10,9 @@ from src.attraction.models import Attraction
 from src.attraction.schemas import (
     AttractionFilters,
     AttractionSchema,
-    AttractionSortedBy,
-    SortDirection,
+    AttractionSortedBy
 )
+from src.core.common_schema import SortDirection
 
 logger = logging.getLogger(__name__)
 
