@@ -1,11 +1,18 @@
 import logging
 from typing import Optional
 
+from geoalchemy2 import Geography
+from sqlalchemy import desc, func
 from sqlalchemy.orm import Session
 
 from src.attraction.interfaces.repository import Repository
 from src.attraction.models import Attraction
-from src.attraction.schemas import AttractionSchema
+from src.attraction.schemas import (
+    AttractionFilters,
+    AttractionSchema,
+    AttractionSortedBy,
+    SortDirection,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +20,45 @@ logger = logging.getLogger(__name__)
 class AttractionRepository(Repository):
     def get_all(self, db: Session) -> list[Attraction]:
         return db.query(Attraction).all()
+
+    def get_filtered(self, db: Session, filters: AttractionFilters) -> list[Attraction]:
+        query = db.query(Attraction)
+
+        if filters.city:
+            query = query.filter(Attraction.city == filters.city)
+        if filters.country:
+            query = query.filter(Attraction.country == filters.country)
+        if filters.category:
+            query = query.filter(Attraction.category == filters.category)
+
+        if (
+            filters.radius is not None
+            and filters.longitude is not None
+            and filters.latitude is not None
+        ):
+            point = func.ST_SetSRID(
+                func.ST_MakePoint(filters.longitude, filters.latitude), 4326
+            ).cast(Geography)
+            attraction_point = func.ST_SetSRID(
+                func.ST_MakePoint(Attraction.longitude, Attraction.latitude), 4326
+            ).cast(Geography)
+            query = query.filter(
+                func.ST_DWithin(attraction_point, point, filters.radius)
+            )
+
+        # sorting
+        if filters.sort_by == AttractionSortedBy.TopRated:
+            if filters.sort_direction == SortDirection.Desc:
+                query = query.order_by(desc(Attraction.rating))
+            else:
+                query = query.order_by(Attraction.rating)
+        elif filters.sort_by == AttractionSortedBy.MostRated:
+            if filters.sort_direction == SortDirection.Desc:
+                query = query.order_by(desc(Attraction.visits))
+            else:
+                query = query.order_by(Attraction.visits)
+
+        return query.all()
 
     def get_by_id(self, db: Session, attraction_id: int) -> Optional[Attraction]:
         return db.query(Attraction).filter(Attraction.id == attraction_id).first()

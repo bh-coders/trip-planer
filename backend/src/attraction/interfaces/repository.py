@@ -1,9 +1,15 @@
 from abc import ABC, abstractmethod
 
+from src.attraction.schemas import AttractionFilters
+
 
 class Repository(ABC):
     @abstractmethod
     def get_all(self, db):
+        pass
+
+    @abstractmethod
+    def get_filtered(self, db, filters: AttractionFilters):
         pass
 
     @abstractmethod
