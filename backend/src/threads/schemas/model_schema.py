@@ -14,13 +14,11 @@ class CommentBase(BaseModel):
 
 
 class CommentCreate(CommentBase):
-    review_id: UUID
-    content: str
+    pass
 
 
 class CommentUpdate(CommentBase):
-    review_id: UUID
-    content: str
+    pass
 
 
 class CommentSchema(CommentBase):
