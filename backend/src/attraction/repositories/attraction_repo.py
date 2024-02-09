@@ -24,12 +24,16 @@ class AttractionRepository(Repository):
     def get_by_filters(self, db: Session, filters: AttractionFilters) -> list[Attraction]:
         query = db.query(Attraction)
 
-        if filters.city:
-            query = query.filter(Attraction.city == filters.city)
-        if filters.country:
-            query = query.filter(Attraction.country == filters.country)
-        if filters.category:
-            query = query.filter(Attraction.category == filters.category)
+        filter_operations = {
+            'city': lambda value: Attraction.city == value,
+            'country': lambda value: Attraction.country == value,
+            'category': lambda value: Attraction.category == value,
+        }
+
+        for filter_name, operation in filter_operations.items():
+            filter_value = getattr(filters, filter_name, None)
+            if filter_value:
+                query = query.filter(operation(filter_value))
 
         if (
             filters.radius is not None
