@@ -21,7 +21,7 @@ class AttractionRepository(Repository):
     def get_all(self, db: Session) -> list[Attraction]:
         return db.query(Attraction).all()
 
-    def get_filtered(self, db: Session, filters: AttractionFilters) -> list[Attraction]:
+    def get_by_filters(self, db: Session, filters: AttractionFilters) -> list[Attraction]:
         query = db.query(Attraction)
 
         if filters.city:

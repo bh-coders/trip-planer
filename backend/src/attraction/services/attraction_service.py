@@ -40,7 +40,7 @@ class AttractionService:
             finally:
                 maps_service.close()
 
-        attractions = self._repository.get_filtered(db, filters)
+        attractions = self._repository.get_by_filters(db, filters)
         return [AttractionSchema(**attraction.as_dict()) for attraction in attractions]
 
     def get_attraction_by_id(self, db: Session, attraction_id: int) -> AttractionSchema:

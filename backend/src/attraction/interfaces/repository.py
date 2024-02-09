@@ -9,7 +9,7 @@ class Repository(ABC):
         pass
 
     @abstractmethod
-    def get_filtered(self, db, filters: AttractionFilters):
+    def get_by_filters(self, db, filters: AttractionFilters):
         pass
 
     @abstractmethod
