@@ -36,8 +36,7 @@ const MapboxBoard = () => {
         if (status === 'granted') {
           setLocation(getCurrentLocation());
         } else {
-          console.log('Location permission not granted');
-          // Handle permission denial here
+          Alert.alert('Permission Denied', 'Location permission is required to use this feature.');
         }
       });
     }
