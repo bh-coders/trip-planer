@@ -32,7 +32,13 @@ const MapboxBoard = () => {
         }
       });
     } else {
-      setLocation(getCurrentLocation());
+      Geolocation.requestAuthorization('whenInUse').then((status) => {
+        if (status === 'granted') {
+          setLocation(getCurrentLocation());
+        } else {
+          Alert.alert('Permission Denied', 'Location permission is required to use this feature.');
+        }
+      });
     }
   }, []);
 
