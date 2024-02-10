@@ -83,6 +83,7 @@ class ReviewService:
         return review_schemas
 
     def delete_thread(self, db: Session, review_id: uuid.UUID) -> Response:
+        cache_key = CacheKeys.THREAD.value + str(review_id)
         thread = self.repository.get_review_by_id(review_id, db)
         if thread is None:
             raise HTTPException(
@@ -90,7 +91,7 @@ class ReviewService:
             )
         if not self.repository.delete(db, thread):
             raise HTTPException(status_code=400, detail="Review could not be deleted.")
-        cache.delete_value(f"thread:{review_id}")
+        cache.delete_value(cache_key)
         return Response(status_code=200, content="Review deleted")
 
     def update_thread(
