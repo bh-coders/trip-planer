@@ -4,6 +4,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from src.core.common_schema import SortDirection
+
 
 class AttractionCategory(str, Enum):
     Gastronomy = "gastronomy"
@@ -15,9 +17,12 @@ class OpenHoursSchema(BaseModel):
     close: Optional[int] = None
 
 
-class AttractionSchema(BaseModel):
+class AttractionBase(BaseModel):
     id: Optional[int] = None
     user_id: Optional[uuid.UUID] = None
+
+
+class AttractionCreate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     latitude: float
@@ -27,6 +32,9 @@ class AttractionSchema(BaseModel):
     address: Optional[str] = None
     city: Optional[str] = None
     country: Optional[str] = None
+
+
+class AttractionSchema(AttractionBase, AttractionCreate):
     rating: float = 0.0
     time_spent: float = 0.0
     price: float = 0.0
@@ -34,5 +42,22 @@ class AttractionSchema(BaseModel):
 
 
 class AttractionImages(BaseModel):
-    id: int | None
+    id: Optional[int] = None  # attraction_id
     image_urls: list[str] = []
+
+
+class AttractionSortedBy(str, Enum):
+    TopRated = "topRated"
+    MostRated = "mostRated"
+
+
+class AttractionFilters(BaseModel):
+    country: Optional[str] = None  # 'Poland' for only developing
+    state: Optional[str] = None
+    city: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    category: Optional[AttractionCategory] = None
+    radius: Optional[int] = 1000
+    sort_by: Optional[AttractionSortedBy] = None
+    sort_direction: Optional[SortDirection] = SortDirection.Desc
