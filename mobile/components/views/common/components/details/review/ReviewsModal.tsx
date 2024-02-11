@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Alert, FlatList, Modal, Text, TouchableOpacity, View } from "react-native"
-import { reviewModal } from "../../../styles";
+import { reviewModal } from "./styles";
 import { fetchAttraction, fetchAttractionOpinions } from "../../../../Attractions/api/attractionsApi";
 import { Attraction, Opinion } from "../../../../Attractions/types";
 import { attractionsExamples, reviewsExamples } from "../../../../Attractions/api/fake/apiMock";
 import ReviewTile from "./ReviewTile";
-import AttractionTile from "../../../AttractionTile";
+import AttractionReviewTile from "./AtrractionReviewTile";
+import SortTile from "./SortTile";
+import FilterTile from "./FilterTile";
 
 interface ReviewsModalProps {
     attractionId: number,
@@ -18,6 +20,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ attractionId, visible, hide
 
     const [attraction, setAttraction] = useState<Attraction>();
     const [attractionOpinions, setAttractionOpinions] = useState<Opinion[]>([]);
+    const flatListRef = useRef<FlatList<Opinion>>(null);
 
     useEffect(() => {
         fetchAttraction(attractionId)
@@ -38,6 +41,10 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ attractionId, visible, hide
         onHide();
     };
 
+    const scrollList = (index: number) => {
+        flatListRef.current?.scrollToIndex({ index, animated: true });
+    };
+
     return (
         <Modal
             transparent={false}
@@ -49,27 +56,33 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ attractionId, visible, hide
                 <TouchableOpacity onPress={onBack}>
                     <Text style={reviewModal.backArrow}>⇦</Text>
                 </TouchableOpacity>
-                <AttractionTile
-                    attraction={{
-                        place_name: attraction?.name,
-                        place_description: attraction?.description,
-                        place_category: attraction?.category,
-                        place_rating: attraction?.rating.toFixed(1)
-                    }}
+                <AttractionReviewTile
+                    attraction={attraction as Attraction}
+                    reviews={attractionOpinions}
                 />
+                <View style={reviewModal.filtersContainer}>
+                <SortTile
+
+                />
+                <FilterTile
+
+                />
+                </View>
                 <View style={reviewModal.modalContent}>
                     <FlatList
                         // style={attractionSerchStyles.attractionsList}
-                        data={attractionOpinions}
+                        ref={flatListRef}
+                        data={attractionOpinions.sort((a, b) => b.rating - a.rating)}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ index, item: opinion }) => (
-                            <TouchableOpacity>
-                                <View>
-                                    <ReviewTile
-                                        opinion={opinion}
-                                    />
-                                </View>
-                            </TouchableOpacity>
+                            <View>
+                                <ReviewTile
+                                    opinion={opinion}
+                                    author={{ id: opinion.author, name: 'zenek', avatar: '' }}
+                                    loggedInUserId={1} //this needs to be changed to real user id
+                                    onPressExtra={() => scrollList(index)}
+                                />
+                            </View>
                         )}
                     />
                 </View>

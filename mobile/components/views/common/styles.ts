@@ -368,8 +368,8 @@ export const reviewTile = StyleSheet.create({
     marginTop: 10,
   },
   thumbnail: {
-    width: 50,
-    height: 50,
+    width: 280,
+    height: 200,
     marginRight: 10,
     borderRadius: 5,
   },

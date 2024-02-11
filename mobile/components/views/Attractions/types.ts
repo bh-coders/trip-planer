@@ -4,6 +4,7 @@ export type Attraction = {
     id: number; 
     user_id?: number;
     name: string;
+    image_url?: string;
     description: string;
     latitude: number;
     longitude: number;
