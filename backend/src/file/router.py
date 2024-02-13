@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import APIRouter, Depends
 
 from src.core.interceptors.auth_interceptor import verify_jwt
@@ -9,7 +11,7 @@ file_router = APIRouter()
 @file_router.get("/{bucket_name}/{object_id}/{filename}")
 def open_file_from_cloud_storage(
     bucket_name: str,
-    object_id: int,
+    object_id: int | str | uuid.UUID,
     filename: str,
     is_token_valid: bool = Depends(verify_jwt),
 ):

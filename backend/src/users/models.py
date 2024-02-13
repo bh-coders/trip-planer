@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, TypeVar
 from sqlalchemy import UUID, Column, ForeignKey, String
 from sqlalchemy.orm import Mapped, relationship
 
-from src.core.database import Base
+from src.db.database import Base
 
 if TYPE_CHECKING:
     from src.auth.models import User

@@ -1,5 +1,6 @@
 import io
 import logging
+from enum import Enum
 from mimetypes import guess_type
 from typing import BinaryIO, Union
 
@@ -15,6 +16,11 @@ from src.core.configs import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class BucketNames(Enum):
+    ATTRACTIONS = "attractions"
+    USERS = "users"
 
 
 class CloudStorage:
