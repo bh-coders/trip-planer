@@ -1,8 +1,7 @@
 import uuid
 from datetime import datetime
-from typing import Optional, Union, BinaryIO
+from typing import Optional, Union
 
-from fastapi import UploadFile
 from pydantic import BaseModel, model_validator
 
 

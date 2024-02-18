@@ -12,7 +12,12 @@ from src.file.models.schemas import (
     MediaReference,
     MediaUpdate,
 )
-from src.file.utils import guess_media_type, get_bucket_name, get_file_name, read_upload_file
+from src.file.utils import (
+    get_bucket_name,
+    get_file_name,
+    guess_media_type,
+    read_upload_file,
+)
 
 
 class MediaService:
@@ -21,7 +26,7 @@ class MediaService:
         self.cloud_storage = storage
 
     def get_media_by_reference(
-            self, db: Session, reference: MediaReference
+        self, db: Session, reference: MediaReference
     ) -> List[MediaRead]:
         reference_methods = {
             "attraction_id": lambda id: self.repository.get_by_attraction_id(db, id),
@@ -49,14 +54,21 @@ class MediaService:
         try:
             bucket_name = get_bucket_name(media)
         except Exception as e:
-            raise HTTPException(status_code=400, detail="Cannot provide correct reference to object: " + str(e))
+            raise HTTPException(
+                status_code=400,
+                detail="Cannot provide correct reference to object: " + str(e),
+            )
 
         try:
             content, file_size = read_upload_file(file)
             file_name = get_file_name(media)
-            self.cloud_storage.upload_file(bucket_name, filename=file_name, file=content, file_size=file_size)
+            self.cloud_storage.upload_file(
+                bucket_name, filename=file_name, file=content, file_size=file_size
+            )
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Failed to upload file: {str(e)}")
+            raise HTTPException(
+                status_code=500, detail=f"Failed to upload file: {str(e)}"
+            )
 
         media.bucket_name = bucket_name
         new_media = self.repository.create(db, media)

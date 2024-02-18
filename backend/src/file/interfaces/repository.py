@@ -36,7 +36,9 @@ class IRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, db: Session, existing_media: Media,  media: MediaUpdate) -> Optional[Media]:
+    def update(
+        self, db: Session, existing_media: Media, media: MediaUpdate
+    ) -> Optional[Media]:
         pass
 
     @abstractmethod

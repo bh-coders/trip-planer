@@ -37,7 +37,11 @@ def get_bucket_name(media_create: MediaCreate) -> str:
 
 
 def get_file_name(media_create: MediaCreate) -> str:
-    object_attrs = [media_create.attraction_id, media_create.comment_id, media_create.review_id]
+    object_attrs = [
+        media_create.attraction_id,
+        media_create.comment_id,
+        media_create.review_id,
+    ]
     for object_id in object_attrs:
         if object_id is not None:
             return f"{object_id}/{media_create.file_name}"

@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from src.file.interfaces.repository import (
     IRepository,
 )
+
 # Make sure this is correctly imported
 from src.file.models.models import Media
 from src.file.models.schemas import MediaCreate, MediaUpdate
@@ -45,7 +46,7 @@ class MediaRepository(IRepository):
             return False
 
     def update(
-            self, db: Session, existing_media: Media, media: MediaUpdate
+        self, db: Session, existing_media: Media, media: MediaUpdate
     ) -> Optional[Media]:
         try:
             with db.begin_nested():
