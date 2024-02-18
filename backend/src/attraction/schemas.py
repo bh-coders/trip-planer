@@ -5,6 +5,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from src.core.common_schema import SortDirection
+from src.file.models.schemas import MediaRead
 
 
 class AttractionCategory(str, Enum):
@@ -32,6 +33,9 @@ class AttractionCreate(BaseModel):
     address: Optional[str] = None
     city: Optional[str] = None
     country: Optional[str] = None
+    media: list[
+        MediaRead
+    ] = []  # Something to think about is whether we need so much data
 
 
 class AttractionSchema(AttractionBase, AttractionCreate):

@@ -9,7 +9,7 @@ from src.attraction.interfaces.repository import Repository
 from src.attraction.schemas import AttractionFilters, AttractionImages, AttractionSchema
 from src.attraction.services.geocoding_service import MapsCoService
 from src.db.cache_storage import CacheKeys, CacheStorage
-from src.db.cloudstorage import BucketNames, CloudStorage
+from src.db.cloud_storage import BucketNames, CloudStorage
 
 logger = logging.getLogger(__name__)
 cache = CacheStorage()
@@ -50,7 +50,6 @@ class AttractionService:
             attraction = json.loads(cache_attraction)
             return AttractionSchema(**attraction)
         attraction = self._repository.get_by_id(db, attraction_id)
-
         if not attraction:
             raise HTTPException(status_code=404, detail="Attraction does not exist")
         cache.set_value(

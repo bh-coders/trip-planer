@@ -39,6 +39,9 @@ class Attraction(Base):
         nullable=False,
     )
     user = relationship("User", back_populates="attractions")
+    media = relationship(
+        "Media", back_populates="attraction", cascade="all, delete-orphan"
+    )
 
     rating: Mapped[Decimal] = column_property(
         select(func.coalesce(func.avg(Review.rating), 0))
@@ -70,7 +73,6 @@ class Attraction(Base):
 
     def as_dict(self):
         data = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
         decimal_fields = ["price", "rating", "time_spent", "visits"]
         for field in decimal_fields:
             value = getattr(self, field, None)
@@ -78,5 +80,6 @@ class Attraction(Base):
                 data[field] = float(value)
             elif value is not None:
                 data[field] = value
+        data["media"] = [media.as_dict() for media in self.media]
 
         return data
