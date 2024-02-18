@@ -5,9 +5,11 @@ from src.attraction.routes.router import router as attraction_router
 from src.auth.routes import auth_router
 from src.core.configs import CORS_ORIGINS
 from src.core.logger import LoggerSetup
-from src.db.database import Base, engine
-from src.file.router import file_router
+from src.db.database import engine
+from src.file.models.models import Media
+from src.file.routers.media_router import media_router
 from src.middleware.log_middleware import LoggingMiddleware
+from src.threads.models import *
 from src.threads.routes.router import threads_router
 from src.users.routes import router as users_router
 
@@ -67,7 +69,7 @@ def register_router(app: FastAPI):
     app.include_router(attraction_router, prefix="/attractions", tags=["Attractions"])
     app.include_router(auth_router, prefix="/auth", tags=["Authorizations"])
     app.include_router(users_router, prefix="/me", tags=["Users"])
-    app.include_router(file_router, prefix="/files", tags=["Files"])
+    app.include_router(media_router, prefix="/media", tags=["Media"])
     app.include_router(threads_router, prefix="/threads", tags=["Threads"])
 
 
