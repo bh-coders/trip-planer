@@ -4,6 +4,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, File, Form, Response, UploadFile
 from sqlalchemy.orm import Session
 
+from src.core.interceptors.auth_interceptor import verify_jwt
 from src.db.cloud_storage import CloudStorage
 from src.db.database import get_db
 from src.file.models.schemas import (
@@ -30,7 +31,7 @@ def create_media(
     review_id: Optional[uuid.UUID] = Form(None),
     comment_id: Optional[uuid.UUID] = Form(None),
     db: Session = Depends(get_db),
-    # is_token_valid: bool = Depends(verify_jwt),
+    is_token_valid: bool = Depends(verify_jwt),
 ) -> Response:
     media_create = MediaCreate(
         attraction_id=attraction_id,
@@ -46,7 +47,7 @@ def create_media(
 def get_media(
     media_id: str,
     db: Session = Depends(get_db),
-    # is_token_valid: bool = Depends(verify_jwt),
+    is_token_valid: bool = Depends(verify_jwt),
 ) -> List[MediaRead]:
     return media_service.get_media_obj(media_id, db)
 
@@ -55,7 +56,7 @@ def get_media(
 def get_media_by_attraction(
     attraction_id: int,
     db: Session = Depends(get_db),
-    # is_token_valid: bool = Depends(verify_jwt),
+    is_token_valid: bool = Depends(verify_jwt),
 ) -> List[MediaRead]:
     return media_service.get_media_by_reference(
         db, MediaReference(attraction_id=attraction_id)
@@ -66,7 +67,7 @@ def get_media_by_attraction(
 def get_media_by_comment(
     comment_id: str,
     db: Session = Depends(get_db),
-    # is_token_valid: bool = Depends(verify_jwt),
+    is_token_valid: bool = Depends(verify_jwt),
 ) -> List[MediaRead]:
     return media_service.get_media_by_reference(
         db, MediaReference(comment_id=comment_id)
@@ -77,7 +78,7 @@ def get_media_by_comment(
 def get_media_by_review(
     review_id: str,
     db: Session = Depends(get_db),
-    # is_token_valid: bool = Depends(verify_jwt),
+    is_token_valid: bool = Depends(verify_jwt),
 ) -> List[MediaRead]:
     return media_service.get_media_by_reference(db, MediaReference(review_id=review_id))
 
@@ -87,7 +88,7 @@ def update_media(
     media_id: str,
     media_update: MediaUpdate,
     db: Session = Depends(get_db),
-    # is_token_valid: bool = Depends(verify_jwt),
+    is_token_valid: bool = Depends(verify_jwt),
 ) -> MediaRead:
     return media_service.update_media(db, media_id, media_update)
 
@@ -96,7 +97,7 @@ def update_media(
 def delete_media(
     media_id: str,
     db: Session = Depends(get_db),
-    # is_token_valid: bool = Depends(verify_jwt),
+    is_token_valid: bool = Depends(verify_jwt),
 ) -> Response:
     return media_service.delete_media(db, media_id)
 
@@ -106,7 +107,7 @@ def open_media_from_cloud_storage(
     bucket_name: str,
     object_id: int | str | uuid.UUID,
     filename: str,
-    # is_token_valid: bool = Depends(verify_jwt),
+    is_token_valid: bool = Depends(verify_jwt),
 ):
     return media_service.get_media_file(
         MediaFile(
@@ -121,7 +122,7 @@ def open_media_from_cloud_storage(
 def open_default_media_from_cloud_storage(
     bucket_name: str,
     filename: str,
-    # is_token_valid: bool = Depends(verify_jwt)
+    is_token_valid: bool = Depends(verify_jwt)
 ):
     return media_service.get_media_file(
         MediaFile(bucket_name=bucket_name, file_name=filename)
