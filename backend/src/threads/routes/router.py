@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Request, Response
 from sqlalchemy.orm import Session
 
 from src.core.interceptors.auth_interceptor import verify_jwt
+from src.db.cache_storage import RedisStorage
 from src.db.database import get_db
 from src.threads.repository.comment_repository import CommentRepository
 from src.threads.repository.review_repository import ReviewRepository
@@ -20,10 +21,8 @@ from src.threads.services.comment_service import CommentService
 from src.threads.services.review_service import ReviewService
 
 threads_router = APIRouter()
-review_repository = ReviewRepository()
-comment_repository = CommentRepository()
-comment_service = CommentService(repository=comment_repository)
-review_service = ReviewService(repository=review_repository)
+comment_service = CommentService(CommentRepository())
+review_service = ReviewService(ReviewRepository(), RedisStorage())
 
 
 @threads_router.post("/create")

@@ -6,13 +6,18 @@ from sqlalchemy.orm import Session
 from src.attraction.repositories.attraction_repo import AttractionRepository
 from src.attraction.schemas import AttractionFilters, AttractionImages, AttractionSchema
 from src.attraction.services.attraction_service import AttractionService
+from src.attraction.services.geocoding_service import MapsCoService
 from src.core.interceptors.auth_interceptor import verify_jwt
+from src.db.cache_storage import RedisStorage
+from src.db.cloud_storage import CloudStorage
 from src.db.database import get_db
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-_attraction_service = AttractionService(AttractionRepository())
+_attraction_service = AttractionService(
+    AttractionRepository(), RedisStorage(), CloudStorage(), MapsCoService()
+)
 
 
 @router.get("/all")

@@ -15,7 +15,7 @@ from src.file.models.schemas import (
     MediaUpdate,
 )
 from src.file.repositories.media_repository import MediaRepository
-from src.file.services.services import MediaService
+from src.file.services.media_service import MediaService
 
 media_router = APIRouter()
 
@@ -120,9 +120,7 @@ def open_media_from_cloud_storage(
 
 @media_router.get("/{bucket_name}/{filename}")
 def open_default_media_from_cloud_storage(
-    bucket_name: str,
-    filename: str,
-    is_token_valid: bool = Depends(verify_jwt)
+    bucket_name: str, filename: str, is_token_valid: bool = Depends(verify_jwt)
 ):
     return media_service.get_media_file(
         MediaFile(bucket_name=bucket_name, file_name=filename)

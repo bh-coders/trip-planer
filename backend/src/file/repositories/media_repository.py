@@ -8,7 +8,7 @@ from src.file.interfaces.repository import (
 )
 
 # Make sure this is correctly imported
-from src.file.models.models import Media
+from src.file.models.media_models import Media
 from src.file.models.schemas import MediaCreate, MediaUpdate
 
 logger = logging.getLogger(__name__)

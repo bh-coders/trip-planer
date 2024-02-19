@@ -10,7 +10,7 @@ from src.core.configs import (
     CACHE_STORAGE_PASSWORD,
     CACHE_STORAGE_PORT,
 )
-from src.db.interfaces.cache_storage import CacheStorage
+from src.db.interfaces.cache_storage import ICacheStorage
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class CacheKeys(Enum):
     ATTRACTION_IMAGES = "attraction-images:"
 
 
-class RedisStorage(CacheStorage):
+class RedisStorage(ICacheStorage):
     def __init__(self):
         self.expiration_time: int = CACHE_STORAGE_EXP
         try:
@@ -50,3 +50,12 @@ class RedisStorage(CacheStorage):
 
     def delete_value(self, key):
         self.cache.delete(key)
+
+    def publish(self, channel, message):
+        pass
+
+    def subscribe(self, channel, callback):
+        pass
+
+    def unsubscribe(self, channel):
+        pass

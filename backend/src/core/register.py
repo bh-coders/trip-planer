@@ -1,15 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+# we need to import all models to create tables in database
+from src.attraction.models import *  # noqa
+from src.file.models.media_models import *  # noqa
+from src.threads.models import *  # noqa
+
 from src.attraction.routes.router import router as attraction_router
 from src.auth.routes import auth_router
 from src.core.configs import CORS_ORIGINS
 from src.core.logger import LoggerSetup
 from src.db.database import engine
-from src.file.models.models import Media
 from src.file.routers.media_router import media_router
 from src.middleware.log_middleware import LoggingMiddleware
-from src.threads.models import *
 from src.threads.routes.router import threads_router
 from src.users.routes import router as users_router
 
