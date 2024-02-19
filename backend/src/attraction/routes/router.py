@@ -14,69 +14,70 @@ from src.db.database import get_db
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
-
-_attraction_service = AttractionService(
-    AttractionRepository(), RedisStorage(), CloudStorage(), MapsCoService()
-)
+attraction_repo = AttractionRepository()
+cloud_storage = CloudStorage()
+cache_storage = RedisStorage()
+geo_service = MapsCoService()
+_attraction_service = AttractionService(attraction_repo, cache_storage, cloud_storage, geo_service)
 
 
 @router.get("/all")
 def get_all_attractions(
-    db: Session = Depends(get_db), is_token_valid: bool = Depends(verify_jwt)
+        db: Session = Depends(get_db), is_token_valid: bool = Depends(verify_jwt)
 ) -> list[AttractionSchema]:
     return _attraction_service.get_all_attractions(db)
 
 
 @router.get("")
 def get_attractions(
-    filters: AttractionFilters = Depends(),
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+        filters: AttractionFilters = Depends(),
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
 ) -> list[AttractionSchema]:
     return _attraction_service.get_attractions(db, filters)
 
 
 @router.get("/{attraction_id}")
 def get_attraction_by_id(
-    attraction_id: int,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+        attraction_id: int,
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
 ) -> AttractionSchema:
     return _attraction_service.get_attraction_by_id(db, attraction_id)
 
 
 @router.post("/create")
 def create_attraction(
-    attraction: AttractionSchema,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+        attraction: AttractionSchema,
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
 ) -> Response:
     return _attraction_service.create_attraction(db, attraction)
 
 
 @router.get("/{attraction_id}/images")
 def get_attraction_images(
-    attraction_id: int,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+        attraction_id: int,
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
 ) -> AttractionImages:
     return _attraction_service.get_attraction_images(db, attraction_id)
 
 
 @router.patch("/{attraction_id}/update")
 def update_attraction(
-    attraction_id: int,
-    updated_attraction: AttractionSchema,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+        attraction_id: int,
+        updated_attraction: AttractionSchema,
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
 ) -> AttractionSchema:
     return _attraction_service.update_attraction(db, attraction_id, updated_attraction)
 
 
 @router.delete("/{attraction_id}/delete")
 def delete_attraction(
-    attraction_id: int,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+        attraction_id: int,
+        db: Session = Depends(get_db),
+        is_token_valid: bool = Depends(verify_jwt),
 ) -> Response:
     return _attraction_service.delete_attraction(db, attraction_id)
