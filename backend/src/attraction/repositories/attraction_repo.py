@@ -10,7 +10,7 @@ from src.attraction.models import Attraction
 from src.attraction.schemas import (
     AttractionFilters,
     AttractionSchema,
-    AttractionSortedBy
+    AttractionSortedBy,
 )
 from src.core.common_schema import SortDirection
 
@@ -21,13 +21,15 @@ class AttractionRepository(Repository):
     def get_all(self, db: Session) -> list[Attraction]:
         return db.query(Attraction).all()
 
-    def get_by_filters(self, db: Session, filters: AttractionFilters) -> list[Attraction]:
+    def get_by_filters(
+        self, db: Session, filters: AttractionFilters
+    ) -> list[Attraction]:
         query = db.query(Attraction)
 
         filter_operations = {
-            'city': lambda value: Attraction.city == value,
-            'country': lambda value: Attraction.country == value,
-            'category': lambda value: Attraction.category == value,
+            "city": lambda value: Attraction.city == value,
+            "country": lambda value: Attraction.country == value,
+            "category": lambda value: Attraction.category == value,
         }
 
         for filter_name, operation in filter_operations.items():
