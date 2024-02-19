@@ -18,11 +18,11 @@ logger = logging.getLogger(__name__)
 
 class AttractionService:
     def __init__(
-        self,
-        repository: Repository,
-        cache: ICacheStorage,
-        cloud_storage: ICloudStorage,
-        geo_service: MapsCoService,
+            self,
+            repository: Repository,
+            cache: ICacheStorage,
+            cloud_storage: ICloudStorage,
+            geo_service: MapsCoService,
     ):
         self._repository = repository
         self.cache = cache
@@ -34,7 +34,7 @@ class AttractionService:
         return [AttractionSchema(**attraction.as_dict()) for attraction in attractions]
 
     def get_attractions(
-        self, db: Session, filters: AttractionFilters
+            self, db: Session, filters: AttractionFilters
     ) -> list[AttractionSchema]:
         if not filters.country and filters.longitude and filters.latitude:
             try:
@@ -43,10 +43,8 @@ class AttractionService:
                 )
                 if "country" in result["address"] and not filters.country:
                     filters.country = result["address"]["country"]
-            except Exception:
-                logger.error("i chuj")
-            finally:
-                self.geo_service.close()
+            except Exception as e:
+                logger.error("Error during reverse geocoding: %s" % e)
 
         attractions = self._repository.get_by_filters(db, filters)
         return [AttractionSchema(**attraction.as_dict()) for attraction in attractions]
@@ -74,7 +72,7 @@ class AttractionService:
         return Response(status_code=201, content="Attraction successfully created.")
 
     def update_attraction(
-        self, db: Session, attraction_id: int, updated_attraction: AttractionSchema
+            self, db: Session, attraction_id: int, updated_attraction: AttractionSchema
     ) -> AttractionSchema:
         cache_key = CacheKeys.ATTRACTION.value + str(attraction_id)
         attraction = self._repository.get_by_id(db, attraction_id)
@@ -99,7 +97,7 @@ class AttractionService:
         return Response(status_code=200, content="Attraction successfully deleted.")
 
     def get_attraction_images(
-        self, db: Session, attraction_id: int
+            self, db: Session, attraction_id: int
     ) -> AttractionImages:
         cache_key = CacheKeys.ATTRACTION_IMAGES.value + str(attraction_id)
         cache_attraction_images = self.cache.get_value(cache_key)
