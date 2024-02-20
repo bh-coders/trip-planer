@@ -10,6 +10,7 @@ from src.core.configs import (
     CACHE_STORAGE_PASSWORD,
     CACHE_STORAGE_PORT,
 )
+from src.db.interfaces.cache_storage import ICacheStorage
 
 logger = logging.getLogger(__name__)
 
@@ -21,30 +22,16 @@ class CacheKeys(Enum):
     ATTRACTION_IMAGES = "attraction-images:"
 
 
-class CacheStorage:
-    def __init__(
-        self,
-        host: Optional[str] = None,
-        port: Optional[str] = None,
-        password: Optional[str] = None,
-        expiration: Optional[int] = None,
-    ):
-        self._host = host or CACHE_STORAGE_HOST
-        self._port = port or CACHE_STORAGE_PORT
-        self._password = password or CACHE_STORAGE_PASSWORD
-        self.cache = self._connect_to_data_store()
-
-        self.expiration_time: int = expiration or CACHE_STORAGE_EXP
-
-    def _connect_to_data_store(self) -> Redis:
+class RedisStorage(ICacheStorage):
+    def __init__(self):
+        self.expiration_time: int = CACHE_STORAGE_EXP
         try:
-            redis = Redis(
-                host=self._host,
-                port=self._port,
-                password=self._password,
+            self.cache = Redis(
+                host=CACHE_STORAGE_HOST,
+                port=CACHE_STORAGE_PORT,
+                password=CACHE_STORAGE_PASSWORD,
                 decode_responses=True,
             )
-            return redis
         except Exception as e:
             logger.error("Could not connect to redis server: %s" % e)
             raise Exception(f"Could not connect to redis server: {e}")
@@ -63,3 +50,12 @@ class CacheStorage:
 
     def delete_value(self, key):
         self.cache.delete(key)
+
+    def publish(self, channel, message):
+        pass
+
+    def subscribe(self, channel, callback):
+        pass
+
+    def unsubscribe(self, channel):
+        pass
