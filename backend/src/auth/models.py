@@ -2,18 +2,22 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING, TypeVar
 
-from sqlalchemy import UUID, Boolean, Column, DateTime, String
+from sqlalchemy import UUID, Boolean, Column, DateTime, String, Table, ForeignKey
 from sqlalchemy.orm import Mapped, relationship
+
 
 from src.db.database import Base
 
 if TYPE_CHECKING:
     from src.attraction.models import Attraction
     from src.users.models import Profile
+    from route.models import Route
 
     ProfileType = TypeVar("ProfileType", bound=Profile)
     AttractionType = TypeVar("AttractionType", bound=Attraction)
     AttractionTypeList = TypeVar("AttractionTypeList", bound=list[Attraction])
+    RouteType = TypeVar("RouteType", bound=Route)
+    RouteTypeList = TypeVar("RouteTypeList", bound=list[Route])
 
 
 class User(Base):
@@ -50,6 +54,14 @@ class User(Base):
     # One-to-many relationship with Attraction
     attractions: Mapped["AttractionTypeList"] = relationship(
         "Attraction",
+        back_populates="user",
+        uselist=True,
+        cascade="all, delete",
+    )
+
+    routes: Mapped["RouteTypeList"] = relationship(
+        "Route",
+        secondary="user_route_table",
         back_populates="user",
         uselist=True,
         cascade="all, delete",

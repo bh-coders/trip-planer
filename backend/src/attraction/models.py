@@ -71,6 +71,9 @@ class Attraction(Base):
         .scalar_subquery()
     )
 
+    route_id = Column(Integer, ForeignKey("routes.id"))
+    route = relationship("Route", back_populates="attractions")
+
     def as_dict(self):
         data = {c.name: getattr(self, c.name) for c in self.__table__.columns}
         decimal_fields = ["price", "rating", "time_spent", "visits"]

@@ -3,10 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # we need to import all models to create tables in database
 from src.attraction.models import *  # noqa
+from src.route.models import *
 from src.file.models.media_models import *  # noqa
 from src.threads.models import *  # noqa
 
 from src.attraction.routes.router import router as attraction_router
+from src.route.routes.router import router as route_router
 from src.auth.routes import auth_router
 from src.core.configs import CORS_ORIGINS
 from src.core.logger import LoggerSetup
@@ -70,6 +72,7 @@ def register_middleware(app: FastAPI):
 
 def register_router(app: FastAPI):
     app.include_router(attraction_router, prefix="/attractions", tags=["Attractions"])
+    app.include_router(route_router, prefix="/routes", tags=["Routes"])
     app.include_router(auth_router, prefix="/auth", tags=["Authorizations"])
     app.include_router(users_router, prefix="/me", tags=["Users"])
     app.include_router(media_router, prefix="/media", tags=["Media"])
