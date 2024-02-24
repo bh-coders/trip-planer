@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 
 from src.attraction.repositories.attraction_repo import AttractionRepository
-from src.attraction.schemas import AttractionImages, AttractionSchema
+from src.attraction.schemas import AttractionFilters, AttractionImages, AttractionSchema
 from src.attraction.services.attraction_service import AttractionService
 from src.core.interceptors.auth_interceptor import verify_jwt
 from src.db.database import get_db
@@ -20,6 +20,15 @@ def get_all_attractions(
     db: Session = Depends(get_db), is_token_valid: bool = Depends(verify_jwt)
 ) -> list[AttractionSchema]:
     return _attraction_service.get_all_attractions(db)
+
+
+@router.get("")
+def get_attractions(
+    filters: AttractionFilters = Depends(),
+    db: Session = Depends(get_db),
+    is_token_valid: bool = Depends(verify_jwt),
+) -> list[AttractionSchema]:
+    return _attraction_service.get_attractions(db, filters)
 
 
 @router.get("/{attraction_id}")

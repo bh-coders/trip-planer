@@ -6,13 +6,15 @@ from fastapi import HTTPException, Response
 from sqlalchemy.orm import Session
 
 from src.attraction.interfaces.repository import Repository
-from src.attraction.schemas import AttractionImages, AttractionSchema
-from src.db.cache_storage import CacheKeys, CacheStorage
-from src.db.cloudstorage import CloudStorage
+from src.attraction.schemas import AttractionFilters, AttractionImages, AttractionSchema
+from src.attraction.services.geocoding_service import MapsCoService
+from src.db.cache_storage import CacheKeys, RedisStorage
+from src.db.cloudstorage import BucketNames, CloudStorage
 
 logger = logging.getLogger(__name__)
-cache = CacheStorage()
+cache = RedisStorage()
 cloud_storage = CloudStorage()
+maps_service = MapsCoService()
 
 
 class AttractionService:
@@ -21,6 +23,24 @@ class AttractionService:
 
     def get_all_attractions(self, db: Session) -> list[AttractionSchema]:
         attractions = self._repository.get_all(db)
+        return [AttractionSchema(**attraction.as_dict()) for attraction in attractions]
+
+    def get_attractions(
+        self, db: Session, filters: AttractionFilters
+    ) -> list[AttractionSchema]:
+        if not filters.country and filters.longitude and filters.latitude:
+            try:
+                result = maps_service.reverse_geocode(
+                    filters.latitude, filters.longitude
+                )
+                if "country" in result["address"] and not filters.country:
+                    filters.country = result["address"]["country"]
+            except Exception:
+                logger.error("i chuj")
+            finally:
+                maps_service.close()
+
+        attractions = self._repository.get_by_filters(db, filters)
         return [AttractionSchema(**attraction.as_dict()) for attraction in attractions]
 
     def get_attraction_by_id(self, db: Session, attraction_id: int) -> AttractionSchema:
@@ -49,20 +69,22 @@ class AttractionService:
     def update_attraction(
         self, db: Session, attraction_id: int, updated_attraction: AttractionSchema
     ) -> AttractionSchema:
+        cache_key = CacheKeys.ATTRACTION.value + str(attraction_id)
         attraction = self._repository.get_by_id(db, attraction_id)
         if attraction is None:
             raise HTTPException(status_code=404, detail="Cannot found attraction.")
         updated = self._repository.update(db, attraction, updated_attraction)
         if not updated:
             raise HTTPException(status_code=402, detail="Cannot update attraction.")
-        cache.set_value(f"attraction:{attraction_id}", updated.as_dict())
+        cache.set_value(cache_key, updated.as_dict())
         return AttractionSchema(**updated.as_dict())
 
     def delete_attraction(self, db: Session, attraction_id: int):
+        cache_key = CacheKeys.ATTRACTION.value + str(attraction_id)
         attraction = self._repository.get_by_id(db, attraction_id)
         if attraction is None:
             return False
-        cache.delete_value(f"attraction:{attraction_id}")
+        cache.delete_value(cache_key)
         if not self._repository.delete(db, attraction):
             raise HTTPException(
                 status_code=400, detail="Attraction could not be deleted."
@@ -80,7 +102,7 @@ class AttractionService:
 
         attraction = self.get_attraction_by_id(db, attraction_id)
 
-        bucket_name = "attractions"
+        bucket_name = BucketNames.ATTRACTIONS.value
         default_path = f"{bucket_name}/default.jpg"
         prefix_bucket = f"{attraction.id}/"
 

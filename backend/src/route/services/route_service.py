@@ -16,7 +16,7 @@ class RouteService:
 
     def create_item(self, route):
         item = route
-        return self._repository.create_model(item)
+        return self._repository.create_profile(item)
 
     def update_item(self, item_id, name):
         item = self._repository.get_by_id(item_id)

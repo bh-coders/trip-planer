@@ -1,4 +1,5 @@
 import json
+import uuid
 from typing import Optional
 
 from fastapi import HTTPException
@@ -21,12 +22,10 @@ from src.auth.utils import (
 from src.core.exceptions import (
     NotAuthenticated,
 )
-from src.db.cache_storage import CacheStorage
-from src.db.cloudstorage import CloudStorage
+from src.db.cache_storage import CacheHandler, RedisStorage
 from src.users.exceptions import (
     EmailTaken,
     InvalidPassword,
-    InvalidProfileData,
     InvalidUserData,
     RegisterFailed,
     TokenDoesNotExist,
@@ -34,65 +33,71 @@ from src.users.exceptions import (
     UsernameTaken,
 )
 from src.users.models.user_model import User
-from src.users.repositories import ProfileRepository, UserRepository
-from src.users.utils import prepare_profile_image
+from src.users.repositories import UserRepository
+from src.users.schemas.profile import CreateProfileModel
+from src.users.schemas.user import CreateUserModel
 
-cache = CacheStorage()
-cloud_storage = CloudStorage()
+cache = RedisStorage()
 
 
 class AuthService:
     def __init__(
         self,
-        user_repository: UserRepository,
-        profile_repository: ProfileRepository,
+        repository: UserRepository,
+        cache_handler: CacheHandler,
     ):
-        self.user_repository = user_repository
-        self.profile_repository = profile_repository
+        self.repository = repository
+        self.cache_handler = cache_handler
 
     def authenticate_user(
         self, username: str, password: str, db: Session
     ) -> Optional[User]:
-        user = self.user_repository.get_by_username(username=username, db=db)
+        user = self.repository.get_by_username(username=username, db=db)
         if not user:
             raise UserDoesNotExist
         if not verify_passwords(password, user.password):
             raise InvalidPassword
         return user
 
-    def register(
-        self, user_data: RegisterUserModel, db: Session
-    ) -> Optional[JSONResponse]:
-        user_data.password = hash_password(user_data.password)
-        if self.user_repository.get_by_username(user_data.username, db):
+    def create_user(self, user: CreateUserModel, db: Session):
+        user.password = hash_password(user.password)
+        try:
+            user = self.repository.create_model(user=user, db=db)
+        except Exception:
+            raise HTTPException(status_code=400, detail="User already exists")
+        return user
+
+    def publish_user_created_event(
+        self, user_id: str, user: CreateUserModel, profile: CreateProfileModel
+    ) -> None:
+        self.cache_handler.publish_event(
+            pattern="user_created",
+            data={
+                "id": user_id,
+                "email": user.email,
+                "username": user.username,
+                "profile": {
+                    "name": profile.name,
+                    "surname": profile.surname,
+                    "image_url": profile.image_url,
+                },
+            },
+        )
+
+    def register(self, user: RegisterUserModel, db: Session) -> Optional[JSONResponse]:
+        if self.repository.get_by_username(user.username, db):
             raise UsernameTaken
-        elif self.user_repository.get_by_email(user_data.email, db):
+        elif self.repository.get_by_email(user.email, db):
             raise EmailTaken
         try:
-            user = self.user_repository.create_model(user=user_data, db=db)
-            if not user:
-                db.rollback()
+            user_db = self.create_user(user=user, db=db)
+            if not user_db:
                 raise InvalidUserData
 
-            if not user_data.profile.image_url:
-                raise HTTPException(status_code=400, detail="Profile image is required")
-            image = prepare_profile_image(
-                image_url=user_data.profile.image_url,
-                user_id=user.id,
-            )
-            cloud_storage.upload_file(
-                **image,
+            self.publish_user_created_event(
+                user_id=str(user_db.id), user=user, profile=user.profile
             )
 
-            profile = self.profile_repository.create_model(
-                name=user_data.profile.name,
-                surname=user_data.profile.surname,
-                user_id=user.id,
-                db=db,
-            )
-            if not profile:
-                db.rollback()
-                raise InvalidProfileData
             return JSONResponse(
                 content=RegisterEndpoint(
                     message="User registered successfully"
@@ -101,6 +106,34 @@ class AuthService:
             )
         except Exception:
             raise RegisterFailed
+
+            # if not user_data.profile.image_url:
+            #     raise HTTPException(status_code=400, detail="Profile image is required")
+        #     image = prepare_profile_image(
+        #         image_url=user_data.profile.image_url,
+        #         user_id=user.id,
+        #     )
+        #     cloud_storage.upload_file(
+        #         **image,
+        #     )
+        #
+        #     profile = self.profile_repository.create_model(
+        #         name=user_data.profile.name,
+        #         surname=user_data.profile.surname,
+        #         user_id=user.id,
+        #         db=db,
+        #     )
+        #     if not profile:
+        #         db.rollback()
+        #         raise InvalidProfileData
+        #     return JSONResponse(
+        #         content=RegisterEndpoint(
+        #             message="User registered successfully"
+        #         ).model_dump(),
+        #         status_code=201,
+        #     )
+        # except Exception:
+        #     raise RegisterFailed
 
     def login(self, user: LoginUserModel, db: Session) -> Optional[JSONResponse]:
         auth_user = self.authenticate_user(
@@ -111,12 +144,10 @@ class AuthService:
         if not auth_user:
             raise NotAuthenticated
 
-        self.user_repository.set_is_active(auth_user, db)
+        self.repository.set_is_active(auth_user, db)
         cache.set_value(
             key=f"user:{str(auth_user.id)}",
-            value=json.dumps(
-                auth_user.as_dict()
-            ),  # TODO .encode("utf-8"), bytes or not for me better json
+            value=json.dumps(auth_user.as_dict()),
             expiration=None,
         )
         token = encode_jwt_token(username=auth_user.username, user_id=auth_user.id)
@@ -130,7 +161,7 @@ class AuthService:
             raise TokenDoesNotExist
         user_payload = decode_jwt_token(token)
         user_id = user_payload.get("user_id")
-        user = self.user_repository.get_by_id(user_id=user_id, db=db)
+        user = self.repository.get_by_id(user_id=user_id, db=db)
         if not user:
             raise UserDoesNotExist
         token = encode_jwt_token(username=user.username, user_id=user.id)

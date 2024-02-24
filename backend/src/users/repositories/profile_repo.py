@@ -6,8 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from src.users.interfaces import AbstractProfileRepository
-from src.users.models import Profile, User
-from src.users.schemas.profile import CreateProfileModel
+from src.users.models import Profile
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +24,7 @@ class ProfileRepository(AbstractProfileRepository):
             logger.error("Error getting profile: %s", error)
             return None
 
-    def create_model(
+    def create_profile(
         self,
         name: str,
         surname: str,

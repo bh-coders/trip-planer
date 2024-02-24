@@ -23,7 +23,10 @@ from src.users.schemas.user import (
 
 
 class UserService:
-    def __init__(self, repository: UserRepository):
+    def __init__(
+        self,
+        repository: UserRepository,
+    ):
         self.user_repository = repository
 
     def change_email(
@@ -88,3 +91,17 @@ class UserService:
             )
         except Exception:
             raise DeleteFailed
+
+    # def event_handler(self):
+    #     try:
+    #         self.cache_handler.subscribe_event("profile")
+    #
+    #         while msg := self.cache_handler.get_event():
+    #             if msg["id"]:
+    #                 return
+    #
+    #     except Exception as e:
+    #         print(f"An error occurred: {e}")
+    #
+    #     finally:
+    #         self.cache_handler.unsubscribe_event("profile")

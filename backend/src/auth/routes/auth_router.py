@@ -13,6 +13,7 @@ from src.auth.schemas import (
     RegisterUserModel,
 )
 from src.auth.services import AuthService
+from src.db.cache_storage import CacheHandler, RedisStorage
 from src.db.database import get_db
 from src.users.repositories import ProfileRepository, UserRepository
 
@@ -20,8 +21,8 @@ router = APIRouter()
 user_repository = UserRepository()
 profile_repository = ProfileRepository()
 auth_service = AuthService(
-    user_repository=user_repository,
-    profile_repository=profile_repository,
+    repository=user_repository,
+    cache_handler=CacheHandler(redis=RedisStorage()),
 )
 
 
@@ -34,7 +35,7 @@ def register_view(
     user: RegisterUserModel,
     db: Annotated[Session, Depends(get_db)],
 ):
-    return auth_service.register(user_data=user, db=db)
+    return auth_service.register(user=user, db=db)
 
 
 @router.post(

@@ -1,17 +1,23 @@
-from pathlib import Path
+from typing import Annotated
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 
 from src.attraction.routes.router import router as attraction_router
 from src.auth.routes import auth_router
 from src.core.configs import BASE_DIR, CORS_ORIGINS
 from src.core.logger import LoggerSetup
-from src.db.database import Base, engine
+from src.core.utils import start_events
+from src.db.cache_storage import CacheHandler, RedisStorage
+from src.db.cloudstorage import CloudStorage
+from src.db.database import Base, engine, get_db
 from src.file.router import file_router
 from src.middleware.log_middleware import LoggingMiddleware
 from src.threads.routes.router import threads_router
+from src.users.repositories import ProfileRepository
 from src.users.routes import user_router
+from src.users.services import ProfileService
 
 
 def _init_app(version: str) -> FastAPI:
@@ -65,7 +71,31 @@ def register_middleware(app: FastAPI):
     )
 
 
+def startup_events():
+    redis_storage = RedisStorage()
+    cloud_storage = CloudStorage()
+    cache_handler = CacheHandler(redis=redis_storage)
+
+    services = [
+        ProfileService(
+            repository=ProfileRepository(),
+            cache_handler=cache_handler,
+            cloud_storage=cloud_storage,
+        ),
+    ]
+    with Session(bind=engine) as db:
+        for service in services:
+            service.get_sqlalchemy_session(db=db)
+
+    start_events(services=services)
+
+
 def register_router(app: FastAPI):
+    app.add_event_handler(
+        "startup",
+        startup_events,
+    )
+
     app.include_router(attraction_router, prefix="/attractions", tags=["Attractions"])
     app.include_router(auth_router, prefix="/auth", tags=["Authorizations"])
     app.include_router(user_router, prefix="/me", tags=["Users"])

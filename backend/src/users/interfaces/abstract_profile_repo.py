@@ -22,7 +22,7 @@ class AbstractProfileRepository(ABC):
         pass
 
     @abstractmethod
-    def create_model(
+    def create_profile(
         self,
         name: str,
         surname: str,

@@ -2,8 +2,7 @@ import json
 import logging
 import time
 from enum import Enum
-from typing import Optional
-from uuid import UUID
+from typing import Any, Awaitable, Optional, Union
 
 from redis import Redis
 
@@ -13,9 +12,10 @@ from src.core.configs import (
     CACHE_STORAGE_PASSWORD,
     CACHE_STORAGE_PORT,
 )
-from src.db.database import Base
+from src.db.interfaces import CacheStorage, ICacheHandler
 
 logger = logging.getLogger(__name__)
+ResponseT = Union[Awaitable, Any]
 
 
 class CacheKeys(Enum):
@@ -25,167 +25,96 @@ class CacheKeys(Enum):
     ATTRACTION_IMAGES = "attraction-images:"
 
 
-class CacheStorage:
-    def __init__(
-        self,
-        host: Optional[str] = None,
-        port: Optional[str] = None,
-        password: Optional[str] = None,
-        expiration: Optional[int] = None,
-    ):
-        self._host = host or CACHE_STORAGE_HOST
-        self._port = port or CACHE_STORAGE_PORT
-        self._password = password or CACHE_STORAGE_PASSWORD
-        self.cache = self._connect_to_data_store()
-        self.pubsub = self.cache.pubsub()
-        self.client = self.RedisPubSub(
-            redis=self.cache,
-            client=self.pubsub,
-        )
-
-        self.expiration_time: int = expiration or CACHE_STORAGE_EXP
-
-    def _connect_to_data_store(self) -> Redis:
+class RedisStorage(CacheStorage):
+    def __init__(self):
+        self.expiration_time: int = CACHE_STORAGE_EXP
         try:
-            redis = Redis(
-                host=self._host,
-                port=self._port,
-                password=self._password,
+            self.cache = Redis(
+                host=CACHE_STORAGE_HOST,
+                port=CACHE_STORAGE_PORT,
+                password=CACHE_STORAGE_PASSWORD,
                 decode_responses=True,
             )
-            return redis
         except Exception as e:
             logger.error("Could not connect to redis server: %s" % e)
-            raise Exception(f"Could not connect to redis server: {e}")
+            raise ValueError(f"Could not connect to redis server: {e}")
 
-    def set_value(self, key, value, expiration: Optional[int] = None):
+        self.pubsub = self.cache.pubsub()
+
+    def set_value(self, key: Any, value: Any, expiration: Optional[int] = None) -> None:
         if expiration:
             self.cache.set(key, value, expiration)
         else:
             self.cache.set(key, value, self.expiration_time)
 
-    def get_value(self, key):
+    def get_value(self, key: Any) -> Optional[Awaitable]:
         value = self.cache.get(key)
         if value is not None:
             return value
         return None
 
-    def delete_value(self, key):
+    def delete_value(self, key: Any) -> None:
         self.cache.delete(key)
 
-    class RedisPubSub:
-        def __init__(self, redis, client):
-            self.redis = redis
-            self.client = client
-
-        def publish(
-            self,
-            pattern: str,
-            data: Optional[int | str | dict | float] = None,
-            suffix: Optional[str] = None,
-        ):
-            try:
-                pattern = f"{pattern}:{suffix}" if suffix else pattern
-                if isinstance(data, dict):
-                    data = json.dumps(data)
-                self.redis.publish(pattern, data)
-                logger.info(f"Published signal: {data} to pattern: {pattern}")
-                return True
-            except Exception as e:
-                logger.error("Could not publish signal: %s" % e)
-                return False
-
-        def subscribe(
-            self,
-            channel: str,
-            suffix: Optional[str] = None,
-        ):
-            full_channel = f"{channel}:{suffix}" if suffix else channel
-            self.client.subscribe(full_channel)
-            logger.info("Subscribed to channel: %s", full_channel)
-
-        def unsubscribe(self, channel: str, suffix: Optional[str] = None):
-            full_channel = f"{channel}:{suffix}" if suffix else channel
-            self.client.unsubscribe(full_channel)
-            logger.info("Unsubscribed from channel: %s", full_channel)
-
-        def message(self):
-            message = self.client.get_message()
-            if message is not None:
-                message_type = message["type"]
-                if message_type == "message":
-                    message_data = message["data"]
-                    if isinstance(
-                        message_data,
-                        str,
-                    ):
-                        try:
-                            message_data = json.loads(message_data)
-                        except json.decoder.JSONDecodeError:
-                            pass
-
-                    logger.info("Received message: %s", message_data)
-                    return message_data
-
-                elif message_type == "subscribe":
-                    if message.get("pattern") is not None:
-                        logger.info("Subscribed to pattern: %s", message["pattern"])
-                    else:
-                        logger.info("Subscribed")
-                elif message_type == "unsubscribe":
-                    logger.info("Unsubscribed from pattern: %s", message["pattern"])
-                else:
-                    logger.warning(
-                        "Received unhandled message type: %s. Message data: %s",
-                        message_type,
-                        message.get("data"),
-                    )
-            return None
-
-
-class CacheModel:
-    cache = CacheStorage()
-
-    def add(
+    def publish_signal(
         self,
-        model: Base,
-        data: dict | str | int | float,
-        model_id: Optional[int | str | UUID] = None,
-    ):
-        if model_id is not None:
-            model_id = str(model_id)
-        self.cache.client.publish(
-            pattern=model.__tablename__,
-            suffix=model_id,
-            data=data,
-        )
+        pattern: bytes | str | memoryview,
+        serialized_data: bytes | memoryview | str | int | float,
+    ) -> Awaitable:
+        return self.cache.publish(channel=pattern, message=serialized_data)
 
-    def connect(
+    def subscribe_signal(
         self,
-        model: Base,
-        model_id: Optional[int | str | UUID] = None,
-        many: Optional[bool] = False,
-    ):
-        if model_id is not None:
-            model_id = str(model_id)
-        suffix = model_id
-        if many:
-            suffix = "*"
-        self.cache.client.subscribe(
-            channel=model.__tablename__,
-            suffix=suffix,
-        )
+        pattern: list,
+    ) -> None:
+        self.pubsub.subscribe(*pattern)
 
-    def disconnect(
+    def unsubscribe_signal(
         self,
-        model: Base,
-        model_id: Optional[int | str | UUID] = None,
-    ):
-        self.cache.client.unsubscribe(model.__tablename__, model_id)
+        pattern: list,
+    ) -> None:
+        self.pubsub.unsubscribe(*pattern)
 
-    def get(self):
-        while True:
-            message = self.cache.client.message()
-            if message:
+    def get_signal(self) -> Optional[Union[None, dict[str, Union[None, str, bytes]]]]:
+        while message := self.pubsub.get_message():
+            if message and message["type"] == "message":
                 return message
             time.sleep(0.1)
+        return None
+
+
+class CacheHandler(ICacheHandler):
+    def __init__(self, redis: RedisStorage):
+        self.redis = redis
+
+    def publish_event(self, pattern: str, data: dict) -> None:
+        serialized_data = json.dumps(data)
+        self.redis.publish_signal(
+            pattern=pattern,
+            serialized_data=serialized_data,
+        )
+        logger.info("Published event: %s" % data)
+
+    def subscribe_event(self, pattern: str | list[str]) -> None:
+        if isinstance(pattern, str):
+            pattern = [pattern]
+
+            self.redis.subscribe_signal(pattern=pattern)
+
+        logger.info("Subscribed to events: %s" % pattern)
+
+    def unsubscribe_event(self, pattern: str | list[str]) -> None:
+        if isinstance(pattern, str):
+            pattern = [pattern]
+
+            self.redis.unsubscribe_signal(pattern=pattern)
+
+        logger.info("Unsubscribed from events: %s" % pattern)
+
+    def get_event(self) -> Optional[dict]:
+        if msg := self.redis.get_signal():
+            deserialized_data = json.loads(msg["data"])
+            logger.info("Received event: %s" % deserialized_data)
+            return deserialized_data
+
+        return None
