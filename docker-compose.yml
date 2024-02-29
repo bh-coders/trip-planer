@@ -10,17 +10,3 @@ services:
       - "8081:80"
     env_file:
       - backend/.env
-    depends_on:
-      - postgres
-      - pgadmin
-      - redis
-#      - minio
-#      - cache_storage
-#      - geocodes_api
-    links:
-      - postgres
-      - redis
-    volumes:
-      - ./backend:/app
-
-
