@@ -26,7 +26,7 @@ class AbstractUserRepository(ABC):
         pass
 
     @abstractmethod
-    def create_model(self, user: CreateUserModel, db: SessionType) -> None:
+    def create_user(self, user: CreateUserModel, db: SessionType) -> None:
         pass
 
     @abstractmethod
@@ -44,5 +44,5 @@ class AbstractUserRepository(ABC):
         pass
 
     @abstractmethod
-    def delete_model(self, user: "UserType", db: SessionType) -> None:
+    def delete_user(self, user: "UserType", db: SessionType) -> None:
         pass

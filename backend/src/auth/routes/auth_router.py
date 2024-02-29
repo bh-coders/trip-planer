@@ -13,7 +13,6 @@ from src.auth.schemas import (
     RegisterUserModel,
 )
 from src.auth.services import AuthService
-from src.db.cache_storage import CacheHandler, RedisStorage
 from src.db.database import get_db
 from src.users.repositories import ProfileRepository, UserRepository
 
@@ -22,7 +21,6 @@ user_repository = UserRepository()
 profile_repository = ProfileRepository()
 auth_service = AuthService(
     repository=user_repository,
-    cache_handler=CacheHandler(redis=RedisStorage()),
 )
 
 

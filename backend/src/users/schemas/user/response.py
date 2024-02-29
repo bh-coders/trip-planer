@@ -1,6 +1,6 @@
 from pydantic import ConfigDict
 
-from src.core.schemas import Message
+from src.common.schemas.message_schemas import Message
 
 
 # email_change_view

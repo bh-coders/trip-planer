@@ -50,6 +50,7 @@ class CreateUserModel(PasswordsMatchModel):
 class EmailChangeUserModel(BaseModel):
     new_email: Annotated[str, BeforeValidator(validate_email)]
     old_email: Annotated[str, BeforeValidator(validate_email)]
+    password: Annotated[str, BeforeValidator(validate_password)]
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -58,6 +59,7 @@ class EmailChangeUserModel(BaseModel):
             "example": {
                 "new_email": "basic@basic.com",
                 "old_email": "basic@basic.com",
+                "password": "Password123!",
             },
         },
     )

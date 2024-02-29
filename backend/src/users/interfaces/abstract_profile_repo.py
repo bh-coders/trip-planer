@@ -7,9 +7,14 @@ from sqlalchemy.orm import Session as SessionType
 if TYPE_CHECKING:
     from src.users.models import Profile
     from src.users.models.user_model import User
+    from src.users.schemas.profile import UpdateProfileModel
 
     UserType = TypeVar("UserType", bound=User)
     ProfileType = TypeVar("ProfileType", bound=Profile)
+    UpdateProfileModelType = TypeVar(
+        "UpdateProfileModelType",
+        bound=UpdateProfileModel,
+    )
 
 
 class AbstractProfileRepository(ABC):
@@ -40,16 +45,16 @@ class AbstractProfileRepository(ABC):
         pass
 
     @abstractmethod
-    def update_model(
+    def update_profile(
         self,
         profile: "ProfileType",
-        # TODO update Profile Model
+        profile_update: "UpdateProfileModelType",
         db: SessionType,
     ) -> None:
         pass
 
     @abstractmethod
-    def delete_model(
+    def delete_profile(
         self,
         profile_id: UUID,
         db: SessionType,

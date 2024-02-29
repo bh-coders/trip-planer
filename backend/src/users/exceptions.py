@@ -1,6 +1,6 @@
 from fastapi import status
 
-from src.core.exceptions import (
+from src.common.exceptions import (
     BadRequest,
     Conflict,
     DetailedHTTPException,
@@ -107,3 +107,8 @@ class InvalidProfileData(DetailedHTTPException):
 class InvalidUserData(DetailedHTTPException):
     STATUS_CODE = status.HTTP_500_INTERNAL_SERVER_ERROR
     DETAIL = ErrorCode.INVALID_USER_DATA
+
+
+class ProfileCreationFailed(DetailedHTTPException):
+    STATUS_CODE = status.HTTP_500_INTERNAL_SERVER_ERROR
+    DETAIL = ErrorCode.PROFILE_CREATION_FAILED

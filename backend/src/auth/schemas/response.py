@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
-from src.core.schemas import Message
+from src.common.schemas.message_schemas import Message
 
 
 class Token(BaseModel):

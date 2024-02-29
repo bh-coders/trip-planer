@@ -37,7 +37,7 @@ class UserRepository(AbstractUserRepository):
             logger.error("Error getting user: %s", error)
             return None
 
-    def create_model(self, user: CreateUserModel, db: Session) -> Optional[User]:
+    def create_user(self, user: CreateUserModel, db: Session) -> Optional[User]:
         try:
             with db.begin_nested():
                 new_user = User(
@@ -90,7 +90,7 @@ class UserRepository(AbstractUserRepository):
             logger.error("Error updating user password: %s", error)
             return False
 
-    def delete_model(self, user: User, db: Session) -> bool:
+    def delete_user(self, user: User, db: Session) -> bool:
         try:
             with db.begin_nested():
                 db.delete(user)

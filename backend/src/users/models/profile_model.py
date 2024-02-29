@@ -37,3 +37,11 @@ class Profile(Base):
         "User",
         back_populates="profile",
     )
+
+    def as_dict(self) -> dict:
+        return {
+            "id": str(self.id),
+            "name": self.name,
+            "surname": self.surname,
+            "user_id": str(self.user_id),
+        }

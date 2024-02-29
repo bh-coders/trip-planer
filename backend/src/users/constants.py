@@ -29,6 +29,7 @@ class ErrorCode:
     DELETE_FAILED = "Delete failed"
     REGISTER_FAILED = "Register failed"
     AUTHORIZATION_FAILED = "Authorization failed. User has no access."
+    PROFILE_CREATION_FAILED = "Profile creation failed."
 
     # other
     AUTHENTICATION_REQUIRED = "Authentication required."

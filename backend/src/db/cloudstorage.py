@@ -155,3 +155,20 @@ class CloudStorage:
                 status_code=500,
                 detail=f"Failed to retrieve file '{filename}' from bucket '{bucket_name}': {e}",
             )
+
+    def delete_file(self, bucket_name: str, filename: str):
+        if not self.client.bucket_exists(bucket_name):
+            raise HTTPException(
+                status_code=404, detail=f"Bucket '{bucket_name}' does not exist."
+            )
+        try:
+            self.client.remove_object(bucket_name, filename)
+        except S3Error as e:
+            logger.error(
+                "Error deleting file '%s' from bucket '%s': %s"
+                % (filename, bucket_name, e)
+            )
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to delete file '{filename}' from bucket '{bucket_name}': {e}",
+            )

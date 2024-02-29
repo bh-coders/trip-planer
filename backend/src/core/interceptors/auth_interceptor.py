@@ -1,31 +1,31 @@
 import logging
+from typing import Optional
+from uuid import UUID
 
-import jwt
 from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
 
-from src.auth.utils import decode_jwt_token
-from src.users.exceptions import (
-    InvalidCredentials,
-    InvalidToken,
-    TokenExpired,
+from src.auth.utils import (
+    decode_jwt_token,
+    get_token_from_request,
 )
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 logger = logging.getLogger(__name__)
 
 
 def verify_jwt(
-    token: str = Depends(oauth2_scheme),
+    get_token: str = Depends(get_token_from_request),
 ) -> bool:
-    try:
-        payload = decode_jwt_token(token=token)
-        logger.info(payload)
+    token = decode_jwt_token(token=get_token)
+    if token:
         return True
-    except jwt.ExpiredSignatureError:
-        raise TokenExpired
-    except jwt.InvalidTokenError:
-        raise InvalidToken
-    except jwt.PyJWTError:
-        raise InvalidCredentials
+    return False
+
+
+def verify_user_id(
+    get_token: str = Depends(get_token_from_request),
+) -> Optional[UUID]:
+    token = decode_jwt_token(token=get_token)
+    if token:
+        user_id = token.get("user_id")
+        return user_id
+    return None

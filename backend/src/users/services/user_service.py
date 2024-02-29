@@ -1,9 +1,11 @@
-import uuid
 from typing import Optional
+from uuid import UUID
 
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from src.auth.utils import verify_passwords
+from src.common.utils import publish_handler_event
 from src.users.exceptions import (
     DeleteFailed,
     EmailChangeFailed,
@@ -27,40 +29,46 @@ class UserService:
         self,
         repository: UserRepository,
     ):
-        self.user_repository = repository
+        self.repository = repository
 
     def change_email(
         self,
-        user_id: uuid.UUID,
+        user_id: UUID,
         new_email: str,
         old_email: str,
+        password: str,
         db: Session,
-    ) -> Optional[EmailChangeEndpoint]:
-        user = self.user_repository.get_by_id(user_id=user_id, db=db)
+    ) -> Optional[JSONResponse]:
+        user = self.repository.get_by_id(user_id=user_id, db=db)
         if not user:
             raise UserDoesNotExist
+        if not verify_passwords(password, user.password):
+            raise InvalidOldPassword
         if old_email != user.email:
             raise InvalidOldEmail
 
         if new_email == old_email:
             raise InvalidNewOldEmail
         try:
-            self.user_repository.update_email(new_email, user, db)
-            return EmailChangeEndpoint(
-                message="Email changed successfully",
+            self.repository.update_email(new_email, user, db)
+            return JSONResponse(
+                content=EmailChangeEndpoint(
+                    message="Email changed successfully",
+                ).model_dump(),
+                status_code=200,
             )
         except Exception:
             raise EmailChangeFailed
 
     def change_password(
         self,
-        user_id: uuid.UUID,
+        user_id: UUID,
         old_password,
         new_password,
         rewrite_password,
         db: Session,
-    ) -> Optional[PasswordChangeEndpoint]:
-        user = self.user_repository.get_by_id(user_id=user_id, db=db)
+    ) -> Optional[JSONResponse]:
+        user = self.repository.get_by_id(user_id=user_id, db=db)
         if not user:
             raise UserDoesNotExist
         if new_password != rewrite_password:
@@ -69,39 +77,42 @@ class UserService:
         if not verify_passwords(old_password, user.password):
             raise InvalidOldPassword
         try:
-            self.user_repository.update_password(new_password, user, db)
-            return PasswordChangeEndpoint(
-                message="Password changed successfully",
+            self.repository.update_password(new_password, user, db)
+            return JSONResponse(
+                content=PasswordChangeEndpoint(
+                    message="Password changed successfully",
+                ).model_dump(),
+                status_code=200,
             )
         except Exception:
             raise PasswordChangeFailed
 
+    @staticmethod
+    def publish_user_deleted_event(user_id: str) -> None:
+        publish_handler_event(
+            pattern="user_deleted",
+            data={
+                "id": user_id,
+            },
+        )
+
     def delete_user(
         self,
-        user_id: uuid.UUID,
+        user_id: UUID,
         db: Session,
-    ) -> Optional[DeleteEndpoint]:
-        user = self.user_repository.get_by_id(user_id=user_id, db=db)
-        if not user:
+    ) -> Optional[JSONResponse]:
+        user_db = self.repository.get_by_id(user_id=user_id, db=db)
+        if not user_db:
             raise UserDoesNotExist
         try:
-            self.user_repository.delete_model(user, db)
-            return DeleteEndpoint(
-                message="User deleted successfully",
+            self.publish_user_deleted_event(str(user_db.id))
+            self.repository.delete_user(user_db, db)
+
+            return JSONResponse(
+                content=DeleteEndpoint(
+                    message="User deleted successfully",
+                ).model_dump(),
+                status_code=200,
             )
         except Exception:
             raise DeleteFailed
-
-    # def event_handler(self):
-    #     try:
-    #         self.cache_handler.subscribe_event("profile")
-    #
-    #         while msg := self.cache_handler.get_event():
-    #             if msg["id"]:
-    #                 return
-    #
-    #     except Exception as e:
-    #         print(f"An error occurred: {e}")
-    #
-    #     finally:
-    #         self.cache_handler.unsubscribe_event("profile")

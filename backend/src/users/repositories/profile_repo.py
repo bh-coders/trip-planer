@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from src.users.interfaces import AbstractProfileRepository
 from src.users.models import Profile
+from src.users.schemas.profile import UpdateProfileModel
 
 logger = logging.getLogger(__name__)
 
@@ -59,24 +60,28 @@ class ProfileRepository(AbstractProfileRepository):
             logger.error("Error getting profile: %s", error)
             return None
 
-    def update_model(
+    def update_profile(
         self,
-        profile: Profile,
+        profile_db: Profile,
+        profile_update: UpdateProfileModel,
         db: Session,
     ) -> Optional[Profile]:
         try:
             with db.begin_nested():
-                for attr, value in vars(profile).items():
-                    setattr(profile, attr, value)
-                db.add(profile)
+                update_data = profile_update.model_dump(exclude_unset=True)
+                if "image_url" in update_data:
+                    update_data.pop("image_url")
+                for key, value in update_data.items():
+                    setattr(profile_db, key, value)
+            db.add(profile_db)
             db.commit()
-            return profile
+            return profile_db
         except SQLAlchemyError as error:
             db.rollback()
             logger.error("Error updating profile: %s", error)
             return None
 
-    def delete_model(
+    def delete_profile(
         self,
         profile_id: uuid.UUID,
         db: Session,
