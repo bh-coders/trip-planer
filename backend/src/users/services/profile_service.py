@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from src.common.utils import run_handler_thread
 from src.db.cache_storage import CacheHandler
-from src.db.cloudstorage import CloudStorage
+from src.db.cloud_storage import CloudStorage
 from src.users.exceptions import DeleteFailed, InvalidProfileData, ProfileCreationFailed
 from src.users.repositories import ProfileRepository
 from src.users.schemas.profile import (

@@ -7,7 +7,8 @@ from fastapi import HTTPException, Request, Response
 from sqlalchemy.orm import Session
 
 from src.auth.utils import get_user_id_from_request
-from src.db.cache_storage import CacheKeys, RedisStorage
+from src.db.cache_storage import CacheKeys
+from src.db.interfaces.cache_storage import ICacheStorage
 from src.threads.repository.review_repository import ReviewRepository
 from src.threads.schemas.model_schema import (
     ReviewCreate,
@@ -18,12 +19,11 @@ from src.threads.schemas.model_schema import (
 if TYPE_CHECKING:
     from src.threads.models import Review
 
-cache = RedisStorage()
-
 
 class ReviewService:
-    def __init__(self, repository: ReviewRepository):
+    def __init__(self, repository: ReviewRepository, cache: ICacheStorage):
         self.repository = repository
+        self.cache = cache
 
     def create(self, request: Request, thread: ReviewCreate, db: Session) -> Response:
         user_id = get_user_id_from_request(request)
@@ -46,7 +46,7 @@ class ReviewService:
 
     def get_thread_by_id(self, thread_id: uuid.UUID, db: Session) -> ReviewSchema:
         cache_key = CacheKeys.THREAD.value + str(thread_id)
-        cache_review = cache.get_value(cache_key)
+        cache_review = self.cache.get_value(cache_key)
         if cache_review:
             review_data = json.loads(cache_review)
             return ReviewSchema(**review_data)
@@ -57,7 +57,7 @@ class ReviewService:
                 status_code=404, detail=f"Cannot find review with review_id={thread_id}"
             )
 
-        cache.set_value(cache_key, orjson.dumps(review.as_dict()))
+        self.cache.set_value(cache_key, orjson.dumps(review.as_dict()))
         return ReviewSchema(**review.as_dict())
 
     def get_threads_attraction_filtered_sorted(
@@ -91,7 +91,7 @@ class ReviewService:
             )
         if not self.repository.delete(db, thread):
             raise HTTPException(status_code=400, detail="Review could not be deleted.")
-        cache.delete_value(cache_key)
+        self.cache.delete_value(cache_key)
         return Response(status_code=200, content="Review deleted")
 
     def update_thread(
@@ -106,5 +106,5 @@ class ReviewService:
         updated = self.repository.update_review(db, thread, updated_review)
         if not updated:
             raise HTTPException(status_code=402, detail="Cannot update review.")
-        cache.set_value(cache_key, orjson.dumps(updated.as_dict()))
+        self.cache.set_value(cache_key, orjson.dumps(updated.as_dict()))
         return ReviewSchema(**updated.as_dict())

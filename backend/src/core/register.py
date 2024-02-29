@@ -1,28 +1,19 @@
-import inspect
-from typing import Type, TypeVar
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
 
+# we need to import all models to create tables in database
+from src.attraction.models import *  # noqa
 from src.attraction.routes.router import router as attraction_router
 from src.auth.routes import auth_router
 from src.core.configs import BASE_DIR, CORS_ORIGINS
 from src.core.logger import LoggerSetup
-
-# from src.core.utils import start_events
-from src.db.cache_storage import CacheHandler, RedisStorage
-from src.db.cloudstorage import CloudStorage
 from src.db.database import Base, engine
-from src.file.router import file_router
+from src.file.models.media_models import *  # noqa
+from src.file.routers.media_router import media_router
 from src.middleware.log_middleware import LoggingMiddleware
+from src.threads.models import *  # noqa
 from src.threads.routes.router import threads_router
-from src.users.repositories import ProfileRepository
 from src.users.routes import profile_router, user_router
-from src.users.services import ProfileService
-
-LoggingMiddlewareType = TypeVar("LoggingMiddlewareType", bound=Type[LoggingMiddleware])
-CORSMiddlewareType = TypeVar("CORSMiddlewareType", bound=Type[CORSMiddleware])
 
 
 def _init_app(version: str) -> FastAPI:
@@ -62,13 +53,12 @@ def register_app():
     # we can initialize all configurations, middlewares, cors etc. here
     register_logger()
     register_middleware(app)
+
     return app
 
 
 def register_middleware(app: FastAPI):
-    app.add_middleware(
-        LoggingMiddleware,
-    )
+    app.add_middleware(LoggingMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=CORS_ORIGINS,
@@ -83,7 +73,7 @@ def register_router(app: FastAPI):
     app.include_router(auth_router, prefix="/auth", tags=["Authorizations"])
     app.include_router(user_router, prefix="/users", tags=["Users"])
     app.include_router(profile_router, prefix="/profiles", tags=["Profiles"])
-    app.include_router(file_router, prefix="/files", tags=["Files"])
+    app.include_router(media_router, prefix="/media", tags=["Media"])
     app.include_router(threads_router, prefix="/threads", tags=["Threads"])
 
 

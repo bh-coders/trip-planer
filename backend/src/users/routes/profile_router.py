@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
 from src.core.interceptors.auth_interceptor import verify_user_id
-from src.db.cloudstorage import CloudStorage
+from src.db.cloud_storage import CloudStorage
 from src.db.database import engine, get_db
 from src.users.repositories import ProfileRepository
 from src.users.schemas.profile import (

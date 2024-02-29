@@ -12,7 +12,8 @@ from src.core.configs import (
     CACHE_STORAGE_PASSWORD,
     CACHE_STORAGE_PORT,
 )
-from src.db.interfaces import CacheStorage, ICacheHandler
+from src.db.interfaces.cache_storage import ICacheStorage
+from src.db.interfaces.cache_handler import ICacheHandler
 
 logger = logging.getLogger(__name__)
 ResponseT = Union[Awaitable, Any]
@@ -22,18 +23,11 @@ class CacheKeys(Enum):
     THREAD = "thread:"
     COMMENT = "thread-comment:"
     ATTRACTION = "attraction:"
-    USER = "user:"
     ATTRACTION_IMAGES = "attraction-images:"
 
 
-class RedisStorage(CacheStorage):
+class RedisStorage(ICacheStorage):
     def __init__(self):
-        """
-        Initialize the RedisStorage class by connecting to the Redis server.
-
-        Raises:
-            ValueError: If connection to the Redis server fails.
-        """
         self.expiration_time: int = CACHE_STORAGE_EXP
         try:
             self.cache = Redis(

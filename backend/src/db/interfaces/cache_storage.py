@@ -1,16 +1,38 @@
 from abc import ABC, abstractmethod
-from typing import Any
 
 
-class CacheStorage(ABC):
+class ICacheStorage(ABC):
     @abstractmethod
-    def set_value(self, key: Any, value: Any, expiration=None) -> None:
+    def set_value(self, key, value, expiration=None):
+        """Set a value in the cache with an optional expiration."""
         pass
 
     @abstractmethod
-    def get_value(self, key: Any) -> None:
+    def get_value(self, key):
+        """Get a value from the cache."""
         pass
 
     @abstractmethod
-    def delete_value(self, key: Any) -> None:
+    def delete_value(self, key):
+        """Delete a value from the cache."""
+        pass
+
+    @abstractmethod
+    def publish_signal(self, pattern, serialized_data):
+        """Publish a signal to a channel in the cache."""
+        pass
+
+    @abstractmethod
+    def subscribe_signal(self, pattern):
+        """Subscribe to a channel to receive signals."""
+        pass
+
+    @abstractmethod
+    def unsubscribe_signal(self, pattern):
+        """Unsubscribe from a channel."""
+        pass
+
+    @abstractmethod
+    def get_signal(self):
+        """Get the next signal message from the subscribed channels."""
         pass

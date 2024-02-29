@@ -1,7 +1,7 @@
 from src.db.interfaces.cache_handler import ICacheHandler
-from src.db.interfaces.cache_storage import CacheStorage
+from src.db.interfaces.cache_storage import ICacheStorage
 
 __all__ = [
-    "CacheStorage",
+    "ICacheStorage",
     "ICacheHandler",
 ]

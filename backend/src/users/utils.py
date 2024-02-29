@@ -5,7 +5,7 @@ import uuid
 from mimetypes import guess_type
 from typing import Optional
 
-from src.db.cloudstorage import CloudStorage
+from src.db.cloud_storage import CloudStorage
 
 cloud_storage = CloudStorage()
 
