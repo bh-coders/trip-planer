@@ -19,11 +19,33 @@ class PasswordsMatchModel(BaseModel):
     password: Annotated[str, BeforeValidator(validate_password)]
     rewrite_password: Annotated[str, BeforeValidator(validate_password)]
 
-    # TODO: uncomment this
     @model_validator(mode="after")
     def passwords_match(self) -> "PasswordsMatchModel":
         if check_passwords_match(self.password, self.rewrite_password):
             return self
+
+
+class PasswordsMatchUpdateModel(BaseModel):
+    old_password: Annotated[str, BeforeValidator(validate_password)]
+    new_password: Annotated[str, BeforeValidator(validate_password)]
+    rewrite_password: Annotated[str, BeforeValidator(validate_password)]
+
+    @model_validator(mode="after")
+    def passwords_match(self) -> "PasswordsMatchUpdateModel":
+        if check_passwords_match(self.new_password, self.rewrite_password):
+            return self
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "title": "User",
+            "description": "User model",
+            "example": {
+                "old_password": "basic@basic.com",
+                "new_password": "Password123!",
+                "rewrite_password": "Password123!",
+            },
+        }
+    )
 
 
 class CreateUserModel(PasswordsMatchModel):

@@ -4,7 +4,7 @@ from uuid import UUID
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from src.auth.utils import verify_passwords
+from src.auth.utils import hash_password, verify_passwords
 from src.common.utils import publish_handler_event
 from src.users.exceptions import (
     DeleteFailed,
@@ -77,7 +77,7 @@ class UserService:
         if not verify_passwords(old_password, user.password):
             raise InvalidOldPassword
         try:
-            self.repository.update_password(new_password, user, db)
+            self.repository.update_password(hash_password(new_password), user, db)
             return JSONResponse(
                 content=PasswordChangeEndpoint(
                     message="Password changed successfully",

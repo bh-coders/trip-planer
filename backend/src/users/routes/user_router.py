@@ -12,7 +12,7 @@ from src.users.repositories import UserRepository
 from src.users.schemas.user import (
     DeleteEndpoint,
     EmailChangeUserModel,
-    PasswordChangeUserModel,
+    PasswordsMatchUpdateModel,
 )
 from src.users.services import UserService
 
@@ -22,7 +22,6 @@ redis_storage = RedisStorage()
 cache_handler = CacheHandler(redis=redis_storage)
 user_service = UserService(
     repository=user_repository,
-    cache_handler=cache_handler,
 )
 
 
@@ -47,11 +46,11 @@ def change_email_view(
 
 @router.patch(
     "/change-password",
-    response_model=PasswordChangeUserModel,
+    response_model=PasswordsMatchUpdateModel,
     response_class=JSONResponse,
 )
 def change_password_view(
-    model: PasswordChangeUserModel,
+    model: PasswordsMatchUpdateModel,
     user_id: Annotated[UUID, Depends(verify_user_id)],
     db: Annotated[Session, Depends(get_db)],
 ):

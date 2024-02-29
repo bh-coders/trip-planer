@@ -3,6 +3,7 @@ from src.users.schemas.user.request import (
     EmailChangeUserModel,
     PasswordChangeUserModel,
     PasswordsMatchModel,
+    PasswordsMatchUpdateModel,
 )
 from src.users.schemas.user.response import (
     DeleteEndpoint,
@@ -14,6 +15,7 @@ __all__ = [
     # user-model
     "CreateUserModel",
     "PasswordsMatchModel",
+    "PasswordsMatchUpdateModel",
     # change_email_view
     "EmailChangeUserModel",
     "EmailChangeEndpoint",
