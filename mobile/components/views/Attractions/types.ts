@@ -54,7 +54,8 @@ export type Opinion = {
 };
 
 type StackParamList = {
-    AttractionDetailScreen: { id: number }
+    AttractionDetailScreen: { id: number },
+    NewReviewScreen: any,
 }
 
 export type NavigationProps = StackNavigationProp<StackParamList>

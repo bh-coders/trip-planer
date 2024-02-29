@@ -2,25 +2,28 @@ import React, { useEffect, useRef, useState } from "react"
 import { Alert, FlatList, Modal, Text, TouchableOpacity, View } from "react-native"
 import { reviewModal } from "./styles";
 import { fetchAttraction, fetchAttractionOpinions } from "../../../../Attractions/api/attractionsApi";
-import { Attraction, Opinion } from "../../../../Attractions/types";
+import { Attraction, NavigationProps, Opinion } from "../../../../Attractions/types";
 import { attractionsExamples, reviewsExamples } from "../../../../Attractions/api/fake/apiMock";
 import ReviewTile from "./ReviewTile";
 import AttractionReviewTile from "./AtrractionReviewTile";
 import SortTile from "./SortTile";
 import FilterTile from "./FilterTile";
+import { useNavigation } from "@react-navigation/native";
 
 interface ReviewsModalProps {
     attractionId: number,
     visible: boolean,
-    hideMenu: () => void
+    hideMenu: () => void,
+    navigation: any
 }
 
 
-const ReviewsModal: React.FC<ReviewsModalProps> = ({ attractionId, visible, hideMenu: onHide }) => {
+const ReviewsModal: React.FC<ReviewsModalProps> = ({ attractionId, visible, hideMenu: onHide, navigation }) => {
 
     const [attraction, setAttraction] = useState<Attraction>();
     const [attractionOpinions, setAttractionOpinions] = useState<Opinion[]>([]);
     const flatListRef = useRef<FlatList<Opinion>>(null);
+    // const navigation = useNavigation<NavigationProps>();
 
     useEffect(() => {
         fetchAttraction(attractionId)
@@ -70,9 +73,8 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ attractionId, visible, hide
                 </View>
                 <View style={reviewModal.modalContent}>
                     <FlatList
-                        // style={attractionSerchStyles.attractionsList}
                         ref={flatListRef}
-                        data={attractionOpinions.sort((a, b) => b.rating - a.rating)}
+                        data={attractionOpinions.sort((a, b) => b.rating - a.rating)} //ToDo sorting schemes dependent on user selection
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ index, item: opinion }) => (
                             <View>
@@ -89,7 +91,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({ attractionId, visible, hide
             </View>
 
             <View style={reviewModal.buttonsContainer}>
-                <TouchableOpacity style={reviewModal.addOpinionIcon}>
+                <TouchableOpacity style={reviewModal.addOpinionIcon} onPress={() => navigation.navigate('NewReviewScreen')}>
                     <Text style={reviewModal.addOpinionText}>+</Text>
                 </TouchableOpacity>
             </View>

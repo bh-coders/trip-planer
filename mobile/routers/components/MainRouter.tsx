@@ -12,16 +12,19 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { AuthContext } from '../../contexts/AuthContext';
 import SubMenuDrawerContent from './DrawnerContent';
 import SearchAttractions from '../../components/views/Attractions/Search/Search';
-import AddNewAttraction from '../../components/views/Attractions/AddNew/AddNew';
-import AttractionDetailScreen from '../../components/views/common/AttractionDetail';
+import AddNewAttraction from '../../components/views/Attractions/AddNew/AttractionForm';
+import AttractionDetailScreen from '../../components/views/common/AttractionDetail.tsx';
+import { AddNewReview } from '../../components/views/Attractions/Review/AttractionReviewForm';
 
-const Drawer = createDrawerNavigator();
 const MainRouter = () => {
   const { userToken } = useContext(AuthContext);
+  const Drawer = createDrawerNavigator();
   console.log(userToken);
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Dashboard" drawerContent={(props) => <SubMenuDrawerContent {...props} />}>
+      <Drawer.Navigator
+        initialRouteName="Dashboard"
+        drawerContent={(props) => <SubMenuDrawerContent {...props} />}>
         <Drawer.Screen name="Dashboard" component={Dashboard} />
         <Drawer.Screen
           name="Search"
@@ -39,6 +42,11 @@ const MainRouter = () => {
         <Drawer.Screen
           name="AttractionDetailScreen"
           component={AttractionDetailScreen}
+          options={{ drawerItemStyle: { display: 'none' } }}
+        />
+        <Drawer.Screen
+          name="NewReviewScreen"
+          component={AddNewReview}
           options={{ drawerItemStyle: { display: 'none' } }}
         />
         <Drawer.Screen

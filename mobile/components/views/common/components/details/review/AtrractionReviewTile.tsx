@@ -10,7 +10,6 @@ interface AttractionReviewTileProps {
 
 const AttractionReviewTile: React.FC<AttractionReviewTileProps> = ({ attraction, reviews }) => {
   const hasImage = attraction.image_url && attraction.image_url.trim() !== '';
-  // const [filtersVisible, setFiltersVisible] = useState<boolean>(false);
 
   return (
     <View style={attractionTileStyles.attractionTile}>
@@ -34,12 +33,6 @@ const AttractionReviewTile: React.FC<AttractionReviewTileProps> = ({ attraction,
           <Text style={attractionTileStyles.reviews}>{reviews.length} reviews</Text>
         </View>
       </View>
-      {/* <TouchableOpacity onPress={() => setFiltersVisible(!filtersVisible)}>
-        <View style={attractionTileStyles.filtersContainer}>
-          <Text style={attractionTileStyles.sortFilterIndicator}>{filtersVisible ? '▲' : '▼'}</Text>
-          {filtersVisible ? (<Text style={{ margin: 10 }}>there will be sorting and filters here</Text>) : null}
-        </View>
-      </TouchableOpacity> */}
     </View>
   );
 };
