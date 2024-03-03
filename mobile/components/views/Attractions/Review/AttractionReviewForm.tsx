@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
-import { Button, Image, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Button,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Slider from '@react-native-community/slider';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary, MediaType } from 'react-native-image-picker';
+import { reviewTile } from '../../common/components/details/review/styles';
 
 interface Review {
   title: string;
@@ -18,6 +29,8 @@ interface ReviewFormProps {
 }
 
 const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
+  const [showImage, setShowImage] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
   const [formData, setFormData] = useState<Review>(
     review || {
       title: '',
@@ -33,39 +46,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  // const handleImagePicker = async () => {
-  //   const options = {
-  //     mediaType: 'photo',
-  //     includeBase64: false,
-  //   };
-  //
-  //   try {
-  //     const response = await ImagePicker.launchImageLibrary(options);
-  //
-  //     // if (response && !response.didCancel && !response.errorMessage && response.assets) {
-  //     //   const selectedImage = response.assets[0]; // Assuming we want only the first asset
-  //     //
-  //     //   if (selectedImage && selectedImage.uri) {
-  //     //     setFormData((prevData) => ({
-  //     //       ...prevData,
-  //     //       images: [...(prevData.images || []), selectedImage.uri].filter(
-  //     //         (image) => image
-  //     //       ) as string[],
-  //     //     }));
-  //     //   }
-  //     // }
-  //   } catch (error) {
-  //     console.error('ImagePicker Error:', error);
-  //   }
-  // };
-
   const selectFile = () => {
     const options = {
-      title: 'Select Avatar',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
+      mediaType: 'photo' as MediaType,
+      saveToPhotos: false,
+      includeBase64: true,
     };
 
     launchImageLibrary(options as any, (response) => {
@@ -73,18 +58,31 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
         console.log('User cancelled image picker');
       } else if (response.errorCode) {
         console.log('ImagePicker Error: ', response.errorMessage);
-      } else if (response.assets && response.assets.length > 0) {
+      } else if (response.assets && response.assets[0].base64) {
         const source = 'data:image/jpeg;base64,' + response.assets[0].base64;
         setFormData((prevData) => ({
           ...prevData,
           images: [...(prevData.images || []), source],
         }));
+      } else {
+        console.log('Loading image error');
       }
     });
+  };
+
+  const removeImage = (index: number) => {
+    const newImages = formData.images ? [...formData.images] : [];
+    newImages.splice(index, 1);
+    setFormData((prevData) => ({ ...prevData, images: newImages }));
   };
   const handleSubmit = () => {
     // Validation, etc.
     onSubmit(formData);
+  };
+
+  const toggleImageModal = (image: string) => {
+    setSelectedImage(image);
+    setShowImage(!showImage);
   };
 
   return (
@@ -97,16 +95,16 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
         value={formData.title}
       />
 
-      <Text>Opis:</Text>
+      <Text>Description:</Text>
       <TextInput
         style={[styles.input, styles.multiline]}
         multiline
-        placeholder="Wpisz opis"
+        placeholder="Type description"
         onChangeText={(text) => handleChange('description', text)}
         value={formData.description}
       />
 
-      <Text>Ogólna ocena (0-5): {formData.rating}</Text>
+      <Text>Rating (0-5): {formData.rating}</Text>
       <Slider
         style={styles.slider}
         value={formData.rating}
@@ -116,7 +114,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
         onValueChange={(value) => handleChange('rating', value)}
       />
 
-      <Text>Koszt (0-5): {formData.cost}</Text>
+      <Text>Price (0-5): {formData.cost}</Text>
       <Slider
         style={styles.slider}
         value={formData.cost}
@@ -126,7 +124,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
         onValueChange={(value) => handleChange('cost', value)}
       />
 
-      <Text>Czas spędzony (0-5): {formData.timeSpent}</Text>
+      <Text>Time spent (0-5): {formData.timeSpent}</Text>
       <Slider
         style={styles.slider}
         value={formData.timeSpent}
@@ -136,13 +134,28 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
         onValueChange={(value) => handleChange('timeSpent', value)}
       />
 
-      <Button title="Dodaj zdjęcie" onPress={selectFile} />
-
-      {formData.images?.map((image, index) => (
-        <Image key={index} source={{ uri: image }} style={{ width: 200, height: 200, margin: 5 }} />
-      ))}
-
-      <Button title="Dodaj recenzję" onPress={handleSubmit} />
+      <Button title="Add photos" onPress={selectFile} />
+      <ScrollView horizontal>
+        {formData.images?.map((image, index) => (
+          <View key={index} style={reviewTile.imageContainer}>
+            <TouchableOpacity onPress={() => toggleImageModal(image)}>
+              <Image source={{ uri: image }} style={reviewTile.thumbnail} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => removeImage(index)} style={reviewTile.closeButton}>
+              <Text style={reviewTile.closeText}>Remove</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </ScrollView>
+      <Modal visible={showImage} transparent={true}>
+        <View style={reviewTile.imageModal}>
+          <TouchableOpacity style={reviewTile.closeButton} onPress={() => toggleImageModal('')}>
+            <Text style={reviewTile.closeText}>Close</Text>
+          </TouchableOpacity>
+          <Image source={{ uri: selectedImage }} style={reviewTile.modalImage} />
+        </View>
+      </Modal>
+      <Button title="Submit review" onPress={handleSubmit} />
     </View>
   );
 };
