@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Button, Modal, Text, TextInput, View } from "react-native";
+import React, { useState } from 'react';
+import { Button, Modal, Text, TextInput, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { Attraction } from "../types";;
+import { Attraction } from '../../types.ts';
+import { filterModal } from '../styles.ts';
 
 interface FiltersModalProps {
   visible: boolean;
   onSave: (filtersProps: Filters) => void;
-  onClose: () => void;
   attractionList: Attraction[];
-  radiuses: string[];
+  radii: string[];
 }
 
 interface Filters {
@@ -20,7 +20,7 @@ interface Filters {
   radius: string;
 }
 
-const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, onClose, attractionList, radiuses }) => {
+const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, attractionList, radii }) => {
   const [keyword, setKeyword] = useState('');
   const [country, setCountry] = useState('');
   const [cities, setCities] = useState<string[]>([]);
@@ -33,64 +33,70 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, onClose, a
   const [regionVisible, setRegionVisible] = useState(false);
   const [furtherFiltersVisible, setFurtherFiltersVisible] = useState(false);
 
-  const countries: string[] = [...new Set(attractionList.map(attraction => attraction?.country as string))];
+  const countries: string[] = [
+    ...new Set(attractionList.map((attraction) => attraction?.country as string)),
+  ];
 
-  const handleSearch = () => {
+  const onSearchPress = () => {
     onSave({ keyword, country, city, region, category, radius });
-  }
+  };
 
-  const handleCountrySelected = (selectedCountry: string) => {
+  const onCountrySelected = (selectedCountry: string) => {
     setCountry(selectedCountry);
     if (selectedCountry) {
       setRegionVisible(true);
-      const countryRegions = attractionList.filter(attraction => attraction.country === selectedCountry).map(attraction => attraction.region);
+      const countryRegions = attractionList
+        .filter((attraction) => attraction.country === selectedCountry)
+        .map((attraction) => attraction.region);
       setRegions([...new Set(countryRegions)]);
     } else {
       setRegionVisible(false);
     }
     setRegion('');
-    handleRegionSelected('');
-  }
+    onRegionSelected('');
+  };
 
-  const handleRegionSelected = (selectedRegion: string) => {
+  const onRegionSelected = (selectedRegion: string) => {
     setRegion(selectedRegion);
     if (selectedRegion) {
       setFurtherFiltersVisible(true);
-      const regionCities = attractionList.filter(attraction => attraction.region === selectedRegion).map(attraction => attraction.city as string);
+      const regionCities = attractionList
+        .filter((attraction) => attraction.region === selectedRegion)
+        .map((attraction) => attraction.city as string);
       setCities([...new Set(regionCities)]);
-      const regionCategories = attractionList.filter(attraction => attraction.region === selectedRegion).map(attraction => attraction.category);
+      const regionCategories = attractionList
+        .filter((attraction) => attraction.region === selectedRegion)
+        .map((attraction) => attraction.category);
       setCategories([...new Set(regionCategories)]);
     } else {
       setFurtherFiltersVisible(false);
     }
     setCity('');
     setCategory('');
-  }
-
+  };
 
   return (
     <Modal visible={visible} transparent={false} animationType="slide">
-      <View style={{ padding: 16 }}>
+      <View style={filterModal.keywordContainer}>
         <Text>Keyword:</Text>
         <TextInput
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 16 }}
+          style={filterModal.keywordInput}
           placeholder="Type keyword"
           value={keyword}
           onChangeText={(text) => setKeyword(text)}
         />
       </View>
 
-      <View style={{ flexDirection: 'column', padding: 5 }}>
+      <View style={filterModal.pickerContainer}>
         <View>
           <Text>Country:</Text>
           <Picker
             selectedValue={country}
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onValueChange={(itemValue) => handleCountrySelected(itemValue)}
-          >
+            style={filterModal.picker}
+            onValueChange={(itemValue) => onCountrySelected(itemValue)}>
             <Picker.Item label="All" value="" />
-            {countries.map((country, index) => (
-              <Picker.Item key={index} label={country} value={country} />
+            {countries.map((countryData, index) => (
+              <Picker.Item key={index} label={countryData} value={countryData} />
             ))}
           </Picker>
         </View>
@@ -100,12 +106,11 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, onClose, a
           <Picker
             enabled={regionVisible}
             selectedValue={region}
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onValueChange={(itemValue) => handleRegionSelected(itemValue)}
-          >
+            style={filterModal.picker}
+            onValueChange={(itemValue) => onRegionSelected(itemValue)}>
             <Picker.Item label="All" value="" />
-            {regions.map((region, index) => (
-              <Picker.Item key={index} label={region} value={region} />
+            {regions.map((regionData, index) => (
+              <Picker.Item key={index} label={regionData} value={regionData} />
             ))}
           </Picker>
         </View>
@@ -115,12 +120,11 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, onClose, a
           <Picker
             enabled={furtherFiltersVisible}
             selectedValue={city}
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onValueChange={(itemValue) => setCity(itemValue)}
-          >
+            style={filterModal.picker}
+            onValueChange={(itemValue) => setCity(itemValue)}>
             <Picker.Item label="All" value="" />
-            {cities.map((city, index) => (
-              <Picker.Item key={index} label={city} value={city} />
+            {cities.map((cityData, index) => (
+              <Picker.Item key={index} label={cityData} value={cityData} />
             ))}
           </Picker>
         </View>
@@ -130,12 +134,11 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, onClose, a
           <Picker
             enabled={furtherFiltersVisible}
             selectedValue={category}
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onValueChange={(itemValue) => setCategory(itemValue)}
-          >
+            style={filterModal.picker}
+            onValueChange={(itemValue) => setCategory(itemValue)}>
             <Picker.Item label="All" value="" />
-            {categories.map((category, index) => (
-              <Picker.Item key={index} label={category} value={category} />
+            {categories.map((categoryData, index) => (
+              <Picker.Item key={index} label={categoryData} value={categoryData} />
             ))}
           </Picker>
         </View>
@@ -145,22 +148,21 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, onClose, a
           <Picker
             enabled={furtherFiltersVisible}
             selectedValue={radius}
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onValueChange={(itemValue) => setRadius(itemValue)}
-          >
+            style={filterModal.picker}
+            onValueChange={(itemValue) => setRadius(itemValue)}>
             <Picker.Item label="Select Category" value="" />
-            {radiuses.map((radius, index) => (
-              <Picker.Item key={index} label={radius + " km"} value={radius} />
+            {radii.map((radiusData, index) => (
+              <Picker.Item key={index} label={radiusData + ' km'} value={radiusData} />
             ))}
           </Picker>
         </View>
       </View>
 
-      <View style={{ padding: 20, borderRadius: 10, marginTop: 20, alignItems: 'flex-end' }}>
-        <Button title="Search Attractions" onPress={handleSearch} />
+      <View style={filterModal.button}>
+        <Button title="Search Attractions" onPress={onSearchPress} />
       </View>
     </Modal>
   );
-}
+};
 
 export default FiltersModal;

@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
-import FiltersModal from './FiltersModal';
+import FiltersModal from './components/FiltersModal.tsx';
 import { attractionsExamples } from '../api/fake/apiMock';
-import AttractionModal from './AttractionModal';
 import AttractionTile from '../../common/AttractionTile';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { styles } from '../../Dashboard/styles';
-import { attractionSerchStyles } from './styles';
-import { Attraction, Filters } from '../types';
+import { attractionSearchStyles } from './styles';
+import { Attraction, Filters, NavigationProps } from '../types';
 import { fetchUserAttractions } from '../api/attractionsApi';
 
-const AttractionSearchScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
+const AttractionSearchScreen: React.FC<{ navigation: NavigationProps }> = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [userAttractions, setUserAttractions] = useState<Attraction[]>(attractionsExamples);
   const [attractions, setAttractions] = useState<Attraction[]>([]);
-  const [attractionDetails, setAttractionDetails] = useState<Attraction | {}>({});
   const [filterModalVisible, setFilterModalVisible] = useState(false);
-  const [attractionModalVisible, setAttractionModalVisible] = useState(false);
   const [filters, setFilters] = useState<Filters>({
     category: '',
     city: '',
@@ -27,7 +24,6 @@ const AttractionSearchScreen: React.FC<{ navigation: any }> = ({ navigation }) =
   });
 
   const [radii, setRadii] = useState<string[]>([]);
-  // const navigation = useNavigation<NavigationProps>();
 
   useEffect(() => {
     const radiusData = ['5', '10', '15'];
@@ -59,16 +55,14 @@ const AttractionSearchScreen: React.FC<{ navigation: any }> = ({ navigation }) =
     setAttractions(filteredAttractions);
   }, [filters, userAttractions]);
 
-  const handleSetFilters = (filtersProps: Filters) => {
+  const onSetFilters = (filtersProps: Filters) => {
     setFilterModalVisible(false);
     setFilters(filtersProps);
   };
 
   const onAttractionClick = (attraction: Attraction) => {
-    // setAttractionModalVisible(true);
-    setAttractionDetails(attraction);
-    navigation.navigate('AttractionDetailScreen', { id: attraction.id });
-
+    let attractionId = attraction?.id;
+    navigation.navigate('AttractionDetailScreen', { id: attractionId });
     console.log('Clicked Attraction:', attraction);
   };
 
@@ -79,7 +73,6 @@ const AttractionSearchScreen: React.FC<{ navigation: any }> = ({ navigation }) =
           title="Add to favorite"
           onPress={() => {
             console.log('add to favorite: ', item);
-            // swip.close();
           }}
         />
       </View>
@@ -103,16 +96,9 @@ const AttractionSearchScreen: React.FC<{ navigation: any }> = ({ navigation }) =
       <Button title="Filters" onPress={() => setFilterModalVisible(true)} />
       <FiltersModal
         visible={filterModalVisible}
-        onClose={() => setFilterModalVisible(false)}
-        onSave={handleSetFilters}
+        onSave={onSetFilters}
         attractionList={userAttractions}
-        radiuses={radii}
-      />
-
-      <AttractionModal
-        visible={attractionModalVisible}
-        attraction={attractionDetails as Attraction}
-        onClose={() => setAttractionModalVisible(false)}
+        radii={radii}
       />
 
       <View style={styles.attractionsGrid}>
@@ -129,7 +115,7 @@ const AttractionSearchScreen: React.FC<{ navigation: any }> = ({ navigation }) =
 
         {!loading && attractions?.length > 0 && (
           <FlatList
-            style={attractionSerchStyles.attractionsList}
+            style={attractionSearchStyles.attractionsList}
             data={attractions}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item: attraction }) => (

@@ -1,25 +1,15 @@
-import React, { useState } from 'react';
-import {
-  Button,
-  Image,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { launchImageLibrary, MediaType } from 'react-native-image-picker';
-import { reviewTile } from '../../common/components/details/review/styles';
+import { styles } from './styles.ts';
 
 interface Review {
   title: string;
   description: string;
   rating: number;
-  cost: number;
-  timeSpent: number;
+  price: number;
+  time_spent: number;
   images: string[];
 }
 
@@ -29,20 +19,22 @@ interface ReviewFormProps {
 }
 
 const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
+  const emptyReview: Review = {
+    title: '',
+    description: '',
+    rating: 0,
+    price: 0,
+    time_spent: 0,
+    images: [],
+  };
   const [showImage, setShowImage] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
-  const [formData, setFormData] = useState<Review>(
-    review || {
-      title: '',
-      description: '',
-      rating: 0,
-      cost: 0,
-      timeSpent: 0,
-      images: [],
-    }
-  );
+  const [formData, setFormData] = useState<Review>(review || emptyReview);
 
-  const handleChange = (field: keyof Review, value: string | number) => {
+  useEffect(() => {
+    review ? setFormData(review) : setFormData(emptyReview);
+  }, [review]);
+  const onChangeData = (field: keyof Review, value: string | number) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
@@ -86,106 +78,102 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text>Title:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Title"
-        onChangeText={(text) => handleChange('title', text)}
-        value={formData.title}
-      />
+    <>
+      <View style={styles.container}>
+        <ScrollView>
+          <Text style={styles.inputTitle}>Title:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Title"
+            onChangeText={(text) => onChangeData('title', text)}
+            value={formData.title}
+          />
 
-      <Text>Description:</Text>
-      <TextInput
-        style={[styles.input, styles.multiline]}
-        multiline
-        placeholder="Type description"
-        onChangeText={(text) => handleChange('description', text)}
-        value={formData.description}
-      />
+          <Text style={styles.inputTitle}>Description:</Text>
+          <TextInput
+            style={[styles.input, styles.multiline]}
+            multiline
+            placeholder="Type description"
+            onChangeText={(text) => onChangeData('description', text)}
+            value={formData.description}
+          />
 
-      <Text>Rating (0-5): {formData.rating}</Text>
-      <Slider
-        style={styles.slider}
-        value={formData.rating}
-        minimumValue={0}
-        maximumValue={5}
-        step={0.5}
-        onValueChange={(value) => handleChange('rating', value)}
-      />
+          <Text style={styles.sliderTitle}>
+            <Text>Rating:</Text>
+            {/*<Text style={{ color: 'red' }}>{'❤'.repeat(formData.rating)}</Text>*/}
+          </Text>
+          <Slider
+            style={styles.slider}
+            value={formData.rating}
+            minimumValue={0}
+            maximumValue={5}
+            step={1}
+            onValueChange={(value) => onChangeData('rating', value)}
+          />
 
-      <Text>Price (0-5): {formData.cost}</Text>
-      <Slider
-        style={styles.slider}
-        value={formData.cost}
-        minimumValue={0}
-        maximumValue={5}
-        step={0.5}
-        onValueChange={(value) => handleChange('cost', value)}
-      />
+          <Text style={styles.sliderTitle}>
+            <Text>Price: </Text>
+            {/*<Text style={{ color: 'green' }}>{'$'.repeat(formData.cost)}</Text>*/}
+          </Text>
+          <Slider
+            style={styles.slider}
+            value={formData.price}
+            minimumValue={0}
+            maximumValue={5}
+            step={1}
+            onValueChange={(value) => onChangeData('price', value)}
+          />
 
-      <Text>Time spent (0-5): {formData.timeSpent}</Text>
-      <Slider
-        style={styles.slider}
-        value={formData.timeSpent}
-        minimumValue={0}
-        maximumValue={5}
-        step={0.5}
-        onValueChange={(value) => handleChange('timeSpent', value)}
-      />
+          <Text style={styles.sliderTitle}>
+            <Text>Time spent:</Text>
+            {/*<Text style={{ color: 'yellow' }}>{'⌚'.repeat(formData.timeSpent)}</Text>*/}
+          </Text>
+          <Slider
+            style={styles.slider}
+            value={formData.time_spent}
+            minimumValue={0}
+            maximumValue={5}
+            step={1}
+            onValueChange={(value) => onChangeData('time_spent', value)}
+          />
 
-      <Button title="Add photos" onPress={selectFile} />
-      <ScrollView horizontal>
-        {formData.images?.map((image, index) => (
-          <View key={index} style={reviewTile.imageContainer}>
-            <TouchableOpacity onPress={() => toggleImageModal(image)}>
-              <Image source={{ uri: image }} style={reviewTile.thumbnail} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => removeImage(index)} style={reviewTile.closeButton}>
-              <Text style={reviewTile.closeText}>Remove</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
-      <Modal visible={showImage} transparent={true}>
-        <View style={reviewTile.imageModal}>
-          <TouchableOpacity style={reviewTile.closeButton} onPress={() => toggleImageModal('')}>
-            <Text style={reviewTile.closeText}>Close</Text>
+          <TouchableOpacity onPress={selectFile} style={styles.buttonPhoto}>
+            <Text style={styles.buttonText}>Add photos</Text>
           </TouchableOpacity>
-          <Image source={{ uri: selectedImage }} style={reviewTile.modalImage} />
-        </View>
-      </Modal>
-      <Button title="Submit review" onPress={handleSubmit} />
-    </View>
+          <ScrollView horizontal>
+            {formData.images?.map((image, index) => (
+              <View key={index} style={styles.imageContainer}>
+                <TouchableOpacity onPress={() => toggleImageModal(image)}>
+                  <Image source={{ uri: image }} style={styles.thumbnail} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => removeImage(index)} style={styles.removeButton}>
+                  <Text style={styles.removeButtonText}>✘</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
+          <Modal visible={showImage} transparent={true}>
+            <View style={styles.imageModal}>
+              <TouchableOpacity style={styles.closeButton} onPress={() => toggleImageModal('')}>
+                <Text style={styles.closeText}>Close</Text>
+              </TouchableOpacity>
+              <Image source={{ uri: selectedImage }} style={styles.modalImage} />
+            </View>
+          </Modal>
+        </ScrollView>
+      </View>
+      <TouchableOpacity onPress={handleSubmit} style={styles.buttonSubmit}>
+        <Text style={styles.buttonText}>Submit review</Text>
+      </TouchableOpacity>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    margin: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  multiline: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  slider: {
-    width: '100%',
-    height: 40,
-    marginBottom: 10,
-  },
-});
 
 export const AddNewReview: React.FC = () => {
   return <ReviewForm onSubmit={(data) => console.log('Adding review:', data)} />;
 };
 
-export const EditReview: React.FC<{ review: Review }> = ({ review }) => {
+export const EditReview: React.FC<{ route: any }> = ({ route }) => {
+  const { review } = route.params;
   return <ReviewForm review={review} onSubmit={(data) => console.log('Editing review:', data)} />;
 };

@@ -9,6 +9,7 @@ interface AttractionTileProps {
   author: { id: number; name: string; avatar: string | undefined };
   loggedInUserId: number;
   onPressExtra: () => void;
+  onEdit: () => void;
 }
 
 const AttractionTile: React.FC<AttractionTileProps> = ({
@@ -16,6 +17,7 @@ const AttractionTile: React.FC<AttractionTileProps> = ({
   author,
   loggedInUserId,
   onPressExtra,
+  onEdit,
 }) => {
   const [shortReview, setShortReview] = useState(true);
   const [showImage, setShowImage] = useState(false);
@@ -34,8 +36,8 @@ const AttractionTile: React.FC<AttractionTileProps> = ({
     setShowImage(!showImage);
   };
 
-  const editBox = (attrractionAuthor: number | undefined) => {
-    if (attrractionAuthor && attrractionAuthor == userId) {
+  const editBox = (attractionAuthor: number | undefined) => {
+    if (attractionAuthor && attractionAuthor === userId) {
       return (
         <TouchableOpacity onPress={() => setEditMenuVisible(true)}>
           <Text style={reviewTile.title}>✎</Text>
@@ -79,6 +81,7 @@ const AttractionTile: React.FC<AttractionTileProps> = ({
         Id={opinion.id}
         visible={editMenuVisible}
         hideMenu={() => setEditMenuVisible(false)}
+        edit={() => onEdit()}
       />
       <View
         style={{

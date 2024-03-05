@@ -1,19 +1,24 @@
-import React from "react"
-import { Modal, Text, TouchableOpacity, View } from "react-native"
-import { attractionDetails } from "../../../styles";
+import React from 'react';
+import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { attractionDetails } from '../../../styles';
 
 interface EditModalProps {
-  Id: number | undefined,
-  visible: boolean,
-  hideMenu: () => void
+  Id: number | undefined;
+  visible: boolean;
+  hideMenu: () => void;
+  edit: () => void | undefined;
 }
 
-
-const EditSubMenuModal: React.FC<EditModalProps> = ({Id: attractionId, visible, hideMenu: onMenu}) => {
-
+const EditSubMenuModal: React.FC<EditModalProps> = ({
+  Id: attractionId,
+  visible,
+  hideMenu: onMenu,
+  edit: edit,
+}) => {
   const onEdit = () => {
     console.log(`Edit attraction ${attractionId}`);
     onMenu();
+    edit();
   };
 
   const onDelete = () => {
@@ -22,12 +27,7 @@ const EditSubMenuModal: React.FC<EditModalProps> = ({Id: attractionId, visible, 
   };
 
   return (
-    <Modal
-      transparent={true}
-      animationType="slide"
-      visible={visible}
-      onRequestClose={onMenu}
-    >
+    <Modal transparent={true} animationType="slide" visible={visible} onRequestClose={onMenu}>
       <View style={attractionDetails.modalContainer}>
         <View style={attractionDetails.modalContent}>
           <TouchableOpacity onPress={onEdit}>

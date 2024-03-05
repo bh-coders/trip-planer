@@ -1,11 +1,7 @@
-import { Button, Text } from "react-native"
-
+import { Button } from 'react-native';
 
 const SortTile = () => {
-
-    return (
-        <Button title="Sorted by: rating" />
-    )
+  return <Button title="Sorted by: rating" />;
 };
 
 export default SortTile;

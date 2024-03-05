@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { imagePlaceholder, attractionDetails } from './styles';
-import { Attraction } from '../Attractions/types';
+import { Attraction, NavigationProps, Opinion } from '../Attractions/types';
 import { fetchAttraction } from '../Attractions/api/attractionsApi';
 import { attractionsExamples } from '../Attractions/api/fake/apiMock';
 import EditSubMenuModal from './components/details/edit/EditSubMenu';
 import ReviewsModal from './components/details/review/ReviewsModal';
 
-const AttractionDetailScreen: React.FC<{ route: { params: { id: number } }; navigation: any }> = ({
-  route,
-  navigation,
-}) => {
+const AttractionDetailScreen: React.FC<{
+  route: { params: { id: number } };
+  navigation: NavigationProps;
+}> = ({ route, navigation }) => {
   const [attractionData, setAttractionData] = useState<Attraction>();
   const [attractionImages, setAttractionImages] = useState<any>();
   const [favorite, setFavorite] = useState<boolean>(false);
   const [editMenuVisible, setEditMenuVisible] = useState<boolean>(false);
   const [reviewsModalVisible, setReviewsModalVisible] = useState<boolean>(false);
-  const userId = 1; //it's temporary
+  const userId = 1; //ToDo it's temporary
 
   useEffect(() => {
     const attractionId = route.params.id;
@@ -44,8 +44,7 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } }; navi
     }
   };
 
-  const onReviewClick = () => {
-    console.log('click');
+  const onGeneralRatingClick = () => {
     setReviewsModalVisible(true);
   };
 
@@ -60,8 +59,11 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } }; navi
             Id={attractionData?.id}
             visible={editMenuVisible}
             hideMenu={() => setEditMenuVisible(false)}
+            edit={() => console.log('edit attraction')}
           />
-          <TouchableOpacity style={attractionDetails.ratingContainer} onPress={onReviewClick}>
+          <TouchableOpacity
+            style={attractionDetails.ratingContainer}
+            onPress={onGeneralRatingClick}>
             <View style={attractionDetails.ratingBox}>
               <Text style={attractionDetails.ratingText}>{attractionData?.rating.toFixed(1)}</Text>
               <View style={attractionDetails.addOpinionIcon}>
@@ -73,7 +75,10 @@ const AttractionDetailScreen: React.FC<{ route: { params: { id: number } }; navi
             attractionId={attractionData?.id as number}
             visible={reviewsModalVisible}
             hideMenu={() => setReviewsModalVisible(false)}
-            navigation={navigation}
+            onNewReview={() => navigation.navigate('NewReviewScreen')}
+            onEditReview={(opinion: Opinion) =>
+              navigation.navigate('EditReviewScreen', { review: opinion })
+            }
           />
         </View>
 

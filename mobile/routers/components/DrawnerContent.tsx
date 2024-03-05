@@ -3,10 +3,8 @@ import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawe
 import AttractionSubMenu from '../../components/views/Attractions/Router';
 import TestSubMenu from '../../components/views/test/Router';
 
-
 //Here, instead of any, you need to create an interface, but I don't know how yet
 const SubMenuDrawerContent: React.FC<any> = (props) => {
-
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />

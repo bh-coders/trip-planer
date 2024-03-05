@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { Image, Text, View } from 'react-native';
 import { attractionTileStyles } from './styles';
 import { Attraction, Opinion } from '../../../../Attractions/types';
 
 interface AttractionReviewTileProps {
-  attraction: Attraction,
-  reviews: Opinion[],
+  attraction: Attraction;
+  reviews: Opinion[];
 }
 
 const AttractionReviewTile: React.FC<AttractionReviewTileProps> = ({ attraction, reviews }) => {

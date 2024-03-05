@@ -14,7 +14,10 @@ import SubMenuDrawerContent from './DrawnerContent';
 import SearchAttractions from '../../components/views/Attractions/Search/Search';
 import AddNewAttraction from '../../components/views/Attractions/AddNew/AttractionForm';
 import AttractionDetailScreen from '../../components/views/common/AttractionDetail.tsx';
-import { AddNewReview } from '../../components/views/Attractions/Review/AttractionReviewForm';
+import {
+  AddNewReview,
+  EditReview,
+} from '../../components/views/Attractions/Review/AttractionReviewForm';
 
 const MainRouter = () => {
   const { userToken } = useContext(AuthContext);
@@ -47,6 +50,11 @@ const MainRouter = () => {
         <Drawer.Screen
           name="NewReviewScreen"
           component={AddNewReview}
+          options={{ drawerItemStyle: { display: 'none' } }}
+        />
+        <Drawer.Screen
+          name="EditReviewScreen"
+          component={EditReview}
           options={{ drawerItemStyle: { display: 'none' } }}
         />
         <Drawer.Screen
