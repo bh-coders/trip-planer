@@ -4,19 +4,19 @@ from src.auth.schemas.request import (
     RegisterUserModel,
 )
 from src.auth.schemas.response import (
-    LoginEndpoint,
-    RefreshTokenEndpoint,
-    RegisterEndpoint,
+    LoginSchema,
+    RefreshTokenSchema,
+    RegisterSuccessSchema,
 )
 
 __all__ = [
     # register_view
     "RegisterUserModel",
-    "RegisterEndpoint",
+    "RegisterSuccessSchema",
     # login_view
     "LoginUserModel",
-    "LoginEndpoint",
+    "LoginSchema",
     # refresh_view
     "GetRefreshTokenModel",
-    "RefreshTokenEndpoint",
+    "RefreshTokenSchema",
 ]

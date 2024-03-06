@@ -41,6 +41,6 @@ docker-compose -f docker-compose.dev.yml up --build -d
 ### debug
 you can use:
 ````bash
-python ./backend/src/run_app.py
+python ./web/src/run_app.py
 ````
 

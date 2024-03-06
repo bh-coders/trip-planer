@@ -14,8 +14,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: on-failure
-    networks:
-      - my_network
 
   redis:
     image: redis
@@ -36,8 +34,6 @@ services:
       interval: 3s
       timeout: 5s
       retries: 5
-    networks:
-      - my_network
 
   minio:
     container_name: minio
@@ -51,14 +47,12 @@ services:
       MINIO_ROOT_USER: superuser
       MINIO_ROOT_PASSWORD: superuser
     command: server /data --console-address ":9001"
-    networks:
-      - my_network
 
-  fastapi:
+  backend:
     build:
       context: ./backend
-      dockerfile: ./docker/fastapi/Dockerfile
-    container_name: fastapi
+      dockerfile: ./docker/web/Dockerfile
+    container_name: backend
     depends_on:
       - postgres
       - redis
@@ -68,15 +62,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/src:/app/src
+      - ./backend/src:/src
     restart: on-failure
-    networks:
-      - my_network
 
 volumes:
   postgres_data:
   redis_data:
   minio_data:
-
-networks:
-  my_network:

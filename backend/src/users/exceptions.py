@@ -15,6 +15,10 @@ class InvalidPassword(BadRequest):
     DETAIL = ErrorCode.INVALID_PASSWORD
 
 
+class UserAlreadyExists(Conflict):
+    DETAIL = ErrorCode.USER_ALREADY_EXISTS
+
+
 class UsernameTaken(Conflict):
     DETAIL = ErrorCode.USERNAME_TAKEN
 

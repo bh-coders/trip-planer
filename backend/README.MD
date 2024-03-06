@@ -1,5 +1,5 @@
 ```bash
-    cd backend
+    cd web
 ```
 
 ```bash

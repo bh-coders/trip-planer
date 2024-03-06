@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.11 AS base
 
 WORKDIR /app
 ADD . /app
@@ -8,9 +8,9 @@ ENV PYTHONBUFFERED 1
 
 COPY requirements.txt .
 
-
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 8000
+COPY ./docker/web/backend.sh /backend.sh
+RUN sed -i 's/\r$//g' /backend.sh && chmod +x /backend.sh
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--reload", "--port", "8000"]
+ENTRYPOINT ["/backend.sh"]

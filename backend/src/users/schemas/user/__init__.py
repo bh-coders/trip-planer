@@ -6,9 +6,9 @@ from src.users.schemas.user.request import (
     PasswordsMatchUpdateModel,
 )
 from src.users.schemas.user.response import (
-    DeleteEndpoint,
-    EmailChangeEndpoint,
-    PasswordChangeEndpoint,
+    DeleteSuccessSchema,
+    EmailChangeSuccessSchema,
+    PasswordChangeSuccessSchema,
 )
 
 __all__ = [
@@ -18,10 +18,10 @@ __all__ = [
     "PasswordsMatchUpdateModel",
     # change_email_view
     "EmailChangeUserModel",
-    "EmailChangeEndpoint",
+    "EmailChangeSuccessSchema",
     # change_password_view
     "PasswordChangeUserModel",
-    "PasswordChangeEndpoint",
+    "PasswordChangeSuccessSchema",
     # delete_view
-    "DeleteEndpoint",
+    "DeleteSuccessSchema",
 ]

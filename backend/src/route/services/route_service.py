@@ -1,4 +1,5 @@
 import time
+
 from backend.src.attraction.models import Attraction
 from backend.src.attraction.repositories.in_memory_repo import InMemoryRepository
 from backend.src.route.models import Route

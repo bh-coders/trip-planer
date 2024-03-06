@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING, Optional, TypeVar
 from uuid import UUID
 
 from sqlalchemy.orm import Session as SessionType
@@ -17,13 +17,13 @@ if TYPE_CHECKING:
     )
 
 
-class AbstractProfileRepository(ABC):
+class IProfileRepository(ABC):
     @abstractmethod
     def get_by_id(
         self,
         profile_id: UUID,
         db: SessionType,
-    ) -> None:
+    ) -> Optional["ProfileType"]:
         pass
 
     @abstractmethod
@@ -33,7 +33,7 @@ class AbstractProfileRepository(ABC):
         surname: str,
         user_id: UUID,
         db: SessionType,
-    ) -> None:
+    ) -> Optional["ProfileType"]:
         pass
 
     @abstractmethod
@@ -41,16 +41,16 @@ class AbstractProfileRepository(ABC):
         self,
         user_id: UUID,
         db: SessionType,
-    ) -> None:
+    ) -> Optional["ProfileType"]:
         pass
 
     @abstractmethod
     def update_profile(
         self,
-        profile: "ProfileType",
-        profile_update: "UpdateProfileModelType",
+        profile_obj: "ProfileType",
+        profile_update_model: "UpdateProfileModelType",
         db: SessionType,
-    ) -> None:
+    ) -> Optional["ProfileType"]:
         pass
 
     @abstractmethod

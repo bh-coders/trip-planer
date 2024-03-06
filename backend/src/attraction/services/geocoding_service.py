@@ -3,6 +3,7 @@ from urllib.parse import urlencode
 
 from requests import Session
 from requests.exceptions import HTTPError, RequestException
+
 from src.core.configs import GEOCODES_CO_API_KEY
 
 logger = logging.getLogger(__name__)

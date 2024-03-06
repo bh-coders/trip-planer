@@ -5,21 +5,21 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from src.core.interceptors.auth_interceptor import verify_user_id
-from src.db.cache_storage import CacheHandler, RedisStorage
-from src.db.database import get_db
+from src.core.interceptors.auth_interceptor import get_user_id
+from src.db.cache_storage import CacheHandler
+from src.db.database import get_db, get_redis
 from src.users.repositories import UserRepository
 from src.users.schemas.user import (
-    DeleteEndpoint,
+    DeleteSuccessSchema,
+    EmailChangeSuccessSchema,
     EmailChangeUserModel,
+    PasswordChangeSuccessSchema,
     PasswordsMatchUpdateModel,
 )
 from src.users.services import UserService
 
 router = APIRouter()
 user_repository = UserRepository()
-redis_storage = RedisStorage()
-cache_handler = CacheHandler(redis=redis_storage)
 user_service = UserService(
     repository=user_repository,
 )
@@ -27,12 +27,12 @@ user_service = UserService(
 
 @router.patch(
     "/change-email",
-    response_model=EmailChangeUserModel,
+    response_model=EmailChangeSuccessSchema,
     response_class=JSONResponse,
 )
 def change_email_view(
     model: EmailChangeUserModel,
-    user_id: Annotated[UUID, Depends(verify_user_id)],
+    user_id: Annotated[UUID, Depends(get_user_id)],
     db: Annotated[Session, Depends(get_db)],
 ):
     return user_service.change_email(
@@ -46,12 +46,12 @@ def change_email_view(
 
 @router.patch(
     "/change-password",
-    response_model=PasswordsMatchUpdateModel,
+    response_model=PasswordChangeSuccessSchema,
     response_class=JSONResponse,
 )
 def change_password_view(
     model: PasswordsMatchUpdateModel,
-    user_id: Annotated[UUID, Depends(verify_user_id)],
+    user_id: Annotated[UUID, Depends(get_user_id)],
     db: Annotated[Session, Depends(get_db)],
 ):
     return user_service.change_password(
@@ -65,11 +65,16 @@ def change_password_view(
 
 @router.delete(
     "/delete",
-    response_model=DeleteEndpoint,
+    response_model=DeleteSuccessSchema,
     response_class=JSONResponse,
 )
 def delete_view(
-    user_id: Annotated[UUID, Depends(verify_user_id)],
+    user_id: Annotated[UUID, Depends(get_user_id)],
     db: Annotated[Session, Depends(get_db)],
+    cache_handler: Annotated[CacheHandler, Depends(get_redis)],
 ):
-    return user_service.delete_user(user_id=user_id, db=db)
+    return user_service.delete_user(
+        user_id=user_id,
+        db=db,
+        cache_handler=cache_handler,
+    )

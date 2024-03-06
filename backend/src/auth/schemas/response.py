@@ -22,7 +22,7 @@ class Token(BaseModel):
 
 
 # register_view
-class RegisterEndpoint(Message):
+class RegisterSuccessSchema(Message):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "User",
@@ -35,10 +35,10 @@ class RegisterEndpoint(Message):
 
 
 # login_view
-class LoginEndpoint(Token):
+class LoginSchema(Token):
     pass
 
 
 # refresh_view
-class RefreshTokenEndpoint(Token):
+class RefreshTokenSchema(Token):
     pass

@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from src.core.configs import (
     SQLALCHEMY_DATABASE_URL,
 )
+from src.db.cache_storage import CacheHandler, RedisStorage
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
@@ -19,3 +20,16 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def get_session():
+    db = next(get_db())
+    try:
+        return db
+    finally:
+        db.close()
+
+
+def get_redis():
+    redis_storage = RedisStorage()
+    return CacheHandler(pool_storage=redis_storage)

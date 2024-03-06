@@ -1,6 +1,6 @@
-import uuid
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional, TypeVar
+from uuid import UUID
 
 from sqlalchemy.orm import Session as SessionType
 
@@ -12,37 +12,69 @@ if TYPE_CHECKING:
     UserType = TypeVar("UserType", bound=User)
 
 
-class AbstractUserRepository(ABC):
+class IUserRepository(ABC):
     @abstractmethod
-    def get_by_id(self, user_id: uuid.UUID, db: SessionType) -> None:
+    def get_by_id(
+        self,
+        user_id: UUID,
+        db: SessionType,
+    ) -> Optional["UserType"]:
         pass
 
     @abstractmethod
-    def get_by_username(self, username: str, db: SessionType) -> None:
+    def get_by_username(
+        self,
+        username: str,
+        db: SessionType,
+    ) -> Optional["UserType"]:
         pass
 
     @abstractmethod
-    def get_by_email(self, email: str, db: SessionType) -> None:
+    def get_by_email(
+        self,
+        email: str,
+        db: SessionType,
+    ) -> Optional["UserType"]:
         pass
 
     @abstractmethod
-    def create_user(self, user: CreateUserModel, db: SessionType) -> None:
+    def create_user(
+        self,
+        user_create_model: CreateUserModel,
+        db: SessionType,
+    ) -> Optional["UserType"]:
         pass
 
     @abstractmethod
-    def set_is_active(self, user: "UserType", db: SessionType) -> None:
+    def set_is_active(
+        self,
+        user_obj: "UserType",
+        db: SessionType,
+    ) -> bool:
         pass
 
     @abstractmethod
-    def update_email(self, new_email: str, user: "UserType", db: SessionType) -> None:
+    def update_email(
+        self,
+        new_email: str,
+        user_obj: "UserType",
+        db: SessionType,
+    ) -> bool:
         pass
 
     @abstractmethod
     def update_password(
-        self, new_password: str, user: "UserType", db: SessionType
-    ) -> None:
+        self,
+        new_password: str,
+        user_obj: "UserType",
+        db: SessionType,
+    ) -> bool:
         pass
 
     @abstractmethod
-    def delete_user(self, user: "UserType", db: SessionType) -> None:
+    def delete_user(
+        self,
+        user_obj: "UserType",
+        db: SessionType,
+    ) -> bool:
         pass

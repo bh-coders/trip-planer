@@ -14,6 +14,7 @@ class ErrorCode:
     # taken
     USERNAME_TAKEN = "Username is already taken."
     EMAIL_TAKEN = "Email is already taken."
+    USER_ALREADY_EXISTS = "User already exists."
 
     # not found
     USERNAME_DOES_NOT_EXIST = "Username does not exist."

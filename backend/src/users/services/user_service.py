@@ -5,7 +5,11 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from src.auth.utils import hash_password, verify_passwords
-from src.common.utils import publish_handler_event
+from src.common.multithreading_utils import (
+    publish_handler_event,
+    publish_handler_thread,
+)
+from src.db.interfaces import ICacheHandler
 from src.users.exceptions import (
     DeleteFailed,
     EmailChangeFailed,
@@ -16,18 +20,18 @@ from src.users.exceptions import (
     PasswordChangeFailed,
     UserDoesNotExist,
 )
-from src.users.repositories import UserRepository
+from src.users.interfaces import IUserRepository
 from src.users.schemas.user import (
-    DeleteEndpoint,
-    EmailChangeEndpoint,
-    PasswordChangeEndpoint,
+    DeleteSuccessSchema,
+    EmailChangeSuccessSchema,
+    PasswordChangeSuccessSchema,
 )
 
 
 class UserService:
     def __init__(
         self,
-        repository: UserRepository,
+        repository: IUserRepository,
     ):
         self.repository = repository
 
@@ -39,20 +43,26 @@ class UserService:
         password: str,
         db: Session,
     ) -> Optional[JSONResponse]:
-        user = self.repository.get_by_id(user_id=user_id, db=db)
+        user = self.repository.get_by_id(
+            user_id=user_id,
+            db=db,
+        )
         if not user:
             raise UserDoesNotExist
         if not verify_passwords(password, user.password):
             raise InvalidOldPassword
         if old_email != user.email:
             raise InvalidOldEmail
-
         if new_email == old_email:
             raise InvalidNewOldEmail
         try:
-            self.repository.update_email(new_email, user, db)
+            self.repository.update_email(
+                new_email=new_email,
+                user_obj=user,
+                db=db,
+            )
             return JSONResponse(
-                content=EmailChangeEndpoint(
+                content=EmailChangeSuccessSchema(
                     message="Email changed successfully",
                 ).model_dump(),
                 status_code=200,
@@ -68,18 +78,24 @@ class UserService:
         rewrite_password,
         db: Session,
     ) -> Optional[JSONResponse]:
-        user = self.repository.get_by_id(user_id=user_id, db=db)
+        user = self.repository.get_by_id(
+            user_id=user_id,
+            db=db,
+        )
         if not user:
             raise UserDoesNotExist
         if new_password != rewrite_password:
             raise InvalidNewOrRewritePassword
-
         if not verify_passwords(old_password, user.password):
             raise InvalidOldPassword
         try:
-            self.repository.update_password(hash_password(new_password), user, db)
+            self.repository.update_password(
+                new_password=hash_password(new_password),
+                user_obj=user,
+                db=db,
+            )
             return JSONResponse(
-                content=PasswordChangeEndpoint(
+                content=PasswordChangeSuccessSchema(
                     message="Password changed successfully",
                 ).model_dump(),
                 status_code=200,
@@ -87,29 +103,41 @@ class UserService:
         except Exception:
             raise PasswordChangeFailed
 
-    @staticmethod
-    def publish_user_deleted_event(user_id: str) -> None:
-        publish_handler_event(
-            pattern="user_deleted",
-            data={
-                "id": user_id,
-            },
-        )
-
     def delete_user(
         self,
         user_id: UUID,
         db: Session,
+        cache_handler: ICacheHandler,
     ) -> Optional[JSONResponse]:
-        user_db = self.repository.get_by_id(user_id=user_id, db=db)
-        if not user_db:
+        user_obj_db = self.repository.get_by_id(
+            user_id=user_id,
+            db=db,
+        )
+        if not user_obj_db:
             raise UserDoesNotExist
         try:
-            self.publish_user_deleted_event(str(user_db.id))
-            self.repository.delete_user(user_db, db)
-
+            publish_handler_thread(
+                event_type="user_deleted",
+                data={
+                    "id": str(user_obj_db.id),
+                },
+                cache_handler=cache_handler,
+                delay="2m",
+            )
+            # publish_handler_event(
+            #     event_type="user_deleted",
+            #     data={
+            #         "id": str(user_obj_db.id),
+            #     },
+            #     cache_handler=cache_handler,
+            #     delay="2m",
+            # )
+            self.repository.delete_user(
+                user_obj=user_obj_db,
+                db=db,
+            )
             return JSONResponse(
-                content=DeleteEndpoint(
+                content=DeleteSuccessSchema(
                     message="User deleted successfully",
                 ).model_dump(),
                 status_code=200,

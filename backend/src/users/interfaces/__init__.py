@@ -1,7 +1,7 @@
-from src.users.interfaces.abstract_profile_repo import AbstractProfileRepository
-from src.users.interfaces.abstract_user_repo import AbstractUserRepository
+from src.users.interfaces.abstract_profile_repo import IProfileRepository
+from src.users.interfaces.abstract_user_repo import IUserRepository
 
 __all__ = [
-    "AbstractProfileRepository",
-    "AbstractUserRepository",
+    "IProfileRepository",
+    "IUserRepository",
 ]

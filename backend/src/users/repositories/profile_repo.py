@@ -1,21 +1,21 @@
 import logging
-import uuid
 from typing import Optional
+from uuid import UUID
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from src.users.interfaces import AbstractProfileRepository
+from src.users.interfaces import IProfileRepository
 from src.users.models import Profile
 from src.users.schemas.profile import UpdateProfileModel
 
 logger = logging.getLogger(__name__)
 
 
-class ProfileRepository(AbstractProfileRepository):
+class ProfileRepository(IProfileRepository):
     def get_by_id(
         self,
-        profile_id: uuid.UUID,
+        profile_id: UUID,
         db: Session,
     ) -> Optional[Profile]:
         try:
@@ -29,7 +29,7 @@ class ProfileRepository(AbstractProfileRepository):
         self,
         name: str,
         surname: str,
-        user_id: uuid.UUID,
+        user_id: UUID,
         db: Session,
     ) -> Optional[Profile]:
         try:
@@ -50,7 +50,7 @@ class ProfileRepository(AbstractProfileRepository):
 
     def get_profile_by_user_id(
         self,
-        user_id: uuid.UUID,
+        user_id: UUID,
         db: Session,
     ) -> Optional[Profile]:
         try:
@@ -62,20 +62,20 @@ class ProfileRepository(AbstractProfileRepository):
 
     def update_profile(
         self,
-        profile_db: Profile,
-        profile_update: UpdateProfileModel,
+        profile_obj: Profile,
+        profile_update_model: UpdateProfileModel,
         db: Session,
     ) -> Optional[Profile]:
         try:
             with db.begin_nested():
-                update_data = profile_update.model_dump(exclude_unset=True)
+                update_data = profile_update_model.model_dump(exclude_unset=True)
                 if "image_url" in update_data:
                     update_data.pop("image_url")
                 for key, value in update_data.items():
-                    setattr(profile_db, key, value)
-            db.add(profile_db)
+                    setattr(profile_obj, key, value)
+            db.add(profile_obj)
             db.commit()
-            return profile_db
+            return profile_obj
         except SQLAlchemyError as error:
             db.rollback()
             logger.error("Error updating profile: %s", error)
@@ -83,7 +83,7 @@ class ProfileRepository(AbstractProfileRepository):
 
     def delete_profile(
         self,
-        profile_id: uuid.UUID,
+        profile_id: UUID,
         db: Session,
     ) -> None:
         try:

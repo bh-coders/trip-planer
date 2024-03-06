@@ -4,7 +4,7 @@ from src.common.schemas.message_schemas import Message
 
 
 # edit_view
-class ProfileUpdateResponse(Message):
+class ProfileUpdateSuccessSchema(Message):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "Profile update",
@@ -17,7 +17,7 @@ class ProfileUpdateResponse(Message):
 
 
 # get_view
-class ProfileDetailResponse(BaseModel):
+class ProfileDetailSchema(BaseModel):
     name: str
     surname: str
     image_base64: str

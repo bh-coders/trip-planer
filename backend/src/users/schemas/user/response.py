@@ -4,7 +4,7 @@ from src.common.schemas.message_schemas import Message
 
 
 # email_change_view
-class EmailChangeEndpoint(Message):
+class EmailChangeSuccessSchema(Message):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "User",
@@ -17,7 +17,7 @@ class EmailChangeEndpoint(Message):
 
 
 # password_change_view
-class PasswordChangeEndpoint(Message):
+class PasswordChangeSuccessSchema(Message):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "User",
@@ -30,7 +30,7 @@ class PasswordChangeEndpoint(Message):
 
 
 # delete_view
-class DeleteEndpoint(Message):
+class DeleteSuccessSchema(Message):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "User",

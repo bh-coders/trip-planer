@@ -3,7 +3,7 @@ import json
 
 class SerializerMixin:
     def __init__(self, data):
-        for field in self.__table__.columns:  # noqa
+        for field in self.__table__.columns:
             if getattr(field, "name"):
                 setattr(self, field.name, data[field.name])
 

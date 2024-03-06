@@ -16,7 +16,7 @@ echo "Starting redis server..."
 echo "Redis server is up"
 
 # Start redis server
-redis-server --loglevel warning --appendonly yes --requirepass ${REDIS_PASSWORD} --save 10 1 --maxmemory 100mb --bind 0.0.0.0
+redis-server --bind 0.0.0.0 --requirepass "${REDIS_PASSWORD}" --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
 
 echo "Redis server started"
 

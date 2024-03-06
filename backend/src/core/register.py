@@ -1,17 +1,16 @@
+from src.attraction.models import *  # noqa
+from src.file.models.media_models import *  # noqa
+from src.threads.models import *  # noqa
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-# we need to import all models to create tables in database
-from src.attraction.models import *  # noqa
 from src.attraction.routes.router import router as attraction_router
 from src.auth.routes import auth_router
 from src.core.configs import BASE_DIR, CORS_ORIGINS
 from src.core.logger import LoggerSetup
-from src.db.database import Base, engine
-from src.file.models.media_models import *  # noqa
+from src.db.database import engine, Base
 from src.file.routers.media_router import media_router
 from src.middleware.log_middleware import LoggingMiddleware
-from src.threads.models import *  # noqa
 from src.threads.routes.router import threads_router
 from src.users.routes import profile_router, user_router
 
@@ -22,18 +21,6 @@ def _init_app(version: str) -> FastAPI:
 
 
 def _read_version() -> str:
-    """
-    Read the Rest API version from a VERSION.txt file.
-
-    This function attempts to read the version of the Rest API from a text file named
-    VERSION.txt located in the 'src' directory. If the file is found, it reads the version,
-    trims any leading or trailing whitespace, and returns the version string. If the file
-    is not found, it creates the file, writes a default version '0.0.0' into it, and returns
-    this default version.
-
-    Returns:
-    - str: The version string read from the file, or the default '0.0.0' if the file does not exist.
-    """
     try:
         with open(BASE_DIR / "src" / "VERSION.txt", "r") as version_file:
             version = version_file.read()
@@ -46,11 +33,9 @@ def _read_version() -> str:
 
 def register_app():
     version = _read_version()
-    # config = config.Settings() if we create Settings object we can put this to init_app
     app = _init_app(version=version)
 
     register_router(app)
-    # we can initialize all configurations, middlewares, cors etc. here
     register_logger()
     register_middleware(app)
 

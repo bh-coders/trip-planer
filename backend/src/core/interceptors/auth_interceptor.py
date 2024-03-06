@@ -21,7 +21,7 @@ def verify_jwt(
     return False
 
 
-def verify_user_id(
+def get_user_id(
     get_token: str = Depends(get_token_from_request),
 ) -> Optional[UUID]:
     token = decode_jwt_token(token=get_token)
