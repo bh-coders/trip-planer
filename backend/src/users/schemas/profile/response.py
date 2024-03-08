@@ -20,7 +20,6 @@ class ProfileUpdateSuccessSchema(Message):
 class ProfileDetailSchema(BaseModel):
     name: str
     surname: str
-    image_base64: str
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -29,7 +28,6 @@ class ProfileDetailSchema(BaseModel):
             "example": {
                 "name": "basic",
                 "surname": "basic",
-                "image_base64": "some_base64_string",
             },
         }
     )

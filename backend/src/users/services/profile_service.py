@@ -26,7 +26,6 @@ from src.users.schemas.profile import (
 )
 from src.users.utils import (
     delete_profile_image,
-    get_profile_image,
     prepare_profile_image,
 )
 
@@ -149,19 +148,10 @@ class ProfileService:
             )
             if not profile_obj_db:
                 raise InvalidProfileData
-            image_base64 = get_profile_image(
-                user_id=user_id,
-            )
-            if not image_base64:
-                raise HTTPException(
-                    status_code=404,
-                    detail="Profile image not found",
-                )
             return JSONResponse(
                 content=ProfileDetailSchema(
                     name=profile_obj_db.name,
                     surname=profile_obj_db.surname,
-                    image_base64=image_base64,
                 ).model_dump(),
                 status_code=200,
             )
