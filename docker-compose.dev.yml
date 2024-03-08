@@ -24,7 +24,6 @@ services:
     privileged: true
     env_file:
       - ./backend/.env
-    restart: on-failure
     ports:
       - "6379:6379"
     volumes:
@@ -63,7 +62,6 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/src:/src
-    restart: on-failure
 
 volumes:
   postgres_data:

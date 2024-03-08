@@ -1,9 +1,9 @@
 from src.users.schemas.user.request import (
-    CreateUserModel,
-    EmailChangeUserModel,
+    CreateUserSchema,
+    UserEmailChangeSchema,
     PasswordChangeUserModel,
     PasswordsMatchModel,
-    PasswordsMatchUpdateModel,
+    PasswordsMatchUpdateSchema,
 )
 from src.users.schemas.user.response import (
     DeleteSuccessSchema,
@@ -13,11 +13,11 @@ from src.users.schemas.user.response import (
 
 __all__ = [
     # user-model
-    "CreateUserModel",
+    "CreateUserSchema",
     "PasswordsMatchModel",
-    "PasswordsMatchUpdateModel",
+    "PasswordsMatchUpdateSchema",
     # change_email_view
-    "EmailChangeUserModel",
+    "UserEmailChangeSchema",
     "EmailChangeSuccessSchema",
     # change_password_view
     "PasswordChangeUserModel",

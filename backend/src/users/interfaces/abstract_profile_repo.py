@@ -7,13 +7,13 @@ from sqlalchemy.orm import Session as SessionType
 if TYPE_CHECKING:
     from src.users.models import Profile
     from src.users.models.user_model import User
-    from src.users.schemas.profile import UpdateProfileModel
+    from src.users.schemas.profile import ProfileUpdateSchema
 
     UserType = TypeVar("UserType", bound=User)
     ProfileType = TypeVar("ProfileType", bound=Profile)
     UpdateProfileModelType = TypeVar(
         "UpdateProfileModelType",
-        bound=UpdateProfileModel,
+        bound=ProfileUpdateSchema,
     )
 
 
@@ -48,7 +48,7 @@ class IProfileRepository(ABC):
     def update_profile(
         self,
         profile_obj: "ProfileType",
-        profile_update_model: "UpdateProfileModelType",
+        profile_update_schema: "UpdateProfileModelType",
         db: SessionType,
     ) -> Optional["ProfileType"]:
         pass

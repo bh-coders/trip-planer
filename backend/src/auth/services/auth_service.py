@@ -1,15 +1,15 @@
 from typing import Optional
 
-from fastapi import HTTPException
+from fastapi import BackgroundTasks, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from src.auth.schemas import (
     LoginSchema,
-    LoginUserModel,
+    LoginUserSchema,
     RefreshTokenSchema,
     RegisterSuccessSchema,
-    RegisterUserModel,
+    RegisterUserSchema,
 )
 from src.auth.utils import (
     encode_jwt_token,
@@ -21,7 +21,6 @@ from src.common.exceptions import (
 )
 from src.common.multithreading_utils import (
     publish_handler_event,
-    publish_handler_thread,
 )
 from src.core.interceptors.auth_interceptor import get_user_id
 from src.db.interfaces import ICacheHandler
@@ -36,7 +35,8 @@ from src.users.exceptions import (
 )
 from src.users.interfaces import IUserRepository
 from src.users.models.user_model import User
-from src.users.schemas.user import CreateUserModel
+from src.users.schemas.profile import CreateProfileSchema
+from src.users.schemas.user import CreateUserSchema
 
 
 class AuthService:
@@ -56,61 +56,77 @@ class AuthService:
             raise InvalidPassword
         return user
 
-    def create_user(self, user: CreateUserModel, db: Session):
-        user.password = hash_password(user.password)
+    def create_user(self, user_schema: CreateUserSchema, db: Session):
+        user_schema.password = hash_password(user_schema.password)
         try:
-            user = self.repository.create_user(user_create_model=user, db=db)
+            user = self.repository.create_user(user_schema=user_schema, db=db)
         except Exception:
             raise HTTPException(status_code=400, detail="User already exists")
 
         return user
 
+    @staticmethod
+    def split_user_and_profile(register_schema: RegisterUserSchema):
+        user_schema = CreateUserSchema(
+            **register_schema.model_dump(exclude={"profile"}),
+        )
+        profile_schema = CreateProfileSchema(
+            **register_schema.model_dump(include={"profile"}),
+        )
+        return user_schema, profile_schema
+
     def register(
         self,
-        user_register_model: RegisterUserModel,
+        user_register_schema: RegisterUserSchema,
         db: Session,
         cache_handler: ICacheHandler,
     ) -> Optional[JSONResponse]:
-        if self.repository.get_by_username(user_register_model.username, db):
+        user_schema, profile_schema = self.split_user_and_profile(
+            user_register_schema,
+        )
+        if self.repository.get_by_username(user_schema.username, db):
             raise UsernameTaken
-        elif self.repository.get_by_email(user_register_model.email, db):
+        elif self.repository.get_by_email(user_schema.email, db):
             raise EmailTaken
         try:
-            user_obj_db = self.create_user(user=user_register_model, db=db)
+            user_obj_db = self.create_user(user_schema=user_schema, db=db)
             if not user_obj_db:
                 raise InvalidUserData
-            if publish_handler_thread(
+            publish_handler_event(
                 event_type="user_created",
                 data={
                     "id": str(user_obj_db.id),
-                    **user_register_model.model_dump(
-                        include={"username", "email", "profile"}
-                    ),
+                    **user_schema.model_dump(),
+                    "profile": {
+                        **profile_schema.model_dump(),
+                    },
                 },
                 cache_handler=cache_handler,
-            ):
-                return JSONResponse(
-                    content=RegisterSuccessSchema(
-                        message="User registered successfully"
-                    ).model_dump(),
-                    status_code=201,
-                )
+            )
+            return JSONResponse(
+                content=RegisterSuccessSchema(
+                    message="User registered successfully"
+                ).model_dump(),
+                status_code=201,
+            )
         except Exception:
             raise RegisterFailed
 
-    def login(self, user: LoginUserModel, db: Session) -> Optional[JSONResponse]:
-        auth_user = self.authenticate_user(
-            username=user.username,
-            password=user.password,
+    def login(
+        self, user_login_schema: LoginUserSchema, db: Session
+    ) -> Optional[JSONResponse]:
+        user_obj_db = self.authenticate_user(
+            username=user_login_schema.username,
+            password=user_login_schema.password,
             db=db,
         )
-        if not auth_user:
+        if not user_obj_db:
             raise NotAuthenticated
         self.repository.set_is_active(
-            user_obj=auth_user,
+            user_obj=user_obj_db,
             db=db,
         )
-        token = encode_jwt_token(username=auth_user.username, user_id=auth_user.id)
+        token = encode_jwt_token(username=user_obj_db.username, user_id=user_obj_db.id)
         return JSONResponse(
             content=LoginSchema(**token).model_dump(),
             status_code=200,

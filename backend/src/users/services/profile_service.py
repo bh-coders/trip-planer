@@ -3,11 +3,12 @@ import time
 from typing import Optional
 from uuid import UUID
 
-from fastapi import HTTPException
+from fastapi import BackgroundTasks, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from src.common.multithreading_utils import run_handler_thread
+from src.common.multithreading_utils import add_task, run_handler_thread
+from src.common.utils import delay_time
 from src.db.interfaces.cache_handler import ICacheHandler
 from src.db.interfaces.cloud_storage import ICloudStorage
 from src.users.exceptions import (
@@ -15,14 +16,13 @@ from src.users.exceptions import (
     InvalidProfileData,
     ProfileCreationFailed,
     UserAlreadyExists,
-    UsernameTaken,
 )
 from src.users.interfaces import IProfileRepository
 from src.users.schemas.profile import (
-    CreateProfileModel,
+    CreateProfileSchema,
     ProfileDetailSchema,
+    ProfileUpdateSchema,
     ProfileUpdateSuccessSchema,
-    UpdateProfileModel,
 )
 from src.users.utils import (
     delete_profile_image,
@@ -42,7 +42,11 @@ class ProfileService:
         self.repository = repository
         self.cloud_storage = cloud_storage
 
-    def start_handler_user_created(self, cache_handler: ICacheHandler, db: Session):
+    def start_handler_user_created(
+        self,
+        cache_handler: ICacheHandler,
+        db: Session,
+    ):
         run_handler_thread(
             method=self.event_handler_user_created,
             event_type="user_created",
@@ -50,7 +54,10 @@ class ProfileService:
             db=db,
         )
 
-    def start_handler_user_deleted(self, cache_handler: ICacheHandler):
+    def start_handler_user_deleted(
+        self,
+        cache_handler: ICacheHandler,
+    ):
         run_handler_thread(
             method=self.event_handler_user_deleted,
             event_type="user_deleted",
@@ -88,7 +95,9 @@ class ProfileService:
             data = cache_handler.get_event()
             if data:
                 user_id = UUID(data["id"])
-                self.delete_profile(
+                add_task(
+                    delay="30m",
+                    func=self.delete_profile,
                     user_id=user_id,
                 )
                 cache_handler.unsubscribe_event(event_type)
@@ -96,7 +105,7 @@ class ProfileService:
     def create_profile(
         self,
         user_id: UUID,
-        profile: CreateProfileModel,
+        profile: CreateProfileSchema,
         db: Session,
     ):
         if self.repository.get_profile_by_user_id(user_id=user_id, db=db):
@@ -161,7 +170,7 @@ class ProfileService:
 
     def edit_profile(
         self,
-        profile: UpdateProfileModel,
+        profile_update_schema: ProfileUpdateSchema,
         user_id: UUID,
         db: Session,
     ) -> Optional[JSONResponse]:
@@ -172,11 +181,11 @@ class ProfileService:
             if profile_obj_db:
                 if self.repository.update_profile(
                     profile_obj=profile_obj_db,
-                    profile_update_model=profile,
+                    profile_update_schema=profile_update_schema,
                     db=db,
                 ):
                     image = prepare_profile_image(
-                        image_url=profile.image_url,
+                        image_url=profile_update_schema.image_url,
                         user_id=user_id,
                     )
                     self.cloud_storage.upload_file(

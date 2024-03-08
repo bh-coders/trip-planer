@@ -1,4 +1,4 @@
-from src.users.schemas.profile.request import CreateProfileModel, UpdateProfileModel
+from src.users.schemas.profile.request import CreateProfileSchema, ProfileUpdateSchema
 from src.users.schemas.profile.response import (
     ProfileDetailSchema,
     ProfileUpdateSuccessSchema,
@@ -7,6 +7,6 @@ from src.users.schemas.profile.response import (
 __all__ = [
     "ProfileUpdateSuccessSchema",
     "ProfileDetailSchema",
-    "CreateProfileModel",
-    "UpdateProfileModel",
+    "CreateProfileSchema",
+    "ProfileUpdateSchema",
 ]

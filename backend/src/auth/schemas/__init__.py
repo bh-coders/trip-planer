@@ -1,7 +1,7 @@
 from src.auth.schemas.request import (
-    GetRefreshTokenModel,
-    LoginUserModel,
-    RegisterUserModel,
+    RefreshTokenSchema,
+    LoginUserSchema,
+    RegisterUserSchema,
 )
 from src.auth.schemas.response import (
     LoginSchema,
@@ -11,12 +11,12 @@ from src.auth.schemas.response import (
 
 __all__ = [
     # register_view
-    "RegisterUserModel",
+    "RegisterUserSchema",
     "RegisterSuccessSchema",
     # login_view
-    "LoginUserModel",
+    "LoginUserSchema",
     "LoginSchema",
     # refresh_view
-    "GetRefreshTokenModel",
+    "RefreshTokenSchema",
     "RefreshTokenSchema",
 ]

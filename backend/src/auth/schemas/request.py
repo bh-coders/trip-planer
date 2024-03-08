@@ -7,10 +7,10 @@ from pydantic import (
 )
 
 from src.users.schemas.profile import (
-    CreateProfileModel,
+    CreateProfileSchema,
 )
 from src.users.schemas.user import (
-    CreateUserModel,
+    CreateUserSchema,
 )
 from src.users.validations import (
     validate_password,
@@ -19,8 +19,8 @@ from src.users.validations import (
 
 
 # register_view
-class RegisterUserModel(CreateUserModel):
-    profile: CreateProfileModel
+class RegisterUserSchema(CreateUserSchema):
+    profile: CreateProfileSchema
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -45,7 +45,7 @@ class RegisterUserModel(CreateUserModel):
 
 
 # login_view
-class LoginUserModel(BaseModel):
+class LoginUserSchema(BaseModel):
     username: Annotated[str, BeforeValidator(validate_username)]
     password: Annotated[str, BeforeValidator(validate_password)]
 
@@ -62,7 +62,7 @@ class LoginUserModel(BaseModel):
 
 
 # refresh_view
-class GetRefreshTokenModel(BaseModel):
+class RefreshTokenSchema(BaseModel):
     refresh_token: str
 
     model_config = ConfigDict(

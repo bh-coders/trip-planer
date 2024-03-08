@@ -5,12 +5,11 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from src.auth.schemas import (
-    GetRefreshTokenModel,
     LoginSchema,
-    LoginUserModel,
+    LoginUserSchema,
     RefreshTokenSchema,
     RegisterSuccessSchema,
-    RegisterUserModel,
+    RegisterUserSchema,
 )
 from src.auth.services import AuthService
 from src.db.cache_storage import CacheHandler
@@ -31,12 +30,12 @@ auth_service = AuthService(
     response_class=JSONResponse,
 )
 def register_view(
-    user_register_model: RegisterUserModel,
+    user_register_schema: RegisterUserSchema,
     db: Annotated[Session, Depends(get_db)],
     cache_handler: Annotated[CacheHandler, Depends(get_redis)],
 ):
     return auth_service.register(
-        user_register_model=user_register_model,
+        user_register_schema=user_register_schema,
         db=db,
         cache_handler=cache_handler,
     )
@@ -48,10 +47,10 @@ def register_view(
     response_class=JSONResponse,
 )
 def login_view(
-    user: LoginUserModel,
+    user_login_schema: LoginUserSchema,
     db: Annotated[Session, Depends(get_db)],
 ):
-    return auth_service.login(user=user, db=db)
+    return auth_service.login(user_login_schema=user_login_schema, db=db)
 
 
 @router.post(
@@ -60,7 +59,7 @@ def login_view(
     response_class=JSONResponse,
 )
 def refresh_view(
-    credentials: GetRefreshTokenModel,
+    credentials: RefreshTokenSchema,
     db: Annotated[Session, Depends(get_db)],
 ):
     return auth_service.refresh_credentials(token=credentials.refresh_token, db=db)

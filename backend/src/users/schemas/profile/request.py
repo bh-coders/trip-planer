@@ -9,13 +9,13 @@ from src.users.validations import (
 )
 
 
-class CreateProfileModel(BaseModel):
+class CreateProfileSchema(BaseModel):
     name: Annotated[str, BeforeValidator(validate_name)]
     surname: Annotated[str, BeforeValidator(validate_surname)]
     image_url: Annotated[str, BeforeValidator(validate_image_url)]
 
 
-class UpdateProfileModel(CreateProfileModel):
+class ProfileUpdateSchema(CreateProfileSchema):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "Profile update model",

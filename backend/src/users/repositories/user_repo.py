@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from src.users.interfaces import IUserRepository
 from src.users.models.user_model import User
-from src.users.schemas.user import CreateUserModel
+from src.users.schemas.user import CreateUserSchema
 
 logger = logging.getLogger(__name__)
 
@@ -51,15 +51,15 @@ class UserRepository(IUserRepository):
 
     def create_user(
         self,
-        user_create_model: CreateUserModel,
+        user_schema: CreateUserSchema,
         db: Session,
     ) -> Optional[User]:
         try:
             with db.begin_nested():
                 new_user = User(
-                    username=user_create_model.username,
-                    email=user_create_model.email,
-                    password=user_create_model.password,
+                    username=user_schema.username,
+                    email=user_schema.email,
+                    password=user_schema.password,
                 )
                 db.add(new_user)
             db.commit()

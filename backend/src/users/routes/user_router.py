@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
@@ -12,9 +12,9 @@ from src.users.repositories import UserRepository
 from src.users.schemas.user import (
     DeleteSuccessSchema,
     EmailChangeSuccessSchema,
-    EmailChangeUserModel,
     PasswordChangeSuccessSchema,
-    PasswordsMatchUpdateModel,
+    PasswordsMatchUpdateSchema,
+    UserEmailChangeSchema,
 )
 from src.users.services import UserService
 
@@ -31,15 +31,15 @@ user_service = UserService(
     response_class=JSONResponse,
 )
 def change_email_view(
-    model: EmailChangeUserModel,
+    user_email_change_schema: UserEmailChangeSchema,
     user_id: Annotated[UUID, Depends(get_user_id)],
     db: Annotated[Session, Depends(get_db)],
 ):
     return user_service.change_email(
         user_id=user_id,
-        new_email=model.new_email,
-        old_email=model.old_email,
-        password=model.password,
+        new_email=user_email_change_schema.new_email,
+        old_email=user_email_change_schema.old_email,
+        password=user_email_change_schema.password,
         db=db,
     )
 
@@ -50,15 +50,15 @@ def change_email_view(
     response_class=JSONResponse,
 )
 def change_password_view(
-    model: PasswordsMatchUpdateModel,
+    passwords_match_update_schema: PasswordsMatchUpdateSchema,
     user_id: Annotated[UUID, Depends(get_user_id)],
     db: Annotated[Session, Depends(get_db)],
 ):
     return user_service.change_password(
         user_id=user_id,
-        old_password=model.old_password,
-        new_password=model.new_password,
-        rewrite_password=model.rewrite_password,
+        old_password=passwords_match_update_schema.old_password,
+        new_password=passwords_match_update_schema.new_password,
+        rewrite_password=passwords_match_update_schema.rewrite_password,
         db=db,
     )
 

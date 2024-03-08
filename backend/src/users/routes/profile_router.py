@@ -6,14 +6,13 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from src.core.interceptors.auth_interceptor import get_user_id
-from src.db.cache_storage import CacheHandler
 from src.db.cloud_storage import CloudStorage
 from src.db.database import get_db, get_redis, get_session
 from src.users.repositories import ProfileRepository
 from src.users.schemas.profile import (
     ProfileDetailSchema,
+    ProfileUpdateSchema,
     ProfileUpdateSuccessSchema,
-    UpdateProfileModel,
 )
 from src.users.services import ProfileService
 
@@ -53,8 +52,10 @@ def detail_view(
     response_class=JSONResponse,
 )
 def update_view(
-    profile: UpdateProfileModel,
+    profile_update_schema: ProfileUpdateSchema,
     user_id: Annotated[UUID, Depends(get_user_id)],
     db: Annotated[Session, Depends(get_db)],
 ):
-    return profile_service.edit_profile(profile=profile, user_id=user_id, db=db)
+    return profile_service.edit_profile(
+        profile_update_schema=profile_update_schema, user_id=user_id, db=db
+    )

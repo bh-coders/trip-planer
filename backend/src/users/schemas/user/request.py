@@ -25,13 +25,13 @@ class PasswordsMatchModel(BaseModel):
             return self
 
 
-class PasswordsMatchUpdateModel(BaseModel):
+class PasswordsMatchUpdateSchema(BaseModel):
     old_password: Annotated[str, BeforeValidator(validate_password)]
     new_password: Annotated[str, BeforeValidator(validate_password)]
     rewrite_password: Annotated[str, BeforeValidator(validate_password)]
 
     @model_validator(mode="after")
-    def passwords_match(self) -> "PasswordsMatchUpdateModel":
+    def passwords_match(self) -> "PasswordsMatchUpdateSchema":
         if check_passwords_match(self.new_password, self.rewrite_password):
             return self
 
@@ -48,7 +48,7 @@ class PasswordsMatchUpdateModel(BaseModel):
     )
 
 
-class CreateUserModel(PasswordsMatchModel):
+class CreateUserSchema(PasswordsMatchModel):
     username: Annotated[str, BeforeValidator(validate_username)]
     email: Annotated[str, BeforeValidator(validate_email)]
     password: Annotated[str, BeforeValidator(validate_password)]
@@ -69,7 +69,7 @@ class CreateUserModel(PasswordsMatchModel):
 
 
 # change_email_view
-class EmailChangeUserModel(BaseModel):
+class UserEmailChangeSchema(BaseModel):
     new_email: Annotated[str, BeforeValidator(validate_email)]
     old_email: Annotated[str, BeforeValidator(validate_email)]
     password: Annotated[str, BeforeValidator(validate_password)]

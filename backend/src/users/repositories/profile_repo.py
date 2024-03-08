@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from src.users.interfaces import IProfileRepository
 from src.users.models import Profile
-from src.users.schemas.profile import UpdateProfileModel
+from src.users.schemas.profile import ProfileUpdateSchema
 
 logger = logging.getLogger(__name__)
 
@@ -63,12 +63,12 @@ class ProfileRepository(IProfileRepository):
     def update_profile(
         self,
         profile_obj: Profile,
-        profile_update_model: UpdateProfileModel,
+        profile_update_schema: ProfileUpdateSchema,
         db: Session,
     ) -> Optional[Profile]:
         try:
             with db.begin_nested():
-                update_data = profile_update_model.model_dump(exclude_unset=True)
+                update_data = profile_update_schema.model_dump(exclude_unset=True)
                 if "image_url" in update_data:
                     update_data.pop("image_url")
                 for key, value in update_data.items():

@@ -6,7 +6,6 @@ from typing import Any, Optional, Union
 
 from redis import Redis
 
-from src.common.multithreading_utils import delay_time
 from src.core.configs import (
     CACHE_STORAGE_EXP,
     CACHE_STORAGE_HOST,

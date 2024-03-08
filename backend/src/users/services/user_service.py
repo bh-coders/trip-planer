@@ -1,13 +1,13 @@
 from typing import Optional
 from uuid import UUID
 
+from fastapi import BackgroundTasks
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from src.auth.utils import hash_password, verify_passwords
 from src.common.multithreading_utils import (
     publish_handler_event,
-    publish_handler_thread,
 )
 from src.db.interfaces import ICacheHandler
 from src.users.exceptions import (
@@ -116,22 +116,13 @@ class UserService:
         if not user_obj_db:
             raise UserDoesNotExist
         try:
-            publish_handler_thread(
+            publish_handler_event(
                 event_type="user_deleted",
                 data={
                     "id": str(user_obj_db.id),
                 },
                 cache_handler=cache_handler,
-                delay="2m",
             )
-            # publish_handler_event(
-            #     event_type="user_deleted",
-            #     data={
-            #         "id": str(user_obj_db.id),
-            #     },
-            #     cache_handler=cache_handler,
-            #     delay="2m",
-            # )
             self.repository.delete_user(
                 user_obj=user_obj_db,
                 db=db,

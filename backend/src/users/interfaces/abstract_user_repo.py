@@ -4,7 +4,7 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session as SessionType
 
-from src.users.schemas.user import CreateUserModel
+from src.users.schemas.user import CreateUserSchema
 
 if TYPE_CHECKING:
     from src.users.models.user_model import User
@@ -40,7 +40,7 @@ class IUserRepository(ABC):
     @abstractmethod
     def create_user(
         self,
-        user_create_model: CreateUserModel,
+        user_schema: CreateUserSchema,
         db: SessionType,
     ) -> Optional["UserType"]:
         pass
