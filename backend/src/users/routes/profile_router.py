@@ -6,7 +6,6 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from src.core.interceptors.auth_interceptor import get_user_id
-from src.db.cloud_storage import CloudStorage
 from src.db.database import get_db, get_redis, get_session
 from src.users.repositories import ProfileRepository
 from src.users.schemas.profile import (
@@ -18,12 +17,10 @@ from src.users.services import ProfileService
 
 router = APIRouter()
 profile_repository = ProfileRepository()
-cloud_storage = CloudStorage()
 
 
 profile_service = ProfileService(
     repository=profile_repository,
-    cloud_storage=cloud_storage,
 )
 profile_service.start_handler_user_created(
     cache_handler=get_redis(),

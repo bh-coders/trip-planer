@@ -1,9 +1,9 @@
 from src.users.schemas.user.request import (
     CreateUserSchema,
-    UserEmailChangeSchema,
     PasswordChangeUserModelSchema,
     PasswordsMatchModelSchema,
     PasswordsMatchUpdateSchema,
+    UserEmailChangeSchema,
 )
 from src.users.schemas.user.response import (
     DeleteSuccessSchema,

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import BackgroundTasks, HTTPException
+from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 

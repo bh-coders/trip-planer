@@ -1,5 +1,4 @@
 from src.auth.schemas.request import (
-    RefreshTokenSchema,
     LoginUserSchema,
     RegisterUserSchema,
 )

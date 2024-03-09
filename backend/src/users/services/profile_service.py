@@ -9,7 +9,6 @@ from sqlalchemy.orm import Session
 
 from src.common.multithreading_utils import run_handler_thread
 from src.db.interfaces.cache_handler import ICacheHandler
-from src.db.interfaces.cloud_storage import ICloudStorage
 from src.users.exceptions import (
     InvalidProfileData,
     ProfileCreationFailed,
@@ -30,10 +29,8 @@ class ProfileService:
     def __init__(
         self,
         repository: IProfileRepository,
-        cloud_storage: ICloudStorage,
     ):
         self.repository = repository
-        self.cloud_storage = cloud_storage
 
     def start_handler_user_created(
         self,
