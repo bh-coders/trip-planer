@@ -2,7 +2,6 @@ import logging
 import threading
 from typing import Callable
 
-from fastapi import BackgroundTasks
 from sqlalchemy.orm import Session
 
 from src.common.utils import delay_time
