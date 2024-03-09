@@ -3,10 +3,9 @@ import uuid
 from typing import TYPE_CHECKING, List, Optional
 
 import orjson
-from fastapi import HTTPException, Request, Response
+from fastapi import HTTPException, Response
 from sqlalchemy.orm import Session
 
-from src.auth.utils import get_user_id_from_request
 from src.db.cache_storage import CacheKeys
 from src.db.interfaces.cache_storage import ICacheStorage
 from src.threads.repository.review_repository import ReviewRepository
@@ -25,12 +24,12 @@ class ReviewService:
         self.repository = repository
         self.cache = cache
 
-    def create(self, request: Request, thread: ReviewCreate, db: Session) -> Response:
-        user_id = get_user_id_from_request(request)
-        if not user_id:
-            raise HTTPException(
-                status_code=401, detail="Cannot find user_id in token payload."
-            )
+    def create(
+        self,
+        user_id: uuid.UUID,
+        thread: ReviewCreate,
+        db: Session,
+    ) -> Response:
         new_review = ReviewSchema(
             user_id=user_id,
             attraction_id=thread.attraction_id,
