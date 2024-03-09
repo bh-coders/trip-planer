@@ -52,11 +52,3 @@ class IProfileRepository(ABC):
         db: SessionType,
     ) -> Optional["ProfileType"]:
         pass
-
-    @abstractmethod
-    def delete_profile(
-        self,
-        profile_id: UUID,
-        db: SessionType,
-    ) -> None:
-        pass

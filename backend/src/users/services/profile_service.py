@@ -3,16 +3,14 @@ import time
 from typing import Optional
 from uuid import UUID
 
-from fastapi import BackgroundTasks, HTTPException
+from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from src.common.multithreading_utils import add_task, run_handler_thread
-from src.common.utils import delay_time
+from src.common.multithreading_utils import run_handler_thread
 from src.db.interfaces.cache_handler import ICacheHandler
 from src.db.interfaces.cloud_storage import ICloudStorage
 from src.users.exceptions import (
-    DeleteFailed,
     InvalidProfileData,
     ProfileCreationFailed,
     UserAlreadyExists,
@@ -49,16 +47,6 @@ class ProfileService:
             db=db,
         )
 
-    def start_handler_user_deleted(
-        self,
-        cache_handler: ICacheHandler,
-    ):
-        run_handler_thread(
-            method=self.event_handler_user_deleted,
-            event_type="user_deleted",
-            cache_handler=cache_handler,
-        )
-
     def event_handler_user_created(
         self,
         event_type: str,
@@ -79,24 +67,6 @@ class ProfileService:
                 )
                 cache_handler.unsubscribe_event(event_type)
 
-    def event_handler_user_deleted(
-        self,
-        event_type: str,
-        cache_handler: ICacheHandler,
-    ):
-        cache_handler.subscribe_event(event_type)
-        while True:
-            time.sleep(0.2)
-            data = cache_handler.get_event()
-            if data:
-                user_id = UUID(data["id"])
-                add_task(
-                    delay="30m",
-                    func=self.delete_profile,
-                    user_id=user_id,
-                )
-                cache_handler.unsubscribe_event(event_type)
-
     def create_profile(
         self,
         user_id: UUID,
@@ -114,14 +84,6 @@ class ProfileService:
             )
         except Exception:
             raise ProfileCreationFailed
-
-    @staticmethod
-    def delete_profile(user_id: UUID):
-        try:
-            delete_profile_image(user_id=user_id)
-            return True
-        except Exception:
-            raise DeleteFailed
 
     def get_profile(
         self,

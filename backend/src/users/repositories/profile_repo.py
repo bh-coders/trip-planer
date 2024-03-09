@@ -78,17 +78,3 @@ class ProfileRepository(IProfileRepository):
             db.rollback()
             logger.error("Error updating profile: %s", error)
             return None
-
-    def delete_profile(
-        self,
-        profile_id: UUID,
-        db: Session,
-    ) -> None:
-        try:
-            with db.begin_nested():
-                db.query(Profile).filter(Profile.id == profile_id).delete()
-            db.commit()
-        except SQLAlchemyError as error:
-            db.rollback()
-            logger.error("Error deleting profile: %s", error)
-            return None

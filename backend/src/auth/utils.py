@@ -132,9 +132,3 @@ def get_token_from_request(request: Request) -> Optional[str]:
     if not authorization or scheme.lower() != "bearer":
         raise AuthorizationFailed
     return token
-
-
-def get_user_id_from_request(request: Request) -> Optional[uuid.UUID]:
-    auth_token = get_token_from_request(request=request)
-    payload_token = decode_jwt_token(auth_token)
-    return payload_token.get("user_id")

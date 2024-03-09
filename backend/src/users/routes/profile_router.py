@@ -29,9 +29,6 @@ profile_service.start_handler_user_created(
     cache_handler=get_redis(),
     db=get_session(),
 )
-profile_service.start_handler_user_deleted(
-    cache_handler=get_redis(),
-)
 
 
 @router.get(
