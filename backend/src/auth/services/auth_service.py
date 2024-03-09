@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from src.auth.schemas import (
     LoginSchema,
     LoginUserSchema,
-    RefreshTokenSchema,
+    RefreshTokenSuccessSchema,
     RegisterSuccessSchema,
     RegisterUserSchema,
 )
@@ -66,12 +66,12 @@ class AuthService:
         return user
 
     @staticmethod
-    def split_user_and_profile(register_schema: RegisterUserSchema):
+    def split_user_and_profile(user_register_schema: RegisterUserSchema):
         user_schema = CreateUserSchema(
-            **register_schema.model_dump(exclude={"profile"}),
+            **user_register_schema.model_dump(exclude={"profile"}),
         )
         profile_schema = CreateProfileSchema(
-            **register_schema.model_dump(include={"profile"}),
+            **user_register_schema.model_dump().get("profile"),
         )
         return user_schema, profile_schema
 
@@ -82,7 +82,7 @@ class AuthService:
         cache_handler: ICacheHandler,
     ) -> Optional[JSONResponse]:
         user_schema, profile_schema = self.split_user_and_profile(
-            user_register_schema,
+            user_register_schema=user_register_schema,
         )
         if self.repository.get_by_username(user_schema.username, db):
             raise UsernameTaken
@@ -141,6 +141,6 @@ class AuthService:
             raise UserDoesNotExist
         token = encode_jwt_token(username=user.username, user_id=user.id)
         return JSONResponse(
-            content=RefreshTokenSchema(**token).model_dump(),
+            content=RefreshTokenSuccessSchema(**token).model_dump(),
             status_code=200,
         )

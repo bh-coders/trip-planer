@@ -8,6 +8,7 @@ from src.auth.schemas import (
     LoginSchema,
     LoginUserSchema,
     RefreshTokenSchema,
+    RefreshTokenSuccessSchema,
     RegisterSuccessSchema,
     RegisterUserSchema,
 )
@@ -55,7 +56,7 @@ def login_view(
 
 @router.post(
     "/refresh",
-    response_model=RefreshTokenSchema,
+    response_model=RefreshTokenSuccessSchema,
     response_class=JSONResponse,
 )
 def refresh_view(

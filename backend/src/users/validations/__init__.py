@@ -1,5 +1,4 @@
 from src.users.validations.profile_validation import (
-    validate_image_url,
     validate_name,
     validate_surname,
 )
@@ -19,5 +18,4 @@ __all__ = [
     # profile validation
     "validate_name",
     "validate_surname",
-    "validate_image_url",
 ]

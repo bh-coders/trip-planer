@@ -34,7 +34,6 @@ class RegisterUserSchema(CreateUserSchema):
                 "profile": {
                     "name": "basic",
                     "surname": "basic",
-                    "image_url": "https://i.ibb.co/VVJ5P0R/knowledge-map-2.png",
                 },
             },
         }

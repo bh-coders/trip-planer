@@ -40,5 +40,5 @@ class LoginSchema(TokenSchema):
 
 
 # refresh_view
-class RefreshTokenSchema(TokenSchema):
+class RefreshTokenSuccessSchema(TokenSchema):
     pass

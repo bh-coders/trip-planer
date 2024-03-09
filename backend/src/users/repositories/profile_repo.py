@@ -69,8 +69,6 @@ class ProfileRepository(IProfileRepository):
         try:
             with db.begin_nested():
                 update_data = profile_update_schema.model_dump(exclude_unset=True)
-                if "image_url" in update_data:
-                    update_data.pop("image_url")
                 for key, value in update_data.items():
                     setattr(profile_obj, key, value)
             db.add(profile_obj)

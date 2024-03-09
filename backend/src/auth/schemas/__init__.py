@@ -5,7 +5,7 @@ from src.auth.schemas.request import (
 )
 from src.auth.schemas.response import (
     LoginSchema,
-    RefreshTokenSchema,
+    RefreshTokenSuccessSchema,
     RegisterSuccessSchema,
 )
 
@@ -17,6 +17,6 @@ __all__ = [
     "LoginUserSchema",
     "LoginSchema",
     # refresh_view
-    "RefreshTokenSchema",
-    "RefreshTokenSchema",
+    "RefreshTokenSuccessSchema",
+    "RefreshTokenSuccessSchema",
 ]

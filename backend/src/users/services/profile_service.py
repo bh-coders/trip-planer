@@ -24,10 +24,6 @@ from src.users.schemas.profile import (
     ProfileUpdateSchema,
     ProfileUpdateSuccessSchema,
 )
-from src.users.utils import (
-    delete_profile_image,
-    prepare_profile_image,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -110,22 +106,12 @@ class ProfileService:
         if self.repository.get_profile_by_user_id(user_id=user_id, db=db):
             raise UserAlreadyExists
         try:
-            profile_obj_db = self.repository.create_profile(
+            self.repository.create_profile(
                 user_id=user_id,
                 name=profile.get("name"),
                 surname=profile.get("surname"),
                 db=db,
             )
-            if profile_obj_db:
-                image = prepare_profile_image(
-                    image_url=profile.get("image_url"),
-                    user_id=user_id,
-                )
-                self.cloud_storage.upload_file(
-                    **image,
-                )
-            else:
-                raise InvalidProfileData
         except Exception:
             raise ProfileCreationFailed
 
@@ -174,13 +160,6 @@ class ProfileService:
                     profile_update_schema=profile_update_schema,
                     db=db,
                 ):
-                    image = prepare_profile_image(
-                        image_url=profile_update_schema.image_url,
-                        user_id=user_id,
-                    )
-                    self.cloud_storage.upload_file(
-                        **image,
-                    )
                     return JSONResponse(
                         content=ProfileUpdateSuccessSchema(
                             message="Profile updated successfully"
