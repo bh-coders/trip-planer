@@ -1,8 +1,8 @@
 from src.users.schemas.user.request import (
     CreateUserSchema,
     UserEmailChangeSchema,
-    PasswordChangeUserModel,
-    PasswordsMatchModel,
+    PasswordChangeUserModelSchema,
+    PasswordsMatchModelSchema,
     PasswordsMatchUpdateSchema,
 )
 from src.users.schemas.user.response import (
@@ -14,13 +14,13 @@ from src.users.schemas.user.response import (
 __all__ = [
     # user-model
     "CreateUserSchema",
-    "PasswordsMatchModel",
+    "PasswordsMatchModelSchema",
     "PasswordsMatchUpdateSchema",
     # change_email_view
     "UserEmailChangeSchema",
     "EmailChangeSuccessSchema",
     # change_password_view
-    "PasswordChangeUserModel",
+    "PasswordChangeUserModelSchema",
     "PasswordChangeSuccessSchema",
     # delete_view
     "DeleteSuccessSchema",

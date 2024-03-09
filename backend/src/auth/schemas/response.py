@@ -1,9 +1,9 @@
 from pydantic import BaseModel, ConfigDict
 
-from src.common.schemas.message_schemas import Message
+from src.common.schemas.message_schemas import MessageSchema
 
 
-class Token(BaseModel):
+class TokenSchema(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str
@@ -22,7 +22,7 @@ class Token(BaseModel):
 
 
 # register_view
-class RegisterSuccessSchema(Message):
+class RegisterSuccessSchema(MessageSchema):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "User",
@@ -35,10 +35,10 @@ class RegisterSuccessSchema(Message):
 
 
 # login_view
-class LoginSchema(Token):
+class LoginSchema(TokenSchema):
     pass
 
 
 # refresh_view
-class RefreshTokenSchema(Token):
+class RefreshTokenSchema(TokenSchema):
     pass

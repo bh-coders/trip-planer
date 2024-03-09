@@ -15,12 +15,12 @@ from src.users.validations import (
 )
 
 
-class PasswordsMatchModel(BaseModel):
+class PasswordsMatchModelSchema(BaseModel):
     password: Annotated[str, BeforeValidator(validate_password)]
     rewrite_password: Annotated[str, BeforeValidator(validate_password)]
 
     @model_validator(mode="after")
-    def passwords_match(self) -> "PasswordsMatchModel":
+    def passwords_match(self) -> "PasswordsMatchModelSchema":
         if check_passwords_match(self.password, self.rewrite_password):
             return self
 
@@ -30,15 +30,10 @@ class PasswordsMatchUpdateSchema(BaseModel):
     new_password: Annotated[str, BeforeValidator(validate_password)]
     rewrite_password: Annotated[str, BeforeValidator(validate_password)]
 
-    @model_validator(mode="after")
-    def passwords_match(self) -> "PasswordsMatchUpdateSchema":
-        if check_passwords_match(self.new_password, self.rewrite_password):
-            return self
-
     model_config = ConfigDict(
         json_schema_extra={
             "title": "User",
-            "description": "User model",
+            "description": "Password change model",
             "example": {
                 "old_password": "basic@basic.com",
                 "new_password": "Password123!",
@@ -47,8 +42,13 @@ class PasswordsMatchUpdateSchema(BaseModel):
         }
     )
 
+    @model_validator(mode="after")
+    def passwords_match(self) -> "PasswordsMatchUpdateSchema":
+        if check_passwords_match(self.new_password, self.rewrite_password):
+            return self
 
-class CreateUserSchema(PasswordsMatchModel):
+
+class CreateUserSchema(PasswordsMatchModelSchema):
     username: Annotated[str, BeforeValidator(validate_username)]
     email: Annotated[str, BeforeValidator(validate_email)]
     password: Annotated[str, BeforeValidator(validate_password)]
@@ -57,7 +57,7 @@ class CreateUserSchema(PasswordsMatchModel):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "User",
-            "description": "User model",
+            "description": "User model create",
             "example": {
                 "username": "basic",
                 "email": "basic@basic.com",
@@ -88,7 +88,7 @@ class UserEmailChangeSchema(BaseModel):
 
 
 # change_password_view
-class PasswordChangeUserModel(PasswordsMatchModel):
+class PasswordChangeUserModelSchema(PasswordsMatchModelSchema):
     old_password: Annotated[str, BeforeValidator(validate_password)]
     new_password: Annotated[str, BeforeValidator(validate_password)]
     rewrite_password: Annotated[str, BeforeValidator(validate_password)]

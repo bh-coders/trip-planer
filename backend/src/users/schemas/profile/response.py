@@ -1,10 +1,10 @@
 from pydantic import BaseModel, ConfigDict
 
-from src.common.schemas.message_schemas import Message
+from src.common.schemas.message_schemas import MessageSchema
 
 
 # edit_view
-class ProfileUpdateSuccessSchema(Message):
+class ProfileUpdateSuccessSchema(MessageSchema):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "Profile update",

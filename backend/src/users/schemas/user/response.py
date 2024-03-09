@@ -1,14 +1,14 @@
 from pydantic import ConfigDict
 
-from src.common.schemas.message_schemas import Message
+from src.common.schemas.message_schemas import MessageSchema
 
 
 # email_change_view
-class EmailChangeSuccessSchema(Message):
+class EmailChangeSuccessSchema(MessageSchema):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "User",
-            "description": "User model",
+            "description": "User model change email",
             "example": {
                 "message": "Email changed successfully",
             },
@@ -17,11 +17,11 @@ class EmailChangeSuccessSchema(Message):
 
 
 # password_change_view
-class PasswordChangeSuccessSchema(Message):
+class PasswordChangeSuccessSchema(MessageSchema):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "User",
-            "description": "User model",
+            "description": "Password success model",
             "example": {
                 "message": "Password changed successfully",
             },
@@ -30,7 +30,7 @@ class PasswordChangeSuccessSchema(Message):
 
 
 # delete_view
-class DeleteSuccessSchema(Message):
+class DeleteSuccessSchema(MessageSchema):
     model_config = ConfigDict(
         json_schema_extra={
             "title": "User",
