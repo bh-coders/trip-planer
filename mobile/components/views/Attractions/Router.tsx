@@ -4,7 +4,7 @@ import { View } from 'react-native';
 
 type DrawerParamList = {
   Search: any;
-  AddNew: undefined;
+  AddNew: any;
 };
 
 type AttractionSubMenuProps = {
@@ -12,29 +12,29 @@ type AttractionSubMenuProps = {
 };
 
 const AttractionSubMenu: React.FC<AttractionSubMenuProps> = (props) => {
-  const [nestedMenuOpen, setNestedMenuOpen] = useState(false);
+  const [nestedMenuToggle, setNestedMenuToggle] = useState(false);
   const navigation = props.navigation;
 
   return (
     <>
       <DrawerItem
         label="Attractions"
-        onPress={() => setNestedMenuOpen(!nestedMenuOpen)}
-        focused={nestedMenuOpen}
+        onPress={() => setNestedMenuToggle(!nestedMenuToggle)}
+        focused={nestedMenuToggle}
       />
-      <View style={{ marginLeft: 16, display: nestedMenuOpen ? 'flex' : 'none' }}>
+      <View style={{ marginLeft: 16, display: nestedMenuToggle ? 'flex' : 'none' }}>
         <DrawerItem
           label="Search attraction"
           onPress={() => {
-            navigation.navigate('Search', navigation);
-            setNestedMenuOpen(false);
+            navigation.navigate('Search');
+            setNestedMenuToggle(false);
           }}
         />
         <DrawerItem
           label="Add new attrsction"
           onPress={() => {
             navigation.navigate('AddNew');
-            setNestedMenuOpen(false);
+            setNestedMenuToggle(false);
           }}
         />
       </View>

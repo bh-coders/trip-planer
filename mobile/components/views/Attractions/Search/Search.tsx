@@ -42,16 +42,19 @@ const AttractionSearchScreen: React.FC<{ navigation: NavigationProps }> = ({ nav
 
   useEffect(() => {
     const filteredAttractions = userAttractions.filter((attraction) => {
-      return (
-        (filters.category === '' || attraction.category === filters.category) &&
-        (filters.city === '' || attraction.city === filters.city) &&
-        (filters.country === '' || attraction.country === filters.country) &&
-        (filters.keyword === '' ||
-          attraction.name.toLowerCase().includes(filters.keyword.toLowerCase())) &&
-        (filters.region === '' ||
-          attraction.region.toLowerCase().includes(filters.region.toLowerCase()))
-      );
+      const matchCategory = filters.category === '' || attraction.category === filters.category;
+      const matchCity = filters.city === '' || attraction.city === filters.city;
+      const matchCountry = filters.country === '' || attraction.country === filters.country;
+      const matchKeyword =
+        filters.keyword === '' ||
+        attraction.name.toLowerCase().includes(filters.keyword.toLowerCase());
+      const matchRegion =
+        filters.region === '' ||
+        (attraction.region && attraction.region.toLowerCase().includes(filters.region.toLowerCase()));
+
+      return matchCategory && matchCity && matchCountry && matchKeyword && matchRegion;
     });
+
     setAttractions(filteredAttractions);
   }, [filters, userAttractions]);
 

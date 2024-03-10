@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import StarRating from 'react-native-star-rating';
 import { OpenHours } from '../types';
-import { OpeningHours } from './components/HoursComponent';
+import { OpeningHours } from './components/Hours.tsx';
 import { styles } from './styles';
 
 const AddNewAttraction = () => {

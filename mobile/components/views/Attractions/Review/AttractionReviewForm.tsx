@@ -113,7 +113,6 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
 
           <Text style={styles.sliderTitle}>
             <Text>Price: </Text>
-            {/*<Text style={{ color: 'green' }}>{'$'.repeat(formData.cost)}</Text>*/}
           </Text>
           <Slider
             style={styles.slider}
@@ -126,7 +125,6 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
 
           <Text style={styles.sliderTitle}>
             <Text>Time spent:</Text>
-            {/*<Text style={{ color: 'yellow' }}>{'⌚'.repeat(formData.timeSpent)}</Text>*/}
           </Text>
           <Slider
             style={styles.slider}
@@ -169,11 +167,4 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ review, onSubmit }) => {
   );
 };
 
-export const AddNewReview: React.FC = () => {
-  return <ReviewForm onSubmit={(data) => console.log('Adding review:', data)} />;
-};
-
-export const EditReview: React.FC<{ route: any }> = ({ route }) => {
-  const { review } = route.params;
-  return <ReviewForm review={review} onSubmit={(data) => console.log('Editing review:', data)} />;
-};
+export default ReviewForm;

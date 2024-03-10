@@ -23,7 +23,6 @@ const AttractionTile: React.FC<AttractionTileProps> = ({
   const [showImage, setShowImage] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const [editMenuVisible, setEditMenuVisible] = useState<boolean>(false);
-  const userId = loggedInUserId;
   const hasAuthorAvatar = author.avatar && author.avatar.trim() !== '';
 
   const toggleReview = () => {
@@ -37,7 +36,7 @@ const AttractionTile: React.FC<AttractionTileProps> = ({
   };
 
   const editBox = (attractionAuthor: number | undefined) => {
-    if (attractionAuthor && attractionAuthor === userId) {
+    if (attractionAuthor && attractionAuthor === loggedInUserId) {
       return (
         <TouchableOpacity onPress={() => setEditMenuVisible(true)}>
           <Text style={reviewTile.title}>✎</Text>

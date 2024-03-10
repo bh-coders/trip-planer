@@ -37,7 +37,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, attraction
     ...new Set(attractionList.map((attraction) => attraction?.country as string)),
   ];
 
-  const onSearchPress = () => {
+  const onSearch = () => {
     onSave({ keyword, country, city, region, category, radius });
   };
 
@@ -159,7 +159,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({ visible, onSave, attraction
       </View>
 
       <View style={filterModal.button}>
-        <Button title="Search Attractions" onPress={onSearchPress} />
+        <Button title="Search Attractions" onPress={onSearch} />
       </View>
     </Modal>
   );

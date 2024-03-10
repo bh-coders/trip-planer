@@ -3,7 +3,6 @@ import { Text, TextInput, View } from 'react-native';
 import { styles } from '../styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-
 interface OpenHoursProps {
   label: string;
   value: string;
