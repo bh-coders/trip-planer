@@ -12,6 +12,7 @@
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.6.0",
     "@react-native-async-storage/async-storage": "^1.21.0",
+    "@react-native-community/slider": "^4.5.0",
     "@react-native-picker/picker": "^2.6.1",
     "@react-navigation/drawer": "^6.6.6",
     "@react-navigation/native": "^6.1.9",
@@ -40,6 +41,7 @@
     "@react-native/metro-config": "0.73.3",
     "@react-native/typescript-config": "0.73.1",
     "@types/react": "^18.2.6",
+    "@types/react-native-star-rating": "^1.1.6",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.6.3",
     "eslint": "^8.19.0",
