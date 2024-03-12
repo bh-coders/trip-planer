@@ -1,17 +1,20 @@
 import uuid
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Response
 from sqlalchemy.orm import Session
 
-from src.core.database import get_db
-from src.core.interceptors.auth_interceptor import verify_jwt
+from src.core.interceptors.auth_interceptor import get_user_id, verify_jwt
+from src.db.cache_storage import RedisStorage
+from src.db.database import get_db
 from src.threads.repository.comment_repository import CommentRepository
 from src.threads.repository.review_repository import ReviewRepository
 from src.threads.schemas.model_schema import (
     CommentCreate,
+    CommentSchema,
     CommentUpdate,
     ReviewCreate,
+    ReviewSchema,
     ReviewUpdate,
 )
 from src.threads.services.comment_service import CommentService
@@ -20,18 +23,18 @@ from src.threads.services.review_service import ReviewService
 threads_router = APIRouter()
 review_repository = ReviewRepository()
 comment_repository = CommentRepository()
+cache_storage = RedisStorage()
 comment_service = CommentService(repository=comment_repository)
-review_service = ReviewService(repository=review_repository)
+review_service = ReviewService(repository=review_repository, cache=cache_storage)
 
 
 @threads_router.post("/create")
 def create_thread(
     thread: ReviewCreate,
-    request: Request,
+    user_id: Annotated[uuid.UUID, Depends(get_user_id)],
     db: Annotated[Session, Depends(get_db)],
-    is_token_valid: bool = Depends(verify_jwt),
-):
-    return review_service.create(request=request, thread=thread, db=db)
+) -> Response:
+    return review_service.create(user_id=user_id, thread=thread, db=db)
 
 
 @threads_router.get("/{review_id}")
@@ -39,7 +42,7 @@ def get_thread(
     review_id: uuid.UUID,
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
-):
+) -> ReviewSchema:
     return review_service.get_thread_by_id(thread_id=review_id, db=db)
 
 
@@ -48,7 +51,7 @@ def delete_thread(
     review_id: uuid.UUID,
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
-):
+) -> Response:
     return review_service.delete_thread(db=db, review_id=review_id)
 
 
@@ -57,7 +60,7 @@ def delete_comment(
     comment_id: uuid.UUID,
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
-):
+) -> Response:
     return comment_service.delete_comment(db=db, comment_id=comment_id)
 
 
@@ -67,7 +70,7 @@ def update_thread(
     review: ReviewUpdate,
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
-):
+) -> ReviewSchema:
     return review_service.update_thread(
         db=db, review_id=review_id, updated_review=review
     )
@@ -79,7 +82,7 @@ def update_comment(
     comment: CommentUpdate,
     db: Annotated[Session, Depends(get_db)],
     is_token_valid: bool = Depends(verify_jwt),
-):
+) -> CommentSchema:
     return comment_service.update_comment(
         db=db, comment_id=comment_id, updated_comment=comment
     )
@@ -94,7 +97,7 @@ def get_threads_attraction(
     price: Optional[int] = None,
     time_spent: Optional[int] = None,
     is_token_valid: bool = Depends(verify_jwt),
-):
+) -> list[ReviewSchema]:
     return review_service.get_threads_attraction_filtered_sorted(
         db=db,
         attraction_id=attraction_id,
@@ -107,9 +110,8 @@ def get_threads_attraction(
 
 @threads_router.post("/comment")
 def comment_thread(
-    request: Request,
     comment: CommentCreate,
+    user_id: Annotated[uuid.UUID, Depends(get_user_id)],
     db: Annotated[Session, Depends(get_db)],
-    is_token_valid: bool = Depends(verify_jwt),
-):
-    return comment_service.comment_thread(request=request, comment=comment, db=db)
+) -> Response:
+    return comment_service.comment_thread(user_id=user_id, comment=comment, db=db)

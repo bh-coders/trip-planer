@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
-import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
-import { View } from 'react-native';
+import React from 'react';
+import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import AttractionSubMenu from '../../components/views/Attractions/Router';
 import TestSubMenu from '../../components/views/test/Router';
 
-
-const CustomDrawerContent: React.FC<any> = (props) => {
-
-
+//Here, instead of any, you need to create an interface, but I don't know how yet
+const SubMenuDrawerContent: React.FC<any> = (props) => {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
@@ -17,4 +14,4 @@ const CustomDrawerContent: React.FC<any> = (props) => {
   );
 };
 
-export default CustomDrawerContent;
+export default SubMenuDrawerContent;

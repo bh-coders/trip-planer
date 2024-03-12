@@ -4,15 +4,22 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 import jwt
-from fastapi import HTTPException, Request
+from fastapi import Request
+from fastapi.security.utils import get_authorization_scheme_param
 from passlib.context import CryptContext
 
-from src.auth.exceptions import InvalidPassword
 from src.core.configs import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     ALGORITHM,
     REFRESH_TOKEN_EXPIRE_DAYS,
     SECRET_KEY,
+)
+from src.users.exceptions import (
+    AuthorizationFailed,
+    InvalidCredentials,
+    InvalidPassword,
+    InvalidToken,
+    TokenExpired,
 )
 
 password_hashing = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -55,9 +62,11 @@ def decode_jwt_token(token: str) -> dict:
         logger.info("Token decoded: %s", payload)
         return payload
     except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
+        raise TokenExpired
     except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        raise InvalidToken
+    except jwt.PyJWTError:
+        raise InvalidCredentials
 
 
 def get_access_token(
@@ -117,11 +126,9 @@ def encode_jwt_token(username: str, user_id: uuid.UUID) -> dict:
     return data
 
 
-def get_user_id_from_request(request: Request) -> Optional[uuid.UUID]:
+def get_token_from_request(request: Request) -> Optional[str]:
     authorization = request.headers.get("Authorization")
-    if not authorization:
-        return None
-    auth_token = authorization.split(" ")[1]
-    payload_token = decode_jwt_token(auth_token)
-    return payload_token.get("user_id")
-
+    scheme, token = get_authorization_scheme_param(authorization)
+    if not authorization or scheme.lower() != "bearer":
+        raise AuthorizationFailed
+    return token

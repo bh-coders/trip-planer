@@ -1,5 +1,6 @@
 import io
 import logging
+from enum import Enum
 from mimetypes import guess_type
 from typing import BinaryIO, Union
 
@@ -13,11 +14,19 @@ from src.core.configs import (
     MINIO_SECRET_KEY,
     MINIO_SECURE,
 )
+from src.db.interfaces.cloud_storage import ICloudStorage
 
 logger = logging.getLogger(__name__)
 
 
-class CloudStorage:
+class BucketNames(Enum):
+    ATTRACTIONS = "attractions"
+    COMMENTS = "comments"
+    REVIEWS = "reviews"
+    USERS = "users"
+
+
+class CloudStorage(ICloudStorage):
     def __init__(
         self,
         api_url: str | None = None,

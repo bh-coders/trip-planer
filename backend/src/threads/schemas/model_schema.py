@@ -4,6 +4,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
+from src.file.models.schemas import MediaRead
+
 
 class CommentBase(BaseModel):
     review_id: UUID
@@ -14,19 +16,20 @@ class CommentBase(BaseModel):
 
 
 class CommentCreate(CommentBase):
-    review_id: UUID
-    content: str
+    pass
 
 
 class CommentUpdate(CommentBase):
-    review_id: UUID
-    content: str
+    pass
 
 
 class CommentSchema(CommentBase):
     id: Optional[UUID] = None
     user_id: Optional[UUID] = None
     created_at: Optional[datetime] = None
+    media: list[
+        MediaRead
+    ] = []  # Something to think about is whether we need so much data
 
 
 class ReviewBase(BaseModel):
@@ -53,3 +56,6 @@ class ReviewSchema(ReviewCreate):
     id: Optional[UUID] = None
     user_id: Optional[UUID] = None
     comments: list[CommentSchema] = []
+    media: list[
+        MediaRead
+    ] = []  # Something to think about is whether we need so much data
