@@ -1,7 +1,7 @@
 import uuid
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, Request, Response
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 
 from src.core.interceptors.auth_interceptor import get_user_id, verify_jwt
