@@ -8,9 +8,8 @@ if TYPE_CHECKING:
 
 
 class ICacheHandler(ABC):
-    @abstractmethod
     def __init__(self, pool_storage: "ICacheStorageType"):
-        pass
+        self.pool_storage = pool_storage
 
     @abstractmethod
     def publish_event(self, event_type: str, data: dict) -> None:

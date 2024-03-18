@@ -21,6 +21,18 @@ def _init_app(version: str) -> FastAPI:
 
 
 def _read_version() -> str:
+    """
+    Read the Rest API version from a VERSION.txt file.
+
+    This function attempts to read the version of the Rest API from a text file named
+    VERSION.txt located in the 'src' directory. If the file is found, it reads the version,
+    trims any leading or trailing whitespace, and returns the version string. If the file
+    is not found, it creates the file, writes a default version '0.0.0' into it, and returns
+    this default version.
+
+    Returns:
+    - str: The version string read from the file, or the default '0.0.0' if the file does not exist.
+    """
     try:
         with open(BASE_DIR / "src" / "VERSION.txt", "r") as version_file:
             version = version_file.read()
