@@ -7,10 +7,10 @@ from sqlalchemy.orm import Session
 from src.auth.schemas import (
     LoginSchema,
     LoginUserSchema,
-    RefreshTokenSchema,
     RefreshTokenSuccessSchema,
     RegisterSuccessSchema,
     RegisterUserSchema,
+    TokenSchema,
 )
 from src.auth.services import AuthService
 from src.db.cache_storage import CacheHandler
@@ -60,7 +60,7 @@ def login_view(
     response_class=JSONResponse,
 )
 def refresh_view(
-    credentials: RefreshTokenSchema,
+    credentials: TokenSchema,
     db: Annotated[Session, Depends(get_db)],
 ):
     return auth_service.refresh_credentials(token=credentials.refresh_token, db=db)
