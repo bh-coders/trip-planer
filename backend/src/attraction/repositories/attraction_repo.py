@@ -12,7 +12,7 @@ from src.attraction.schemas import (
     AttractionSchema,
     AttractionSortedBy,
 )
-from src.core.common_schema import SortDirection
+from src.common.schemas.common_schema import SortDirection
 
 logger = logging.getLogger(__name__)
 

@@ -4,6 +4,8 @@ import sys
 
 from pythonjsonlogger import jsonlogger
 
+from src.core.configs import BASE_DIR
+
 
 class LoggerSetup:
     def __init__(self) -> None:
@@ -22,7 +24,7 @@ class LoggerSetup:
         console_handler.setFormatter(json_formatter)
 
         # File Handler with JSON formatter
-        log_file = "logs/api-logs.log"
+        log_file = BASE_DIR / "logs/api-logs.log"
         file_handler = logging.handlers.TimedRotatingFileHandler(
             filename=log_file, when="midnight", backupCount=5
         )

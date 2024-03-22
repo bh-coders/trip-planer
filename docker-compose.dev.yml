@@ -1,0 +1,69 @@
+version: "3.11"
+services:
+  postgres:
+    container_name: postgres-triplane
+    image: postgres:14.6
+    hostname: postgres
+    ports:
+      - "5432:5432"
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: triplane
+      POSTGRES_DB: postgres-triplane
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: on-failure
+
+  redis:
+    image: redis
+    container_name: redis
+    build:
+      context: ./backend/docker/redis
+      dockerfile: Dockerfile
+    privileged: true
+    env_file:
+      - ./backend/.env
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data:rw
+    healthcheck:
+      test: redis-cli ping
+      interval: 3s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    container_name: minio
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: superuser
+      MINIO_ROOT_PASSWORD: superuser
+    command: server /data --console-address ":9001"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./docker/web/Dockerfile
+    container_name: backend
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/src:/src
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

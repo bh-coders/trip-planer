@@ -10,5 +10,3 @@ services:
       - "8081:80"
     env_file:
       - backend/.env
-
-

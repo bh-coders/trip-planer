@@ -4,7 +4,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.core.common_schema import SortDirection
+from src.common.schemas.common_schema import SortDirection
 from src.file.models.schemas import MediaRead
 
 

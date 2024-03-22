@@ -1,19 +1,21 @@
-from src.auth.schemas.endpoint_schema import (
-    LoginRequest,
-    LoginResponse,
-    RefreshTokenResponse,
-    RegisterRequest,
-    RegisterResponse,
+from src.auth.schemas.request import (
+    LoginUserSchema,
+    RegisterUserSchema,
 )
-from src.auth.schemas.model_schema import GetToken, GetUser, UserCreate
+from src.auth.schemas.response import (
+    LoginSchema,
+    RefreshTokenSuccessSchema,
+    RegisterSuccessSchema,
+)
 
 __all__ = [
-    "UserCreate",
-    "GetUser",
-    "RegisterRequest",
-    "RegisterResponse",
-    "LoginRequest",
-    "LoginResponse",
-    "RefreshTokenResponse",
-    "GetToken",
+    # register_view
+    "RegisterUserSchema",
+    "RegisterSuccessSchema",
+    # login_view
+    "LoginUserSchema",
+    "LoginSchema",
+    # refresh_view
+    "RefreshTokenSuccessSchema",
+    "RefreshTokenSuccessSchema",
 ]

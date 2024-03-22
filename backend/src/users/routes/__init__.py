@@ -1,12 +1,7 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from src.users.routes.profile_router import router as profile_router
+from src.users.routes.user_router import router as user_router
 
-from src.db.database import get_db
-from src.users.models import Profile
-
-router = APIRouter()
-
-
-@router.get("/all")
-def get_all_profiles(db: Session = Depends(get_db)):
-    return db.query(Profile).all()
+__all__ = [
+    "user_router",
+    "profile_router",
+]

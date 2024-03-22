@@ -1,4 +1,5 @@
 import time
+
 from backend.src.attraction.models import Attraction
 from backend.src.attraction.repositories.in_memory_repo import InMemoryRepository
 from backend.src.route.models import Route
@@ -16,7 +17,7 @@ class RouteService:
 
     def create_item(self, route):
         item = route
-        return self._repository.create(item)
+        return self._repository.create_profile(item)
 
     def update_item(self, item_id, name):
         item = self._repository.get_by_id(item_id)

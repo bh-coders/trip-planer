@@ -18,16 +18,21 @@ class ICacheStorage(ABC):
         pass
 
     @abstractmethod
-    def publish(self, channel, message):
-        """Publish a message to a channel."""
+    def publish_signal(self, event_type, serialized_data):
+        """Publish a signal to a channel in the cache."""
         pass
 
     @abstractmethod
-    def subscribe(self, channel, callback):
-        """Subscribe to a channel. The callback function is called when a message is published to the channel."""
+    def subscribe_signal(self, event_type):
+        """Subscribe to a channel to receive signals."""
         pass
 
     @abstractmethod
-    def unsubscribe(self, channel):
+    def unsubscribe_signal(self, event_type):
         """Unsubscribe from a channel."""
+        pass
+
+    @abstractmethod
+    def get_signal(self):
+        """Get the next signal message from the subscribed channels."""
         pass

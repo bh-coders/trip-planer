@@ -4,8 +4,8 @@ from datetime import datetime
 from sqlalchemy import UUID, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, relationship
 
-from src.auth.models import User
 from src.db.database import Base
+from src.users.models import User
 
 
 class Review(Base):

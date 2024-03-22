@@ -21,7 +21,7 @@ Mobile, Web and Rest API
 In our project, we use a configuration file that loads environment variables. This allows us to interact with them. The configuration file is located at:
 
 ```bash
-src/backend/core/configs.py
+src/web/core/configs.py
 ```
 
 ### Initializing Environment Variables
