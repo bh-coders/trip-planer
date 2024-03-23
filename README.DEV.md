@@ -1,9 +1,10 @@
 # Develop app
 
-### enviroments:
+## environments
+
 backend/.env
 
-````bash
+```bash
 POSTGRES_HOST=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=triplane
@@ -31,16 +32,26 @@ CACHE_STORAGE_PORT=6379
 CACHE_STORAGE_PASSWORD=redis
 CACHE_STORAGE_DB=1
 CACHE_STORAGE_EXP=86400
-````
+```
 
 ### start app
-````bash
+
+```bash
 docker-compose -f docker-compose.dev.yml up --build -d
-````
+docker-compose -f docker-compose.dev.yml stop
+
+```
 
 ### debug
-you can use:
-````bash
-python ./web/src/run_app.py
-````
 
+you can use:
+
+```bash
+docker-compose -f docker-compose.dev.yml start postgres
+docker-compose -f docker-compose.dev.yml start redis
+docker-compose -f docker-compose.dev.yml start minio
+```
+
+```bash
+python ./backend/src/run_app.py
+```
