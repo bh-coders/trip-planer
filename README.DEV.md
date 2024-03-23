@@ -55,3 +55,8 @@ docker-compose -f docker-compose.dev.yml start minio
 ```bash
 python ./backend/src/run_app.py
 ```
+
+## debug with docker pdb++
+```bash
+docker-compose -f docker-compose.dev.yml run --service-ports backend
+```
