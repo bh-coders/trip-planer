@@ -48,6 +48,14 @@ docker-compose -f docker-compose.dev.yml stop
 docker-compose -f docker-compose.dev.yml run --rm --service-ports backend
 ```
 
+## run containers to vscode or pycharm ide then step debug
+
+```bash
+docker-compose -f docker-compose.dev.yml start postgres
+docker-compose -f docker-compose.dev.yml start redis
+docker-compose -f docker-compose.dev.yml start minio
+```
+
 ## debug with vscode
 - add in project dir ".vscode/launch.json"
 
@@ -91,12 +99,6 @@ docker-compose -f docker-compose.dev.yml run --rm --service-ports backend
 ```
 
 ## debug with pycharm
-
-```bash
-docker-compose -f docker-compose.dev.yml start postgres
-docker-compose -f docker-compose.dev.yml start redis
-docker-compose -f docker-compose.dev.yml start minio
-```
 
 ```bash
 python ./backend/src/run_app.py
