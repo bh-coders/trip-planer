@@ -45,7 +45,7 @@ docker-compose -f docker-compose.dev.yml stop
 ## debug with docker pdb++
 
 ```bash
-docker-compose -f docker-compose.dev.yml run --service-ports backend
+docker-compose -f docker-compose.dev.yml run --rm --service-ports backend
 ```
 
 ## debug with vscode
