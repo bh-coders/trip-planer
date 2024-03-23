@@ -34,17 +34,62 @@ CACHE_STORAGE_DB=1
 CACHE_STORAGE_EXP=86400
 ```
 
-### start app
+### build app
 
 ```bash
 docker-compose -f docker-compose.dev.yml up --build -d
 docker-compose -f docker-compose.dev.yml stop
-
 ```
 
-### debug
+## debug with docker pdb++
 
-you can use:
+```bash
+docker-compose -f docker-compose.dev.yml run --service-ports backend
+```
+
+## debug with vscode
+- add in project dir ".vscode/launch.json"
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FastAPI",
+            "cwd": "${workspaceFolder}/backend",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "src.main:app",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                "8000",
+                "--reload"
+            ],
+            "envFile": "${workspaceFolder}/backend/.env"
+        },
+        {
+            "name": "FastAPI local",
+            "cwd": "${workspaceFolder}/backend",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "src.main:app",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                "8080",
+                "--reload"
+            ]
+        }
+    ]
+}
+```
+
+## debug with pycharm
 
 ```bash
 docker-compose -f docker-compose.dev.yml start postgres
@@ -54,9 +99,4 @@ docker-compose -f docker-compose.dev.yml start minio
 
 ```bash
 python ./backend/src/run_app.py
-```
-
-## debug with docker pdb++
-```bash
-docker-compose -f docker-compose.dev.yml run --service-ports backend
 ```
