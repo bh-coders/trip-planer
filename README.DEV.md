@@ -1,6 +1,6 @@
-# Develop app
+## Develop app
 
-## environments
+### environments
 - this get environments from backend/.env and override it with .env.local in containers 
 
 backend/.env.local
@@ -42,13 +42,13 @@ docker-compose -f docker-compose.dev.yml up --build -d
 docker-compose -f docker-compose.dev.yml stop
 ```
 
-## debug with docker pdb++
+### debug with docker pdb++
 
 ```bash
 docker-compose -f docker-compose.dev.yml run --rm --service-ports backend
 ```
 
-## run containers to vscode or pycharm ide then step debug
+### run containers to vscode or pycharm ide then step debug
 
 ```bash
 docker-compose -f docker-compose.dev.yml start postgres
@@ -56,7 +56,7 @@ docker-compose -f docker-compose.dev.yml start redis
 docker-compose -f docker-compose.dev.yml start minio
 ```
 
-## debug with vscode
+### debug with vscode
 - add in project dir ".vscode/launch.json"
 
 ```json
@@ -98,7 +98,7 @@ docker-compose -f docker-compose.dev.yml start minio
 }
 ```
 
-## debug with pycharm
+### debug with pycharm
 
 ```bash
 python ./backend/src/run_app.py
