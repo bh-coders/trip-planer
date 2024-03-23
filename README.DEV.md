@@ -1,8 +1,9 @@
 # Develop app
 
 ## environments
+- this get environments from backend/.env and override it with .env.local in containers 
 
-backend/.env
+backend/.env.local
 
 ```bash
 POSTGRES_HOST=postgres
