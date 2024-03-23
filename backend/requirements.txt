@@ -24,6 +24,7 @@ minio==7.2.3
 mypy==1.8.0
 mypy-extensions==1.0.0
 orjson==3.9.13
+packaging==24.0
 passlib==1.7.4
 pdbpp==0.10.3
 psycopg2-binary==2.9.9
