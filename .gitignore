@@ -244,7 +244,6 @@ buck-out/
 # Icon must end with two \r
 Icon
 
-
 # Thumbnails
 ._*
 
@@ -849,7 +848,6 @@ buck-out/
 # Icon must end with two \r
 Icon
 
-
 # Thumbnails
 ._*
 
@@ -870,10 +868,11 @@ Temporary Items
 .apdisk
 
 ### VisualStudioCode ###
+.vscode
 .vscode/*
+.vscode/launch.json
 !.vscode/settings.json
 !.vscode/tasks.json
-!.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 

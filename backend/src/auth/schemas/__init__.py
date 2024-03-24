@@ -6,6 +6,7 @@ from src.auth.schemas.response import (
     LoginSchema,
     RefreshTokenSuccessSchema,
     RegisterSuccessSchema,
+    TokenSchema,
 )
 
 __all__ = [
@@ -18,4 +19,6 @@ __all__ = [
     # refresh_view
     "RefreshTokenSuccessSchema",
     "RefreshTokenSuccessSchema",
+    # token_view
+    "TokenSchema",
 ]

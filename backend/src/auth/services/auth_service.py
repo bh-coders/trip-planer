@@ -11,17 +11,9 @@ from src.auth.schemas import (
     RegisterSuccessSchema,
     RegisterUserSchema,
 )
-from src.auth.utils import (
-    encode_jwt_token,
-    hash_password,
-    verify_passwords,
-)
-from src.common.exceptions import (
-    NotAuthenticated,
-)
-from src.common.multithreading_utils import (
-    publish_handler_event,
-)
+from src.auth.utils import encode_jwt_token, hash_password, verify_passwords
+from src.common.exceptions import NotAuthenticated
+from src.common.multithreading_utils import publish_handler_event
 from src.core.interceptors.auth_interceptor import get_user_id
 from src.db.interfaces import ICacheHandler
 from src.users.exceptions import (

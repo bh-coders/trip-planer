@@ -90,6 +90,7 @@ celerybeat.pid
 
 # Environments
 ../.envs/backend/.env
+!.env.local
 .venv
 env/
 venv/

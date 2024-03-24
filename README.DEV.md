@@ -1,9 +1,11 @@
-# Develop app
+## Develop app
 
-### enviroments:
-backend/.env
+### environments
+- this get environments from backend/.env and override it with .env.local in containers 
 
-````bash
+backend/.env.local
+
+```bash
 POSTGRES_HOST=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=triplane
@@ -31,16 +33,73 @@ CACHE_STORAGE_PORT=6379
 CACHE_STORAGE_PASSWORD=redis
 CACHE_STORAGE_DB=1
 CACHE_STORAGE_EXP=86400
-````
+```
 
-### start app
-````bash
+### build app
+
+```bash
 docker-compose -f docker-compose.dev.yml up --build -d
-````
+docker-compose -f docker-compose.dev.yml stop
+```
 
-### debug
-you can use:
-````bash
-python ./web/src/run_app.py
-````
+### debug with docker pdb++
 
+```bash
+docker-compose -f docker-compose.dev.yml run --rm --service-ports backend
+```
+
+### run containers to vscode or pycharm ide then step debug
+
+```bash
+docker-compose -f docker-compose.dev.yml start postgres
+docker-compose -f docker-compose.dev.yml start redis
+docker-compose -f docker-compose.dev.yml start minio
+```
+
+### debug with vscode
+- add in project dir ".vscode/launch.json"
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FastAPI",
+            "cwd": "${workspaceFolder}/backend",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "src.main:app",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                "8000",
+                "--reload"
+            ],
+            "envFile": "${workspaceFolder}/backend/.env"
+        },
+        {
+            "name": "FastAPI local",
+            "cwd": "${workspaceFolder}/backend",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "src.main:app",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                "8080",
+                "--reload"
+            ]
+        }
+    ]
+}
+```
+
+### debug with pycharm
+
+```bash
+python ./backend/src/run_app.py
+```
