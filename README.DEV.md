@@ -47,7 +47,9 @@ docker-compose -f docker-compose.dev.yml --profile dev stop
 ```bash
 docker-compose -f docker-compose.dev.yml run --rm --service-ports backend
 ```
+
 or
+
 ```bash
 ./commands/debug.sh
 ```
