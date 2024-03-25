@@ -38,8 +38,8 @@ CACHE_STORAGE_EXP=86400
 ### build app
 
 ```bash
-docker-compose -f docker-compose.dev.yml up --build -d
-docker-compose -f docker-compose.dev.yml stop
+docker-compose -f docker-compose.dev.yml --profile dev up --build -d
+docker-compose -f docker-compose.dev.yml --profile dev stop
 ```
 
 ### debug with docker pdb++
@@ -47,13 +47,15 @@ docker-compose -f docker-compose.dev.yml stop
 ```bash
 docker-compose -f docker-compose.dev.yml run --rm --service-ports backend
 ```
+or
+```bash
+./commands/debug.sh
+```
 
 ### run containers to vscode or pycharm ide then step debug
 
 ```bash
-docker-compose -f docker-compose.dev.yml start postgres
-docker-compose -f docker-compose.dev.yml start redis
-docker-compose -f docker-compose.dev.yml start minio
+docker-compose -f docker-compose.dev.yml --profile dev-less start
 ```
 
 ### debug with vscode
