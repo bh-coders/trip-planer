@@ -17,11 +17,8 @@ security = HTTPBearer()
 
 def verify_jwt(
     auth: Annotated[HTTPAuthorizationCredentials, Depends(security)]
-) -> bool:
-    token = decode_jwt_token(token=auth.credentials)
-    if token:
-        return True
-    return False
+) -> None:
+    decode_jwt_token(token=auth.credentials)
 
 
 def get_user_id(
