@@ -9,6 +9,7 @@ from src.core.configs import LOGS_DIR, LOGS_FILE_PATH
 
 class LoggerSetup:
     def __init__(self) -> None:
+        self.create_logging_dir()
         self.logger = logging.getLogger("")
         self.setup_logging()
 

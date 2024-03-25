@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 DEBUG = int(os.getenv("DEBUG", 1))
 if DEBUG:
     LOGS_DIR = BASE_DIR / "logs"
