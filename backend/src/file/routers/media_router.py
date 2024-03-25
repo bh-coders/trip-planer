@@ -24,14 +24,13 @@ cloud_storage = CloudStorage()
 media_service = MediaService(repository=media_repository, storage=cloud_storage)
 
 
-@media_router.post("/create")
+@media_router.post("/create", dependencies=[Depends(verify_jwt)])
 def create_media(
     file: UploadFile = File(...),
     attraction_id: Optional[int] = Form(None),
     review_id: Optional[uuid.UUID] = Form(None),
     comment_id: Optional[uuid.UUID] = Form(None),
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+    db: Session = Depends(get_db)
 ) -> Response:
     media_create = MediaCreate(
         attraction_id=attraction_id,
@@ -43,71 +42,64 @@ def create_media(
     return media_service.create_media(db, media_create, file)
 
 
-@media_router.get("/{media_id}")
+@media_router.get("/{media_id}", dependencies=[Depends(verify_jwt)])
 def get_media(
     media_id: str,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+    db: Session = Depends(get_db)
 ) -> List[MediaRead]:
     return media_service.get_media_obj(media_id, db)
 
 
-@media_router.get("/by-attraction/{attraction_id}")
+@media_router.get("/by-attraction/{attraction_id}", dependencies=[Depends(verify_jwt)])
 def get_media_by_attraction(
     attraction_id: int,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+    db: Session = Depends(get_db)
 ) -> List[MediaRead]:
     return media_service.get_media_by_reference(
         db, MediaReference(attraction_id=attraction_id)
     )
 
 
-@media_router.get("/by-comment/{comment_id}")
+@media_router.get("/by-comment/{comment_id}", dependencies=[Depends(verify_jwt)])
 def get_media_by_comment(
     comment_id: str,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+    db: Session = Depends(get_db)
 ) -> List[MediaRead]:
     return media_service.get_media_by_reference(
         db, MediaReference(comment_id=comment_id)
     )
 
 
-@media_router.get("/by-review/{review_id}")
+@media_router.get("/by-review/{review_id}", dependencies=[Depends(verify_jwt)])
 def get_media_by_review(
     review_id: str,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+    db: Session = Depends(get_db)
 ) -> List[MediaRead]:
     return media_service.get_media_by_reference(db, MediaReference(review_id=review_id))
 
 
-@media_router.patch("/{media_id}/update")
+@media_router.patch("/{media_id}/update", dependencies=[Depends(verify_jwt)])
 def update_media(
     media_id: str,
     media_update: MediaUpdate,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+    db: Session = Depends(get_db)
 ) -> MediaRead:
     return media_service.update_media(db, media_id, media_update)
 
 
-@media_router.delete("/{media_id}/delete")
+@media_router.delete("/{media_id}/delete", dependencies=[Depends(verify_jwt)])
 def delete_media(
     media_id: str,
-    db: Session = Depends(get_db),
-    is_token_valid: bool = Depends(verify_jwt),
+    db: Session = Depends(get_db)
 ) -> Response:
     return media_service.delete_media(db, media_id)
 
 
-@media_router.get("/{bucket_name}/{object_id}/{filename}")
+@media_router.get("/{bucket_name}/{object_id}/{filename}", dependencies=[Depends(verify_jwt)])
 def open_media_from_cloud_storage(
     bucket_name: str,
     object_id: int | str | uuid.UUID,
-    filename: str,
-    is_token_valid: bool = Depends(verify_jwt),
+    filename: str
 ):
     return media_service.get_media_file(
         MediaFile(
@@ -118,9 +110,9 @@ def open_media_from_cloud_storage(
     )
 
 
-@media_router.get("/{bucket_name}/{filename}")
+@media_router.get("/{bucket_name}/{filename}", dependencies=[Depends(verify_jwt)])
 def open_default_media_from_cloud_storage(
-    bucket_name: str, filename: str, is_token_valid: bool = Depends(verify_jwt)
+    bucket_name: str, filename: str
 ):
     return media_service.get_media_file(
         MediaFile(bucket_name=bucket_name, file_name=filename)
