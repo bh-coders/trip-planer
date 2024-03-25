@@ -3,6 +3,11 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+DEBUG = int(os.getenv("DEBUG", 1))
+if DEBUG:
+    LOGS_DIR = BASE_DIR / "logs"
+    LOGS_FILE_PATH = LOGS_DIR / "api-logs.log"
+
 FAST_API_HOST = os.getenv("FAST_API_HOST", "localhost")
 FAST_API_PORT = os.getenv("FAST_API_PORT", 8080)
 

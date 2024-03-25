@@ -4,15 +4,24 @@ import sys
 
 from pythonjsonlogger import jsonlogger
 
-from src.core.configs import BASE_DIR
+from src.core.configs import LOGS_DIR, LOGS_FILE_PATH
 
 
 class LoggerSetup:
     def __init__(self) -> None:
+        self.create_logging_dir()
         self.logger = logging.getLogger("")
         self.setup_logging()
 
-    def setup_logging(self):
+    @staticmethod
+    def create_logging_dir():
+        if not LOGS_DIR.exists():
+            LOGS_DIR.mkdir(parents=True, exist_ok=True)
+        if not LOGS_FILE_PATH.exists():
+            LOGS_FILE_PATH.touch()
+
+    @staticmethod
+    def setup_logging():
         # JSON Formatter
         json_formatter = jsonlogger.JsonFormatter(
             "%(asctime)s %(process)s %(levelname)s %(name)s %(module)s %(funcName)s %(lineno)d %(message)s"
@@ -24,9 +33,8 @@ class LoggerSetup:
         console_handler.setFormatter(json_formatter)
 
         # File Handler with JSON formatter
-        log_file = BASE_DIR / "logs/api-logs.log"
         file_handler = logging.handlers.TimedRotatingFileHandler(
-            filename=log_file, when="midnight", backupCount=5
+            filename=LOGS_FILE_PATH, when="midnight", backupCount=5
         )
         file_handler.setLevel(logging.INFO)
         file_handler.setFormatter(json_formatter)
