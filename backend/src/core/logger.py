@@ -4,7 +4,7 @@ import sys
 
 from pythonjsonlogger import jsonlogger
 
-from src.core.configs import BASE_DIR
+from src.core.configs import LOGS_DIR, LOGS_FILE_PATH
 
 
 class LoggerSetup:
@@ -12,7 +12,15 @@ class LoggerSetup:
         self.logger = logging.getLogger("")
         self.setup_logging()
 
-    def setup_logging(self):
+    @staticmethod
+    def create_logging_dir():
+        if not LOGS_DIR.exists():
+            LOGS_DIR.mkdir(parents=True, exist_ok=True)
+        if not LOGS_FILE_PATH.exists():
+            LOGS_FILE_PATH.touch()
+
+    @staticmethod
+    def setup_logging():
         # JSON Formatter
         json_formatter = jsonlogger.JsonFormatter(
             "%(asctime)s %(process)s %(levelname)s %(name)s %(module)s %(funcName)s %(lineno)d %(message)s"
