@@ -26,26 +26,28 @@ MINIO_SECURE=False
 
 FASTAPI_HOST=localhost
 FASTAPI_PORT=8000
-DEBUG=0
+DEBUG=1
+PYTHONBREAKPOINT=pdb.set_trace
 
 CACHE_STORAGE_HOST=redis
 CACHE_STORAGE_PORT=6379
 CACHE_STORAGE_PASSWORD=redis
-CACHE_STORAGE_DB=1
+CACHE_STORAGE_DB=0
 CACHE_STORAGE_EXP=86400
+
 ```
 
 ### build app
 
 ```bash
-docker-compose -f docker-compose.dev.yml --profile dev up --build -d
-docker-compose -f docker-compose.dev.yml --profile dev stop
+docker-compose --profile dev up --build -d
+docker-compose --profile dev stop
 ```
 
 ### debug with docker pdb++
 
 ```bash
-docker-compose -f docker-compose.dev.yml run --rm --service-ports backend
+docker-compose run --rm --service-ports backend
 ```
 
 or
@@ -57,7 +59,7 @@ or
 ### run containers to vscode or pycharm ide then step debug
 
 ```bash
-docker-compose -f docker-compose.dev.yml --profile dev-less start
+docker-compose --profile dev-less start
 ```
 
 ### debug with vscode
